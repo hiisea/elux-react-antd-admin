@@ -1,0 +1,61 @@
+{
+  "name": "elux-react-antd-admin",
+  "version": "1.0.0",
+  "description": "",
+  "author": "hiisea <hiisea@qq.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "private": true,
+  "workspaces": [
+    "./mock",
+    "./public"
+  ],
+  "browserslist": [
+    "chrome >= 70"
+  ],
+  "scripts": {
+    "lint:type": "tsc --project ./src --noEmit --emitDeclarationOnly false",
+    "lint:es": "cross-env NODE_ENV=production eslint --fix --cache \"**/*.{js,ts,tsx}\"",
+    "lint:css": "cross-env NODE_ENV=production stylelint --fix --cache \"**/*.{css,less}\"",
+    "lint:json": "prettier --write **/*.json",
+    "demote": "elux demote",
+    "dev": "elux webpack-dev",
+    "build": "elux webpack-build",
+    "build:analyzer": "elux webpack-build -a",
+    "mock": "elux mock --watch",
+    "start": "run-p mock dev",
+    "dist": "node ./dist/local/start.js",
+    "demo": "run-p mock dist"
+  },
+  "dependencies": {
+    "@elux/react-web": "^2.2.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "axios": "^0.21.1",
+    "query-string": "^7.1.1",
+    "path-to-regexp": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@elux/cli": "^2.5.1",
+    "@elux/cli-utils": "^2.3.1",
+    "@elux/cli-webpack": "^2.2.1",
+    "@elux/cli-mock": "^2.1.0",
+    "@elux/babel-preset": "^1.0.2",
+    "@elux/eslint-plugin": "^1.2.2",
+    "@elux/stylelint-config": "^1.1.1",
+    "npm-run-all": "~4.1.5",
+    "cross-env": "~7.0.0",
+    "typescript": "~4.2.0",
+    "autoprefixer": "~10.4.0",
+    "less": "~3.12.2",
+    "less-loader": "~7.1.0"
+  },
+  "resolutions": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0"
+  }
+}
