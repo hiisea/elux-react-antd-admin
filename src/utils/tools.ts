@@ -1,3 +1,46 @@
+import {Rule} from 'antd/lib/form';
+import {FormItemProps} from 'antd/lib/form/FormItem';
+
+export {message} from 'antd';
+
+export interface FormDecorator<D> {
+  dependencies?: D[];
+  rules?: Rule[];
+  valuePropName?: string;
+}
+
+export interface FromItem<D> {
+  name: D;
+  formItem: FormItemProps['children'];
+  label: string;
+  rules?: Rule[];
+  col?: number;
+  cite?: number;
+}
+export type FromItemList<FormData> = FromItem<Extract<keyof FormData, string>>[];
+
+export function getFormDecorators<FormData>(items: {[key in keyof FormData]: FormDecorator<keyof FormData>}): {
+  [key in keyof FormData]: FormDecorator<keyof FormData> & {name: string};
+} {
+  // return new Proxy(
+  //   {},
+  //   {
+  //     get: (target: {}, key: string) => {
+  //       const item = items[key] || {};
+  //       item['name'] = key;
+  //       return item;
+  //     },
+  //     set: () => {
+  //       return true;
+  //     },
+  //   }
+  // ) as any;
+  Object.entries(items).forEach(([key, item]: [string, any]) => {
+    item.name = key;
+  });
+  return items as any;
+}
+
 function isMapObject(obj: any): Boolean {
   return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
 }

@@ -21,6 +21,22 @@ export const guest: CurUser = {
 export interface LoginParams {
   username: string;
   password: string;
+  keep: boolean;
+}
+
+export interface RegisterParams {
+  username: string;
+  password: string;
+}
+
+export interface SendCaptchaParams {
+  phone: string;
+}
+
+export interface ResetPasswordParams {
+  phone: string;
+  password: string;
+  captcha: string;
 }
 
 export type IGetCurUser = IRequest<{}, CurUser>;
@@ -28,6 +44,12 @@ export type IGetCurUser = IRequest<{}, CurUser>;
 export type ILogin = IRequest<LoginParams, CurUser>;
 
 export type ILogout = IRequest<{}, CurUser>;
+
+export type IRegistry = IRequest<RegisterParams, CurUser>;
+
+export type ISendCaptcha = IRequest<SendCaptchaParams, void>;
+
+export type IResetPassword = IRequest<ResetPasswordParams, CurUser>;
 
 export enum SubModule {
   'article' = 'article',
@@ -37,6 +59,9 @@ export enum SubModule {
 
 export enum CurView {
   'login' = 'login',
+  'registry' = 'registry',
+  'agreement' = 'agreement',
+  'forgetPassword' = 'forgetPassword',
 }
 
 class API {
@@ -61,6 +86,24 @@ class API {
 
   public logout(): Promise<ILogout['Response']> {
     return request.delete<CurUser>('/api/session').then((res) => {
+      return res.data;
+    });
+  }
+
+  public registry(params: IRegistry['Request']): Promise<IRegistry['Response']> {
+    return request.post<CurUser>('/api/session', params).then((res) => {
+      return res.data;
+    });
+  }
+
+  public resetPassword(params: IResetPassword['Request']): Promise<IResetPassword['Response']> {
+    return request.put<CurUser>('/api/session/resetPassword', params).then((res) => {
+      return res.data;
+    });
+  }
+
+  public sendCaptcha(params: ISendCaptcha['Request']): Promise<ISendCaptcha['Response']> {
+    return request.post<void>('/api/session/sendCaptcha', params).then((res) => {
       return res.data;
     });
   }

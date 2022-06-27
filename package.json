@@ -29,13 +29,18 @@
     "dist": "node ./dist/local/start.js",
     "demo": "run-p mock dist"
   },
+  "bundledDependencies": [
+    "@ant-design/icons"
+  ],
   "dependencies": {
     "@elux/react-web": "^2.2.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "axios": "^0.21.1",
     "query-string": "^7.1.1",
-    "path-to-regexp": "^6.2.0"
+    "path-to-regexp": "^6.2.0",
+    "antd": "^4.21.3",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",

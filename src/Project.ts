@@ -23,6 +23,17 @@ export const appConfig: AppConfig = setConfig({
   //只需要将parse(解析)和stringify(序列化)方法设置给Elux
   QueryString: {parse, stringify},
   HomeUrl,
+  NativePathnameMapping: {
+    in(nativePathname) {
+      if (nativePathname === '/') {
+        nativePathname = '/admin/article/list';
+      }
+      return nativePathname;
+    },
+    out(internalPathname) {
+      return internalPathname;
+    },
+  },
 });
 
 export type IModuleGetter = typeof ModuleGetter;

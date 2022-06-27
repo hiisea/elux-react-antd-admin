@@ -1,82 +1,102 @@
-import {Dispatch, DocumentHead, Link, connectRedux} from '@elux/react-web';
-import {FC, useCallback, useState} from 'react';
-import {GetActions} from '@/Global';
+import {AlipayCircleOutlined, AliwangwangFilled, DingtalkCircleFilled, LockOutlined, MobileFilled, UserOutlined} from '@ant-design/icons';
+import {Dispatch, Link, connectRedux} from '@elux/react-web';
+import {Button, Checkbox, Form, Input} from 'antd';
+import {FC, useCallback} from 'react';
+import DialogPage from '@/components/DialogPage';
+import {APPState, GetActions, useRouter} from '@/Global';
+import {getFormDecorators} from '@/utils/tools';
+import {LoginParams} from '../../entity';
 import styles from './index.module.less';
+
+type FormData = Required<LoginParams>;
+
+const initialValues: Partial<FormData> = {
+  username: 'admin',
+  password: '123456',
+  keep: false,
+};
+
+const fromDecorators = getFormDecorators<FormData>({
+  username: {rules: [{required: true, message: '请输入用户名!', whitespace: true}]},
+  password: {rules: [{required: true, message: '请输入密码!', whitespace: true}]},
+  keep: {valuePropName: 'checked'},
+});
 
 const {stage: stageActions} = GetActions('stage');
 
-const Component: FC<{dispatch: Dispatch}> = ({dispatch}) => {
-  const [errorMessage, setErrorMessage] = useState('');
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('123456');
-  const onSubmit = useCallback(() => {
-    if (!username || !password) {
-      setErrorMessage('请输入用户名、密码');
-    } else {
-      //这样的写法可以使用TS的类型提示，等同于dispatch({type:'stage.login',payload:{username, password}})
-      //可以await这个action的所有handler执行完成
-      const result = dispatch(stageActions.login({username, password})) as Promise<void>;
+interface StoreProps {
+  fromUrl?: string;
+}
+
+function mapStateToProps(appState: APPState): StoreProps {
+  const {fromUrl} = appState.stage!;
+  return {
+    fromUrl,
+  };
+}
+
+const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatch}) => {
+  const [form] = Form.useForm();
+  const onSubmit = useCallback(
+    (values: FormData) => {
+      const result = dispatch(stageActions.login(values)) as Promise<void>;
       result.catch(({message}) => {
-        setErrorMessage(message);
+        form.setFields([{name: 'password', errors: [message]}]);
       });
-    }
-  }, [dispatch, password, username]);
+    },
+    [dispatch, form]
+  );
   const onCancel = useCallback(() => {
     dispatch(stageActions.cancelLogin());
   }, [dispatch]);
 
   return (
-    <div className="wrap">
-      <div className={`${styles.root} g-page-dialog`}>
-        <DocumentHead title="登录" />
-        <h2>请登录</h2>
-        <div className="g-form">
-          <div className="item">
-            <div className="item">用户名</div>
-            <div className="item">
-              <input
-                name="username"
-                type="text"
-                className="g-input"
-                placeholder="请输入"
-                onChange={(e) => setUsername(e.target.value.trim())}
-                value={username}
-              />
-            </div>
+    <DialogPage className={styles.root} title="用户登录" banner="用户登录">
+      <Form form={form} onFinish={onSubmit} initialValues={initialValues}>
+        <Form.Item {...fromDecorators.username}>
+          <Input size="large" allowClear prefix={<UserOutlined />} placeholder="请输入用户名" />
+        </Form.Item>
+        <Form.Item {...fromDecorators.password}>
+          <Input.Password size="large" prefix={<LockOutlined />} placeholder="请输入密码" />
+        </Form.Item>
+        <Form.Item style={{marginBottom: 10}}>
+          <Form.Item {...fromDecorators.keep} noStyle>
+            <Checkbox>记住登录</Checkbox>
+          </Form.Item>
+          <Link className="btn-forgot" to={`/stage/forgetPassword?from=${fromUrl}`} action="push" classname="_dialog">
+            忘记密码？
+          </Link>
+        </Form.Item>
+        <Form.Item>
+          <div className="g-control">
+            <Button size="large" type="primary" htmlType="submit">
+              登录
+            </Button>
+            <Button size="large" onClick={onCancel}>
+              取消
+            </Button>
           </div>
-          <div className="item item-last">
-            <div className="item">密码</div>
-            <div className="item">
-              <input
-                name="password"
-                type="text"
-                className="g-input"
-                placeholder="请输入"
-                onChange={(e) => setPassword(e.target.value.trim())}
-                value={password}
-              />
-            </div>
-          </div>
-          <div className="item item-error">
-            <div className="item"></div>
-            <div className="item">{errorMessage}</div>
-          </div>
-        </div>
-        <div className="g-control">
-          <button type="submit" className="g-button primary" onClick={onSubmit}>
-            登 录
-          </button>
-          <button type="button" className="g-button" onClick={onCancel}>
-            取 消
-          </button>
-        </div>
-        <Link className="g-ad" to="/shop/list" action="push" target="window">
-          -- 特惠商城，盛大开业 --
+        </Form.Item>
+      </Form>
+      <div className="footer">
+        <Link to={`/stage/registry?from=${fromUrl}`} action="push" classname="_dialog">
+          <AliwangwangFilled /> <span>注册新用户</span>
         </Link>
+        <div className="other-login">
+          其它登录方式：
+          <a title="手机登录">
+            <MobileFilled />
+          </a>
+          <a title="钉钉登录">
+            <DingtalkCircleFilled />
+          </a>
+          <a title="支付宝登录">
+            <AlipayCircleOutlined />
+          </a>
+        </div>
       </div>
-    </div>
+    </DialogPage>
   );
 };
 
-//connectRedux中包含了exportView()的执行
-export default connectRedux()(Component);
+export default connectRedux(mapStateToProps)(Component);

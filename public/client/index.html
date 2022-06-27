@@ -1,24 +1,49 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta name="renderer" content="webkit" />
-  <meta name="force-rendering" content="webkit" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-  <link rel="shortcut icon" href="<%= htmlWebpackPlugin.options.clientPublicPath %>favicon.ico" />
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <link rel="shortcut icon" href="<%= htmlWebpackPlugin.options.clientPublicPath %>favicon.ico" />
     <style>
       html {
         margin: 0;
         padding: 0;
         height: 100%;
-        font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
       }
       body {
         margin: 0;
         padding: 0;
         height: 100%;
+        background: #fff;
         font-size: 14px;
+        overflow: hidden;
+        background-image: linear-gradient(-45deg, #fff, #eee, #fff, #dbdee2, #fff, #dbdee2, #eee, #fff);
+      }
+      body::before {
+        content: '';
+        display: block;
+        width: 60vw;
+        height: 60vw;
+        border-radius: 60vw;
+        position: absolute;
+        left: -30vw;
+        top: -30vw;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 0 10vw;
+        background-image: linear-gradient(90deg, #d0d5da, #d0d5da, #fff);
+      }
+      body::after {
+        content: '';
+        display: block;
+        width: 44vw;
+        height: 44vw;
+        border-radius: 44vw;
+        position: absolute;
+        right: -22vw;
+        bottom: -22vw;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 0 10vw;
+        background-image: linear-gradient(#fff, #d0d5da, #d0d5da);
       }
       .elux-app {
         width: 100%;
@@ -62,26 +87,26 @@
         content: '';
         display: block;
         position: absolute;
-        background-color: #000;
+        background: #000;
         left: 0;
         right: 0;
         top: 0;
         bottom: 0;
         z-index: -1;
-        opacity: 0.1;
+        opacity: 0;
       }
       .elux-app > article > :first-child {
         overflow: hidden;
         background: #fff;
         border-radius: 15px;
-        box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.2);
+        box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
         padding: 5px;
         position: relative;
+        max-height: 95%;
       }
       #root {
         width: 100%;
         height: 100%;
-        background-color: #005ed8;
       }
       #root-loading {
         display: block;
@@ -91,7 +116,6 @@
         height: 100%;
         top: 0;
         left: 0;
-        background: #fff;
       }
       @keyframes root-loading-ball {
         0% {
@@ -133,7 +157,7 @@
       #root-loading::after {
         font-size: 12px;
         font-family: sans-serif;
-        color: #666;
+        color: #888;
         position: absolute;
         content: 'Loading';
         left: 50%;
