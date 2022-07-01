@@ -1,5 +1,5 @@
 {
-  "name": "elux-react-antd-admin",
+  "name": "elux-admin-antd",
   "version": "1.0.0",
   "description": "",
   "author": "hiisea <hiisea@qq.com>",
@@ -10,10 +10,11 @@
   "private": true,
   "workspaces": [
     "./mock",
-    "./public"
+    "./public",
+    "./src/modules/*"
   ],
   "browserslist": [
-    "chrome >= 70"
+    "chrome >= 80"
   ],
   "scripts": {
     "lint:type": "tsc --project ./src --noEmit --emitDeclarationOnly false",
@@ -29,7 +30,24 @@
     "dist": "node ./dist/local/start.js",
     "demo": "run-p mock dist"
   },
+  "husky2": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": "cross-env NODE_ENV=production eslint --fix --quiet --cache",
+    "*.{css,less}": "cross-env NODE_ENV=production stylelint --fix --quiet --cache",
+    "*.json": "prettier --write"
+  },
   "bundledDependencies": [
+    "moment",
     "@ant-design/icons"
   ],
   "dependencies": {
@@ -45,7 +63,7 @@
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@elux/cli": "^2.5.1",
+    "@elux/cli": "^2.5.2",
     "@elux/cli-utils": "^2.3.1",
     "@elux/cli-webpack": "^2.2.1",
     "@elux/cli-mock": "^2.1.0",
@@ -57,7 +75,13 @@
     "typescript": "~4.2.0",
     "autoprefixer": "~10.4.0",
     "less": "~3.12.2",
-    "less-loader": "~7.1.0"
+    "less-loader": "~7.1.0",
+    "@commitlint/cli": "~12.1.1",
+    "@commitlint/config-conventional": "~12.1.1",
+    "husky": "~4.3.8",
+    "commitizen": "~4.2.3",
+    "cz-lerna-changelog": "~2.0.3",
+    "lint-staged": "~10.5.4"
   },
   "resolutions": {
     "@types/react": "^17.0.0",

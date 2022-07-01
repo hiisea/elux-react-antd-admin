@@ -2,10 +2,10 @@
 import {BaseModel, ErrorCodes, LoadingState, effect, reducer} from '@elux/react-web';
 import {pathToRegexp} from 'path-to-regexp';
 import {APPState} from '@/Global';
-import {HomeUrl, LoginUrl} from '@/utils/const';
-import {CommonErrorCode, CustomError} from '@/utils/errors';
-import {message} from '@/utils/tools';
 import {CurView, SubModule, api, guest} from './entity';
+import {AdminHomeUrl, HomeUrl, LoginUrl} from './utils/const';
+import {CommonErrorCode, CustomError} from './utils/errors';
+import {message} from './utils/tools';
 import type {CurUser, LoginParams, RegisterParams, ResetPasswordParams, SendCaptchaParams} from './entity';
 
 //定义本模块的状态结构
@@ -92,7 +92,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
     const curUser = await api.login(args);
     this.dispatch(this.privateActions.putCurUser(curUser));
     //用户登录后清空所有路由栈，并跳回原地
-    this.getRouter().relaunch({url: this.state.fromUrl || HomeUrl}, 'window');
+    this.getRouter().relaunch({url: this.state.fromUrl || AdminHomeUrl}, 'window');
   }
 
   @effect()
@@ -117,7 +117,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
     const curUser = await api.registry(args);
     this.dispatch(this.privateActions.putCurUser(curUser));
     //用户登录后清空所有路由栈，并跳回原地
-    this.getRouter().relaunch({url: this.state.fromUrl || HomeUrl}, 'window');
+    this.getRouter().relaunch({url: this.state.fromUrl || AdminHomeUrl}, 'window');
   }
 
   @effect()

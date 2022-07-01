@@ -1,6 +1,6 @@
 //定义本模块涉及的业务实体和数据API
 import {isServer} from '@elux/react-web';
-import request, {IRequest} from '@/utils/request';
+import request, {IRequest} from './utils/request';
 
 export interface CurUser {
   id: string;
@@ -52,7 +52,6 @@ export type ISendCaptcha = IRequest<SendCaptchaParams, void>;
 export type IResetPassword = IRequest<ResetPasswordParams, CurUser>;
 
 export enum SubModule {
-  'article' = 'article',
   'shop' = 'shop',
   'admin' = 'admin',
 }

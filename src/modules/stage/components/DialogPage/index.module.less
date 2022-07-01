@@ -1,0 +1,97 @@
+@import '../../assets/css/var.less';
+
+:global {
+  :local(.root) {
+    position: relative;
+    background-color: #fff;
+
+    &.show-brand {
+      padding-top: 45px !important;
+
+      > .content > .subject {
+        margin: 20px 0 0;
+        font-size: 25px;
+        text-align: center;
+      }
+    }
+
+    > .control {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      text-align: center;
+
+      > .anticon {
+        padding: 5px;
+        cursor: pointer;
+        opacity: 0.6;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    > .brand {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding-left: 35px;
+      line-height: 40px;
+      color: #777;
+      background: rgba(0, 0, 0, 0.06) url('../../assets/imgs/logo-icon.svg') no-repeat 10px center;
+      background-size: 20px;
+      border-bottom: rgba(255, 255, 255, 0.5) 1px solid;
+
+      .ver {
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+
+    > .content {
+      box-sizing: border-box;
+      height: 100%;
+      overflow: auto;
+      background: #fff;
+
+      .subject {
+        padding-bottom: 10px;
+        margin: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        border-bottom: 1px solid @border-color-split;
+      }
+
+      > .footer {
+        margin: 20px;
+        text-align: center;
+      }
+    }
+
+    // > .title {
+    //   padding-bottom: 10px;
+    //   font-size: 14px;
+    //   color: #777;
+    //   border-bottom: 1px solid red;
+
+    //   &::before {
+    //     margin-right: 5px;
+    //     content: '◎';
+    //   }
+    // }
+  }
+
+  :local(.mask) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    cursor: default;
+    background: rgba(0, 0, 0, 0.2);
+  }
+}

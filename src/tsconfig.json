@@ -7,7 +7,7 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"]
+      "@/Global": ["./Global"]
     }
   },
   "include": ["./"]

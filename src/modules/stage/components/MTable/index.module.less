@@ -1,0 +1,29 @@
+:global {
+  :local(.root) {
+    > .hd {
+      display: flex;
+      margin: 20px 0;
+
+      > * {
+        margin-right: 10px;
+      }
+
+      .ant-alert-info {
+        padding: 5px 15px;
+        font-size: 13px;
+        border-radius: 5px;
+
+        em {
+          font-style: normal;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  :local(.batchConfirm) {
+    .batch {
+      font-weight: bold;
+    }
+  }
+}

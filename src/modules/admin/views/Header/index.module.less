@@ -1,0 +1,52 @@
+:global {
+  :local(.root) {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+
+    > * {
+      display: flex;
+      align-items: center;
+
+      > * {
+        padding: 0 10px;
+      }
+    }
+
+    > .side {
+      .toggle-sider {
+        padding-left: 20px;
+        font-size: 20px;
+      }
+    }
+
+    > .main {
+      > * {
+        line-height: 50px;
+
+        &:hover {
+          background: #eee;
+        }
+      }
+
+      .notice {
+        display: block;
+        padding-right: 20px;
+        padding-left: 20px;
+        cursor: pointer;
+
+        .anticon {
+          font-size: 18px;
+        }
+      }
+
+      .account {
+        padding: 0 20px;
+
+        .ant-avatar {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}

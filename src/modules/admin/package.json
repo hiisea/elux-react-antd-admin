@@ -1,0 +1,15 @@
+{
+  "name": "@elux-admin-antd/admin",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "peerDependencies": {
+    "@elux-admin-antd/stage": "*",
+    "@ant-design/icons": "*",
+    "@elux/react-web": "*",
+    "path-to-regexp": "*",
+    "moment": "*",
+    "antd": "*",
+    "react": "*",
+    "axios": "*"
+  }
+}

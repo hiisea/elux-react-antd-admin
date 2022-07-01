@@ -2,18 +2,18 @@ import {AliwangwangFilled, LockOutlined, UserOutlined} from '@ant-design/icons';
 import {Dispatch, Link, connectRedux} from '@elux/react-web';
 import {Button, Checkbox, Form, Input} from 'antd';
 import {FC, useCallback} from 'react';
-import DialogPage from '@/components/DialogPage';
 import {APPState, GetActions} from '@/Global';
-import {getFormDecorators} from '@/utils/tools';
+import DialogPage from '../../components/DialogPage';
 import {RegisterParams} from '../../entity';
+import {getFormDecorators} from '../../utils/tools';
 import styles from './index.module.less';
 
-interface FormData extends Required<RegisterParams> {
+interface HFormData extends Required<RegisterParams> {
   confirm: string;
   agreement: boolean;
 }
 
-const initialValues: Partial<FormData> = {
+const initialValues: Partial<HFormData> = {
   username: '',
   password: '',
   confirm: '',
@@ -27,7 +27,7 @@ const agreementChecked = (rule: any, value: string) => {
   return Promise.resolve();
 };
 
-const fromDecorators = getFormDecorators<FormData>({
+const fromDecorators = getFormDecorators<HFormData>({
   username: {rules: [{required: true, message: '请输入用户名!', whitespace: true}]},
   password: {rules: [{required: true, message: '请输入密码!', whitespace: true}]},
   agreement: {valuePropName: 'checked', rules: [{validator: agreementChecked}]},
@@ -63,48 +63,50 @@ function mapStateToProps(appState: APPState): StoreProps {
 const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatch}) => {
   const [form] = Form.useForm();
   const onSubmit = useCallback(
-    (values: FormData) => {
+    (values: HFormData) => {
       dispatch(stageActions.registry(values));
     },
     [dispatch]
   );
 
   return (
-    <DialogPage className={styles.root} title="用户注册" banner="用户注册">
-      <Form form={form} onFinish={onSubmit} initialValues={initialValues}>
-        <Form.Item {...fromDecorators.username}>
-          <Input size="large" allowClear prefix={<UserOutlined />} placeholder="用户名" />
-        </Form.Item>
-        <Form.Item {...fromDecorators.password}>
-          <Input.Password size="large" prefix={<LockOutlined />} placeholder="密码" autoComplete="new-password" />
-        </Form.Item>
-        <Form.Item {...fromDecorators.confirm}>
-          <Input.Password size="large" prefix={<LockOutlined />} placeholder="确认密码" autoComplete="new-password" />
-        </Form.Item>
-        <Form.Item style={{marginBottom: 10}}>
-          <Form.Item {...fromDecorators.agreement} noStyle>
-            <Checkbox>我已阅读并同意</Checkbox>
+    <DialogPage title="用户注册" subject="用户注册" showBrand>
+      <div className={`${styles.root} g-dialog-content`}>
+        <Form form={form} onFinish={onSubmit} initialValues={initialValues}>
+          <Form.Item {...fromDecorators.username}>
+            <Input size="large" allowClear prefix={<UserOutlined />} placeholder="用户名" />
           </Form.Item>
-          <Link to="/stage/agreement" action="push" target="window" classname="_dialog">
-            注册协议
-          </Link>
-        </Form.Item>
-        <Form.Item>
-          <div className="g-control">
-            <Button size="large" type="primary" htmlType="submit">
-              注册
-            </Button>
-            <Link to={1} action="back">
-              <Button size="large">取消</Button>
+          <Form.Item {...fromDecorators.password}>
+            <Input.Password size="large" prefix={<LockOutlined />} placeholder="密码" autoComplete="new-password" />
+          </Form.Item>
+          <Form.Item {...fromDecorators.confirm}>
+            <Input.Password size="large" prefix={<LockOutlined />} placeholder="确认密码" autoComplete="new-password" />
+          </Form.Item>
+          <Form.Item style={{marginBottom: 10}}>
+            <Form.Item {...fromDecorators.agreement} noStyle>
+              <Checkbox>我已阅读并同意</Checkbox>
+            </Form.Item>
+            <Link to="/stage/agreement" action="push" target="window" classname="_dialog">
+              注册协议
             </Link>
-          </div>
-        </Form.Item>
-      </Form>
-      <div className="footer">
-        <AliwangwangFilled /> <span>已注册用户？</span>
-        <Link to={`/stage/login?from=${fromUrl}`} classname="_dialog" action="relaunch">
-          登录
-        </Link>
+          </Form.Item>
+          <Form.Item>
+            <div className="g-control">
+              <Button size="large" type="primary" htmlType="submit">
+                注册
+              </Button>
+              <Link to={1} action="back">
+                <Button size="large">取消</Button>
+              </Link>
+            </div>
+          </Form.Item>
+        </Form>
+        <div className="footer">
+          <AliwangwangFilled /> <span>已注册用户？</span>
+          <Link to={`/stage/login?from=${fromUrl}`} classname="_dialog" action="relaunch">
+            登录
+          </Link>
+        </div>
       </div>
     </DialogPage>
   );
