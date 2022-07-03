@@ -52,7 +52,16 @@ export class Model extends BaseModel<ModuleState, APPState> {
     const prevState = this.getPrevState();
     const initCallback = ([tabData, menuData]: [TabData, MenuData]) => {
       const menuSelected = this.matchMenu(menuData);
-      const initState: ModuleState = {...prevState, curTab, subModule, dialogMode, tabData, menuData, menuSelected, tabEdit: undefined};
+      const initState: ModuleState = {
+        ...prevState,
+        curTab,
+        subModule,
+        dialogMode,
+        tabData,
+        menuData,
+        menuSelected,
+        tabEdit: undefined,
+      };
       this.dispatch(this.privateActions._initState(initState));
     };
     if (prevState) {
@@ -152,6 +161,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
   private getNotices = () => {
     if (this.hasLogin()) {
       api.getNotices().then((notices) => {
+        curNotices = notices;
         this.dispatch(this.privateActions._updateState('updataNotices', {notices}));
       });
     }
@@ -159,11 +169,18 @@ export class Model extends BaseModel<ModuleState, APPState> {
 
   //页面被激活(变为显示页面)时调用
   onActive(): void {
-    curLoopTask = this.getNotices;
-    curLoopTask();
+    if (curNotices && this.state.notices !== curNotices) {
+      this.dispatch(this.privateActions._updateState('updataNotices', {notices: curNotices}));
+    }
+    if (!curLoopTask) {
+      curLoopTask = this.getNotices;
+      curLoopTask();
+    } else {
+      curLoopTask = this.getNotices;
+    }
   }
 }
 
-let curLoopTask: () => void;
-
+let curLoopTask: (() => void) | undefined;
+let curNotices: Notices | undefined;
 setInterval(() => curLoopTask && curLoopTask(), 10000);

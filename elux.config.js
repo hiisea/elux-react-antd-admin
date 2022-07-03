@@ -1,5 +1,6 @@
 //工程配置文件，参见 https://eluxjs.com/guide/configure.html
-const antdVars = require('@elux-admin-antd/stage/assets/css/antd-var.js');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const antdVars = require('@elux-admin-antd/stage/assets/css/antd-var.json');
 const {getLocalIP} = require('@elux/cli-utils');
 const serverPort = 4003;
 const apiHosts = {

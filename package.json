@@ -21,6 +21,7 @@
     "lint:es": "cross-env NODE_ENV=production eslint --fix --cache \"**/*.{js,ts,tsx}\"",
     "lint:css": "cross-env NODE_ENV=production stylelint --fix --cache \"**/*.{css,less}\"",
     "lint:json": "prettier --write **/*.json",
+    "recommit": "git commit --amend --no-edit",
     "demote": "elux demote",
     "dev": "elux webpack-dev",
     "build": "elux webpack-build",
@@ -30,7 +31,7 @@
     "dist": "node ./dist/local/start.js",
     "demo": "run-p mock dist"
   },
-  "husky2": {
+  "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"

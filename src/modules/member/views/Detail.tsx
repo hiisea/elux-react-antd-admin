@@ -1,21 +1,21 @@
 import DateTime from '@elux-admin-antd/stage/components/DateTime';
 import DialogPage from '@elux-admin-antd/stage/components/DialogPage';
-import {DocumentHead, Link, exportView} from '@elux/react-web';
-import {Button, Descriptions, Skeleton} from 'antd';
+import {exportView} from '@elux/react-web';
+import {Descriptions, Skeleton} from 'antd';
 import {FC, memo} from 'react';
-import {DGender, DRole, DStatus, ItemDetail} from '../../entity';
-import styles from './index.module.less';
+import {DGender, DRole, DStatus, ItemDetail} from '../entity';
 
 const DescriptionsItem = Descriptions.Item;
 
 interface Props {
+  listUrl: string;
   itemDetail?: ItemDetail;
 }
 
-const Component: FC<Props> = ({itemDetail}) => {
+const Component: FC<Props> = ({itemDetail, listUrl}) => {
   return (
-    <DialogPage title="用户详情" subject="用户详情" mask footer>
-      <div className={`${styles.root} g-dialog-content`}>
+    <DialogPage title="用户详情" subject="用户详情" backOverflowRedirect={listUrl} mask footer>
+      <div className="g-dialog-content" style={{width: 800}}>
         {itemDetail ? (
           <Descriptions bordered column={2}>
             <DescriptionsItem label="用户名">{itemDetail.name}</DescriptionsItem>

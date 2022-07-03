@@ -10,8 +10,8 @@ router.get('/', function (req, res, next) {
   setTimeout(() => res.json(result), 500);
 });
 
-router.put('/', function (req, res, next) {
-  const {username = '', password = ''}: ILogin['Request'] = req.body;
+router.put('/', function ({body}: {body: ILogin['Request']}, res, next) {
+  const {username = '', password = ''} = body;
   if (username === 'admin' && password === '123456') {
     database.curUser = adminUser;
     const result: ILogin['Response'] = adminUser;
@@ -23,8 +23,8 @@ router.put('/', function (req, res, next) {
   }
 });
 
-router.post('/', function (req, res, next) {
-  const {username = '', password = ''}: IRegistry['Request'] = req.body;
+router.post('/', function ({body}: {body: IRegistry['Request']}, res, next) {
+  const {username = '', password = ''} = body;
   if (username && password) {
     const curUser = {...adminUser, username, password};
     database.curUser = curUser;
@@ -43,8 +43,8 @@ router.delete('/', function (req, res, next) {
   setTimeout(() => res.json(result), 500);
 });
 
-router.put('/resetPassword', function (req, res, next) {
-  const {phone = '', password = '', captcha = ''}: IResetPassword['Request'] = req.body;
+router.put('/resetPassword', function ({body}: {body: IResetPassword['Request']}, res, next) {
+  const {phone = '', password = '', captcha = ''} = body;
   if (phone && password && captcha) {
     setTimeout(() => res.json({}), 500);
   } else {
@@ -54,8 +54,8 @@ router.put('/resetPassword', function (req, res, next) {
   }
 });
 
-router.post('/sendCaptcha', function (req, res, next) {
-  const {phone = ''}: ISendCaptcha['Request'] = req.body;
+router.post('/sendCaptcha', function ({body}: {body: ISendCaptcha['Request']}, res, next) {
+  const {phone = ''} = body;
   if (phone) {
     setTimeout(() => res.json({}), 500);
   } else {

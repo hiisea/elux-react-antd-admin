@@ -1,10 +1,10 @@
-import {BaseModel, Dispatch, LoadingState, PickModelActions, StoreState, effect, reducer} from '@elux/react-web';
+import {Action, BaseModel, Dispatch, LoadingState, StoreState, effect, reducer} from '@elux/react-web';
 import {pathToRegexp} from 'path-to-regexp';
-import {useCallback} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {GetClientRouter} from '@/Global';
 import {excludeDefaultParams, mergeDefaultParams} from './tools';
 
-export type BaseCurView = 'list' | 'detail';
+export type BaseCurView = 'list' | 'detail' | 'edit';
 
 export interface BaseListSearch {
   pageCurrent?: number;
@@ -28,45 +28,53 @@ export interface BaseListSummary {
 
 export interface BaseItemDetail extends BaseListItem {}
 
-export interface BaseModuleState<
-  CurView extends BaseCurView = BaseCurView,
-  ListSearch extends BaseListSearch = BaseListSearch,
-  ListItem extends BaseListItem = BaseListItem,
-  ListSummary extends BaseListSummary = BaseListSummary,
-  ItemDetail extends BaseItemDetail = BaseItemDetail
-> {
+export interface BaseModuleState<TDefineResource extends DefineResource = DefineResource> {
   prefixPathname: string;
-  listSearch: ListSearch;
-  curView?: CurView;
-  list?: ListItem[];
-  listSummary?: ListSummary;
+  listSearch: TDefineResource['ListSearch'];
+  curView?: TDefineResource['CurView'];
+  list?: TDefineResource['ListItem'][];
+  listSummary?: TDefineResource['ListSummary'];
   listLoading?: LoadingState;
   itemId?: string;
-  itemDetail?: ItemDetail;
+  itemDetail?: TDefineResource['ItemDetail'];
 }
 
-export interface BaseRouteParams<CurView extends BaseCurView = BaseCurView, ListSearch extends BaseListSearch = BaseListSearch> {
+export interface BaseRouteParams<TDefineResource extends DefineResource = DefineResource> {
   prefixPathname: string;
-  curView?: CurView;
-  listSearch: ListSearch;
+  curView?: TDefineResource['CurView'];
+  listSearch: TDefineResource['ListSearch'];
   itemId?: string;
 }
 
 export interface BaseApi {
-  getList?(listSearch: BaseListSearch): Promise<{list: BaseListItem[]; listSummary: BaseListSummary}>;
+  getList?(params: BaseListSearch): Promise<{list: BaseListItem[]; listSummary: BaseListSummary}>;
   getItem?(params: {id: string}): Promise<BaseItemDetail>;
-  alterItems?(ids: string[], data: Record<string, any>): Promise<void>;
+  alterItems?(params: {id: string | string[]; data: Record<string, any>}): Promise<void>;
+  updateItem?(params: {id: string; data: any}): Promise<void>;
+  createItem?(params: Record<string, any>): Promise<{id: string}>;
+  deleteItems?(params: {id: string | string[]}): Promise<void>;
 }
 
-export abstract class BaseResource<
-  TRouteParams extends BaseRouteParams,
-  TModuleState extends BaseModuleState,
-  TStoreState extends StoreState = StoreState
-> extends BaseModel<TModuleState, TStoreState> {
+export interface DefineResource {
+  RouteParams: BaseRouteParams;
+  ModuleState: BaseModuleState;
+  ListSearch: BaseListSearch;
+  ListItem: BaseListItem;
+  ListSummary: BaseListSummary;
+  CurView: BaseCurView;
+  ItemDetail: BaseItemDetail;
+  UpdateItem: any;
+  CreateItem: any;
+}
+
+export abstract class BaseResource<TDefineResource extends DefineResource, TStoreState extends StoreState = StoreState> extends BaseModel<
+  TDefineResource['ModuleState'],
+  TStoreState
+> {
   protected abstract api: BaseApi;
-  protected abstract CurView: {[key: string]: TModuleState['curView']};
-  protected abstract defaultListSearch: TModuleState['listSearch'];
-  protected routeParams!: TRouteParams; //保存从当前路由中提取的信息结果
+  protected abstract CurView: {[key: string]: TDefineResource['CurView']};
+  protected abstract defaultListSearch: TDefineResource['ListSearch'];
+  protected routeParams!: TDefineResource['RouteParams']; //保存从当前路由中提取的信息结果
   //因为要尽量避免使用public方法，所以构建this.privateActions来引用私有actions
   protected privateActions = this.getPrivateActions({putList: this.putList, putCurrentItem: this.putCurrentItem});
 
@@ -74,14 +82,19 @@ export abstract class BaseResource<
     return query;
   }
   //提取当前路由中的本模块感兴趣的信息
-  protected getRouteParams(): TRouteParams {
+  protected getRouteParams(): TDefineResource['RouteParams'] {
     const {pathname, searchQuery} = this.getRouter().location;
     const [, admin, subModule, curViewStr = ''] = pathToRegexp('/:admin/:subModule/:curView').exec(pathname) || [];
     const prefixPathname = ['', admin, subModule].join('/');
-    const curView: TModuleState['curView'] | undefined = this.CurView[curViewStr] || undefined;
-    const {pageCurrent = '', id, ...others} = searchQuery as Record<string, string | undefined>;
+    const curView: TDefineResource['CurView'] | undefined = this.CurView[curViewStr] || undefined;
+    const {pageCurrent = '', id = '', ...others} = searchQuery as Record<string, string | undefined>;
     const listSearch = {pageCurrent: parseInt(pageCurrent) || undefined, ...this.parseQuery(others)};
-    return {prefixPathname, curView, itemId: id, listSearch: mergeDefaultParams(this.defaultListSearch, listSearch)} as TRouteParams;
+    return {
+      prefixPathname,
+      curView,
+      itemId: id,
+      listSearch: mergeDefaultParams(this.defaultListSearch, listSearch),
+    } as TDefineResource['RouteParams'];
   }
 
   //每次路由发生变化，都会引起Model重新挂载到Store
@@ -93,28 +106,32 @@ export abstract class BaseResource<
   public onMount(env: 'init' | 'route' | 'update'): void {
     this.routeParams = this.getRouteParams();
     const {prefixPathname, curView, listSearch, itemId} = this.routeParams;
-    this.dispatch(this.privateActions._initState({prefixPathname, curView, listSearch} as TModuleState));
+    this.dispatch(this.privateActions._initState({prefixPathname, curView, listSearch} as TDefineResource['ModuleState']));
     if (curView === 'list') {
       this.dispatch(this.actions.fetchList(listSearch));
-    } else if (curView && itemId) {
-      this.dispatch(this.actions.fetchItem(itemId));
+    } else if (curView === 'edit' || (curView && itemId)) {
+      this.dispatch(this.actions.fetchItem(itemId || ''));
     }
   }
 
   @reducer
-  public putList(listSearch: TModuleState['listSearch'], list: TModuleState['list'], listSummary: TModuleState['listSummary']): TModuleState {
+  public putList(
+    listSearch: TDefineResource['ListSearch'],
+    list: TDefineResource['ListItem'][],
+    listSummary: TDefineResource['ListSummary']
+  ): TDefineResource['ModuleState'] {
     return {...this.state, listSearch, list, listSummary};
   }
 
   @effect('this.listLoading')
-  public async fetchList(listSearchData?: TModuleState['listSearch']): Promise<void> {
+  public async fetchList(listSearchData?: TDefineResource['ListSearch']): Promise<void> {
     const listSearch = listSearchData || this.state.listSearch || this.defaultListSearch;
     const {list, listSummary} = await this.api.getList!(listSearch);
     this.dispatch(this.privateActions.putList(listSearch, list, listSummary));
   }
 
   @reducer
-  public putCurrentItem(itemId = '', itemDetail: TModuleState['itemDetail']): TModuleState {
+  public putCurrentItem(itemId = '', itemDetail: TDefineResource['ItemDetail']): TDefineResource['ModuleState'] {
     return {...this.state, itemId, itemDetail};
   }
 
@@ -125,13 +142,29 @@ export abstract class BaseResource<
   }
 
   @effect()
-  public async alterItems(ids: string[], data: Partial<TModuleState['itemDetail']>): Promise<void> {
-    await this.api.alterItems!(ids, data);
-    this.dispatch(this.actions.fetchList());
+  public async alterItems(id: string | string[], data: Partial<TDefineResource['UpdateItem']>): Promise<void> {
+    await this.api.alterItems!({id, data});
+    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
+  }
+
+  @effect()
+  public async updateItem(id: string, data: TDefineResource['UpdateItem']): Promise<void> {
+    await this.api.updateItem!({id, data});
+    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
+  }
+
+  @effect()
+  public async createItem(data: TDefineResource['CreateItem']): Promise<void> {
+    await this.api.createItem!(data);
+    this.state.curView === 'list' && this.dispatch(this.actions.fetchList(this.defaultListSearch));
+  }
+
+  @effect()
+  public async deleteItems(id: string | string[]): Promise<void> {
+    await this.api.deleteItems!({id});
+    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
   }
 }
-
-export type ResourceActions = PickModelActions<BaseResource<BaseRouteParams, BaseModuleState>>;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useSearch<TFormData>(pathname: string, defaultListSearch: Partial<TFormData>) {
@@ -149,7 +182,7 @@ export function useSearch<TFormData>(pathname: string, defaultListSearch: Partia
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useDetail(prefixPathname: string) {
+export function useShowDetail(prefixPathname: string) {
   const onShowDetail = useCallback(
     (id: string) => {
       GetClientRouter().push({url: `${prefixPathname}/detail?id=${id}`, classname: '_dailog'}, 'window');
@@ -157,8 +190,8 @@ export function useDetail(prefixPathname: string) {
     [prefixPathname]
   );
   const onShowEditor = useCallback(
-    (id: string) => {
-      GetClientRouter().push({url: `${prefixPathname}/edit?id=${id}`, classname: '_dailog'}, 'window');
+    (id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
+      GetClientRouter().push({url: `${prefixPathname}/edit?id=${id}`, classname: '_dailog'}, 'window', {onSubmit});
     },
     [prefixPathname]
   );
@@ -166,9 +199,104 @@ export function useDetail(prefixPathname: string) {
   return {onShowDetail, onShowEditor};
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-// export function useUpdate(dispatch:Dispatch, actions:ResourceActions) {
-//   const onUpdate = useCallback((ids: string[], data: {[key: string]: any}) => {
-//     dispatch(actions.alterItems(ids, data))
-//   }, []);
-// }
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function useAlter<T>(
+  dispatch: Dispatch,
+  actions: {
+    deleteItems?(id: string | string[]): Action;
+    alterItems?(id: string | string[], data: Record<string, any>): Action;
+    updateItem?(id: string, data: Record<string, any>): Action;
+    createItem?(data: Record<string, any>): Action;
+  },
+  propsSelectedRows?: T[]
+) {
+  const [selectedRows, setSelectedRows] = useState(propsSelectedRows);
+
+  useMemo(() => {
+    setSelectedRows(propsSelectedRows);
+  }, [propsSelectedRows]);
+
+  const deleteItems = useCallback(
+    async (id: string | string[]) => {
+      await dispatch(actions.deleteItems!(id));
+      setSelectedRows([]);
+    },
+    [actions, dispatch]
+  );
+
+  const alterItems = useCallback(
+    async (id: string | string[], data: Record<string, any>) => {
+      await dispatch(actions.alterItems!(id, data));
+      setSelectedRows([]);
+    },
+    [actions, dispatch]
+  );
+
+  const updateItem = useCallback(
+    async (id: string, data: Record<string, any>) => {
+      if (id) {
+        await dispatch(actions.updateItem!(id, data));
+      } else {
+        await dispatch(actions.createItem!(data));
+      }
+
+      setSelectedRows([]);
+    },
+    [actions, dispatch]
+  );
+
+  return {selectedRows, setSelectedRows, deleteItems, alterItems, updateItem};
+}
+
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function useTableChange<T extends BaseListSearch>(prefixPathname: string, defaultListSearch: T, listSearch?: T) {
+  const sorterStr = [listSearch?.sorterField, listSearch?.sorterOrder].join('');
+
+  return useCallback(
+    (pagination: any, filter: any, _sorter: any) => {
+      const sorter = _sorter as {field: string; order: 'ascend' | 'descend' | undefined};
+      const {current, pageSize} = pagination as {current: number; pageSize: number};
+      const sorterField = (sorter.order && sorter.field) || undefined;
+      const sorterOrder = sorter.order || undefined;
+      const currentSorter = [sorterField, sorterOrder].join('');
+      const pageCurrent = currentSorter !== sorterStr ? 1 : current;
+
+      GetClientRouter().push({
+        pathname: `${prefixPathname}/list`,
+        searchQuery: excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder}),
+      });
+    },
+    [defaultListSearch, listSearch, prefixPathname, sorterStr]
+  );
+}
+
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function useUpdateItem(
+  id: string,
+  dispatch: Dispatch,
+  actions: {updateItem?(id: string, data: Record<string, any>): Action; createItem?(data: Record<string, any>): Action},
+  goBack: () => void
+) {
+  const [loading, setLoading] = useState(false);
+
+  const onFinish = useCallback(
+    (values: Record<string, any>) => {
+      const {onSubmit} = (GetClientRouter().runtime.payload || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
+      let result: Promise<void>;
+      setLoading(true);
+      if (onSubmit) {
+        result = onSubmit(id, values);
+      } else {
+        if (id) {
+          result = dispatch(actions.updateItem!(id, values)) as Promise<void>;
+        } else {
+          result = dispatch(actions.createItem!(values)) as Promise<void>;
+        }
+      }
+      result.then(goBack).catch(() => setLoading(false));
+    },
+    [goBack, id, dispatch, actions]
+  );
+
+  return {loading, onFinish};
+}

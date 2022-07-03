@@ -1,8 +1,7 @@
 //通常模块可以定义一个根视图，根视图中显示什么由模块自行决定，父级不干涉，相当于子路由
 import ErrorPage from '@elux-admin-antd/stage/components/ErrorPage';
-import LoadingPanel from '@elux-admin-antd/stage/components/LoadingPanel';
 import {CurUser} from '@elux-admin-antd/stage/entity';
-import {LoadingState, Switch, connectRedux} from '@elux/react-web';
+import {Switch, connectRedux} from '@elux/react-web';
 import {Layout} from 'antd';
 import {FC, useMemo} from 'react';
 import {APPState, LoadComponent} from '@/Global';

@@ -1,5 +1,5 @@
 import {CloseOutlined} from '@ant-design/icons';
-import {DocumentHead, Link} from '@elux/react-web';
+import {DocumentHead} from '@elux/react-web';
 import {Button} from 'antd';
 import {FC, ReactNode, useCallback, useMemo} from 'react';
 import {GetClientRouter} from '@/Global';
@@ -16,11 +16,8 @@ export interface Props {
   mask?: boolean;
   size?: 'max' | 'auto';
   footer?: boolean | ReactNode;
+  backOverflowRedirect?: string;
 }
-
-const goBack = () => GetClientRouter().back(1, 'window');
-
-const defaultFooter = <div></div>;
 
 const Component: FC<Props> = ({
   className = '',
@@ -32,23 +29,25 @@ const Component: FC<Props> = ({
   maskClosable = true,
   closeButton = true,
   mask,
+  backOverflowRedirect,
   size = 'auto',
 }) => {
+  const goBack = useCallback(() => GetClientRouter().back(1, 'window', null, backOverflowRedirect), [backOverflowRedirect]);
   const footerArea: ReactNode = useMemo(() => {
     return (
       footer && (
         <div className="footer">
           {footer === true ? (
-            <Link to={1} action="back" target="window">
-              <Button type="primary">确定</Button>
-            </Link>
+            <Button type="primary" onClick={goBack}>
+              确定
+            </Button>
           ) : (
             footer
           )}
         </div>
       )
     );
-  }, [footer]);
+  }, [footer, goBack]);
 
   return (
     <>
@@ -67,7 +66,7 @@ const Component: FC<Props> = ({
           <div></div>
         </div>
       </div>
-      {!!mask && <Link disabled={!maskClosable} to={1} action="back" target="window" className={styles.mask}></Link>}
+      {!!mask && <div className={styles.mask} onClick={() => maskClosable && goBack()}></div>}
     </>
   );
 };

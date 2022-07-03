@@ -17,7 +17,7 @@ export interface StoreProps {
 }
 
 function mapStateToProps(appState: APPState): StoreProps {
-  const {tabData, curTab, tabEdit} = appState.admin!;
+  const {tabData, curTab} = appState.admin!;
   return {
     tabData,
     tabSelected: curTab.id,

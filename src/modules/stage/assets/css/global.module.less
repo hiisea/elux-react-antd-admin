@@ -1,6 +1,14 @@
 @import './var.less';
 
 :global {
+  .elux-window._dailog {
+    :local(.component-loading),
+    :local(.component-error) {
+      width: 400px;
+      height: 200px;
+    }
+  }
+
   :local(.component-loading) {
     position: relative;
     width: 100%;
@@ -31,7 +39,7 @@
   }
 
   :local(.dialog-content) {
-    margin: 20px;
+    margin: 20px 25px 25px;
   }
 
   :local(.page-content) {
@@ -40,20 +48,17 @@
     .stage-comp-MSearch {
       border-bottom: 1px solid @border-color-split;
     }
-    // > h2 {
-    //   padding-bottom: 10px;
-    //   font-size: 16px;
-    //   color: red;
-    //   border-bottom: 1px solid red;
-
-    //   &::before {
-    //     margin-right: 5px;
-    //     content: '▸';
-    //   }
-    // }
   }
 
   :local(.table-actions) {
+    > * {
+      margin: 0 5px;
+    }
+  }
+
+  :local(.form-actions) {
+    text-align: center;
+
     > * {
       margin: 0 5px;
     }
