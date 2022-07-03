@@ -1,23 +1,22 @@
 import {Router} from 'express';
-import {ICreateItem, IDeleteItem, IGetItem, IGetList, IUpdateItem} from '@/modules/member/entity';
+import {IAlterItems, ICreateItem, IGetItem, IGetList} from '@/modules/member/entity';
 import {database} from '../database';
-import {extractQuery} from '../utils';
+
+type Query<T> = {[K in keyof T]: string};
 
 const router = Router();
 
-router.get('/', function (req, res, next) {
-  const args = extractQuery({pageCurrent: '', name: '', nickname: '', role: '', status: '', email: ''}, req.query);
-  const query = {
-    pageCurrent: parseInt(args.pageCurrent, 10) || 1,
-    name: args.name,
-    nickname: args.nickname,
-    role: args.role,
-    status: args.status,
-    email: args.email,
+router.get('/', function ({query}: {query: Query<IGetList['Request']>}, res, next) {
+  const {pageCurrent, pageSize, name, nickname, role, status, email} = {
+    pageCurrent: parseInt(query.pageCurrent || '1'),
+    pageSize: parseInt(query.pageSize || '10'),
+    name: query.name || '',
+    nickname: query.nickname || '',
+    role: query.role || '',
+    status: query.status || '',
+    email: query.email || '',
   };
-  const {pageCurrent, name, nickname, role, status, email} = query;
 
-  const pageSize = 10;
   const start = (pageCurrent - 1) * pageSize;
   const end = start + pageSize;
 
@@ -56,8 +55,7 @@ router.get('/', function (req, res, next) {
   setTimeout(() => res.json(result), 500);
 });
 
-router.get('/:id', function (req, res, next) {
-  const params = extractQuery({id: ''}, req.params);
+router.get('/:id', function ({params}: {params: IGetItem['Request']}, res, next) {
   const {id} = params;
   const item = database.members[id];
   if (!item) {
@@ -68,50 +66,52 @@ router.get('/:id', function (req, res, next) {
   }
 });
 
-router.delete('/:id', function (req, res, next) {
-  const params = extractQuery({id: ''}, req.params);
-  const {id} = params;
-  const item = database.members[id];
-  if (!item) {
-    res.status(404).end();
-  } else {
-    delete database.members[id];
-    const result: IDeleteItem['Response'] = {id};
-    setTimeout(() => res.json(result), 500);
-  }
-});
-
-router.put('/:id', function (req, res, next) {
-  const args = extractQuery({id: '', title: '', summary: '', content: ''}, req.body);
-  const {id, title, summary, content} = args;
-  const item = database.members[id];
-  if (!item) {
-    res.status(404).end();
-  } else {
-    //database.members[id] = {id, title, summary, content};
-    const result: IUpdateItem['Response'] = {id};
-    setTimeout(() => res.json(result), 500);
-  }
-});
-
-router.post('/', function (req, res, next) {
-  const args = extractQuery({title: '', summary: '', content: ''}, req.body);
-  const {title, summary, content} = args;
-  const id = 'n' + Object.keys(database.members).length;
-  //database.members[id] = {id, title, summary, content};
-  const result: ICreateItem['Response'] = {id};
-  setTimeout(() => res.json(result), 500);
-});
-
-router.put('/', function (req, res, next) {
-  const {ids = [], data = {}} = req.body as {ids: string[]; data: Record<string, any>};
+router.put('/:id', function ({params, body}: {params: {id: string}; body: IAlterItems['Request']['data']}, res, next) {
+  const ids = params.id.split(',');
   ids.forEach((id) => {
     const item = database.members[id];
     if (item) {
-      Object.assign(item, data);
+      Object.assign(item, body);
     }
   });
   setTimeout(() => res.json({}), 500);
 });
+
+router.post('/', function ({body}: {body: ICreateItem['Request']}, res, next) {
+  const id = (Object.keys(database.members).length + 1).toString();
+  database.members[id] = {...body, id};
+  const result: ICreateItem['Response'] = {id};
+  setTimeout(() => res.json(result), 500);
+});
+
+router.delete('/:id', function ({params}: {params: {id: string}}, res, next) {
+  const ids = params.id.split(',');
+  ids.forEach((id) => {
+    delete database.members[id];
+  });
+  setTimeout(() => res.json({}), 500);
+});
+
+// router.put('/:id', function (req, res, next) {
+//   const args = extractQuery({id: '', title: '', summary: '', content: ''}, req.body);
+//   const {id, title, summary, content} = args;
+//   const item = database.members[id];
+//   if (!item) {
+//     res.status(404).end();
+//   } else {
+//     //database.members[id] = {id, title, summary, content};
+//     const result: IUpdateItem['Response'] = {id};
+//     setTimeout(() => res.json(result), 500);
+//   }
+// });
+
+// router.post('/', function (req, res, next) {
+//   const args = extractQuery({title: '', summary: '', content: ''}, req.body);
+//   const {title, summary, content} = args;
+//   const id = 'n' + Object.keys(database.members).length;
+//   //database.members[id] = {id, title, summary, content};
+//   const result: ICreateItem['Response'] = {id};
+//   setTimeout(() => res.json(result), 500);
+// });
 
 export default router;

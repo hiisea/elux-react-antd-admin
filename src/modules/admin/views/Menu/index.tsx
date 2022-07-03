@@ -1,9 +1,8 @@
 import {DashboardOutlined, ProfileOutlined, TeamOutlined} from '@ant-design/icons';
-import LoadingPanel from '@elux-admin-antd/stage/components/LoadingPanel';
 import {CurUser} from '@elux-admin-antd/stage/entity';
-import {Dispatch, Link, LoadingState, connectRedux} from '@elux/react-web';
-import {Avatar, Badge, Dropdown, Menu, MenuProps} from 'antd';
-import {ComponentType, FC, ReactNode, useCallback, useMemo} from 'react';
+import {Dispatch, connectRedux} from '@elux/react-web';
+import {Menu, MenuProps} from 'antd';
+import {ComponentType, FC, useCallback, useMemo} from 'react';
 import {APPState, GetActions} from '@/Global';
 import {MenuItem} from '../../entity';
 import styles from './index.module.less';

@@ -1,7 +1,7 @@
 import {CloseOutlined} from '@ant-design/icons';
 import {DocumentHead, Link} from '@elux/react-web';
 import {Button} from 'antd';
-import {FC, ReactNode, useCallback, useMemo} from 'react';
+import {FC, ReactNode, useMemo} from 'react';
 import {GetClientRouter} from '@/Global';
 import styles from './index.module.less';
 
@@ -19,8 +19,6 @@ export interface Props {
 }
 
 const goBack = () => GetClientRouter().back(1, 'window');
-
-const defaultFooter = <div></div>;
 
 const Component: FC<Props> = ({
   className = '',

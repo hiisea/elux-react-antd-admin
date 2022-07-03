@@ -1,4 +1,0 @@
-module.exports = {
-  '@layout-header-background': '#1e2d3d',
-  '@menu-dark-inline-submenu-bg': '#192639',
-};

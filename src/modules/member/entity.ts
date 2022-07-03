@@ -1,10 +1,19 @@
 import request, {IRequest} from '@elux-admin-antd/stage/utils/request';
-import {BaseApi, BaseListItem, BaseListSearch, BaseListSummary, BaseModuleState, BaseRouteParams} from '@elux-admin-antd/stage/utils/resource';
+import {
+  BaseApi,
+  BaseListItem,
+  BaseListSearch,
+  BaseListSummary,
+  BaseModuleState,
+  BaseRouteParams,
+  DefineResource,
+} from '@elux-admin-antd/stage/utils/resource';
 import {enumOptions} from '@elux-admin-antd/stage/utils/tools';
 
 export enum CurView {
   'list' = 'list',
   'detail' = 'detail',
+  'edit' = 'edit',
 }
 
 export enum Gender {
@@ -43,23 +52,36 @@ export interface ListItem extends BaseListItem {
   status: Status;
   articles: number;
   email: string;
-  loginTime: number;
   createdTime: number;
 }
 export interface ListSummary extends BaseListSummary {}
 export interface ItemDetail extends ListItem {}
+export type UpdateItem = Omit<ItemDetail, 'id' | 'createdTime' | 'articles'>;
 
 export type ListSearchFormData = Omit<ListSearch, keyof BaseListSearch>;
 
-export type RouteParams = BaseRouteParams<CurView, ListSearch>;
-export type ModuleState = BaseModuleState<CurView, ListSearch, ListItem, ListSummary, ItemDetail>;
+export interface MemberResource extends DefineResource {
+  RouteParams: RouteParams;
+  ModuleState: ModuleState;
+  ListSearch: ListSearch;
+  ListItem: ListItem;
+  ListSummary: ListSummary;
+  ItemDetail: ItemDetail;
+  UpdateItem: UpdateItem;
+  CreateItem: UpdateItem;
+  CurView: CurView;
+}
+
+export type RouteParams = BaseRouteParams<MemberResource>;
+export type ModuleState = BaseModuleState<MemberResource>;
 
 export const defaultListSearch: ListSearch = {pageCurrent: 1};
 
 export type IGetList = IRequest<ListSearch, {list: ListItem[]; listSummary: ListSummary}>;
 export type IGetItem = IRequest<{id: string}, ItemDetail>;
-export type IDeleteItem = IRequest<{id: string}, {id: string}>;
-export type IUpdateItem = IRequest<ItemDetail, {id: string}>;
+export type IAlterItems = IRequest<{id: string | string[]; data: Partial<ItemDetail>}, void>;
+export type IDeleteItems = IRequest<{id: string | string[]}, void>;
+export type IUpdateItem = IRequest<{id: string | string[]; data: UpdateItem}, void>;
 export type ICreateItem = IRequest<ItemDetail, {id: string}>;
 
 export class API implements BaseApi {
@@ -70,7 +92,7 @@ export class API implements BaseApi {
   }
 
   public getItem(params: IGetItem['Request']): Promise<IGetItem['Response']> {
-    if (params.id === '0') {
+    if (!params.id) {
       return Promise.resolve({} as any);
     }
     return request.get<ItemDetail>(`/api/member/${params.id}`).then((res) => {
@@ -78,25 +100,31 @@ export class API implements BaseApi {
     });
   }
 
-  public deleteItem(params: IDeleteItem['Request']): Promise<IDeleteItem['Response']> {
-    return request.delete<{id: string}>(`/api/member/${params.id}`).then((res) => {
+  public alterItems(params: IAlterItems['Request']): Promise<IAlterItems['Response']> {
+    const {id, data} = params;
+    const ids = typeof id === 'string' ? [id] : id;
+    return request.put<void>(`/api/member/${ids.join(',')}`, data).then((res) => {
       return res.data;
     });
   }
 
   public updateItem(params: IUpdateItem['Request']): Promise<IUpdateItem['Response']> {
-    return request.put<{id: string}>(`/api/member/${params.id}`, params).then((res) => {
+    const {id, data} = params;
+    return request.put<void>(`/api/member/${id}`, data).then((res) => {
+      return res.data;
+    });
+  }
+
+  public deleteItems(params: IDeleteItems['Request']): Promise<IDeleteItems['Response']> {
+    const {id} = params;
+    const ids = typeof id === 'string' ? [id] : id;
+    return request.delete<void>(`/api/member/${ids.join(',')}`).then((res) => {
       return res.data;
     });
   }
 
   public createItem(params: ICreateItem['Request']): Promise<ICreateItem['Response']> {
     return request.post<{id: string}>(`/api/member`, params).then((res) => {
-      return res.data;
-    });
-  }
-  public alterItems(ids: string[], data: Partial<ItemDetail>): Promise<void> {
-    return request.put<void>('/api/member', {ids, data}).then((res) => {
       return res.data;
     });
   }

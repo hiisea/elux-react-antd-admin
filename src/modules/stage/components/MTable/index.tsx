@@ -24,7 +24,7 @@ interface Props<T> extends TableProps<T> {
   listSearch?: BaseListSearch;
   selectedRowKeys?: Key[];
   selectedRows?: T[];
-  selection?: {onClear?: () => void; selectLimit?: number | [number, number]};
+  selection?: {onChange?: (keys: Key[], rows: T[], maps: {[key: string]: T}) => void; selectLimit?: number | [number, number]};
 }
 
 const returnTotal = (total: number) => {
@@ -52,9 +52,21 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
   } = props;
   const {pageCurrent, pageSize, totalItems} = listSummary;
   const {sorterField, sorterOrder} = listSearch;
-  const {selectLimit = 0, onClear} = selection || {};
-  const refData = useRef({selectedIds: [] as Key[]});
+  const {selectLimit = 0, onChange: onSelectedChange} = selection || {};
+  const refData = useRef({selectedIds: [] as Key[], onSelectedChange});
+  refData.current.onSelectedChange = onSelectedChange;
   const [selected, setSelected] = useState<{keys: Key[]; rows: T[]; maps: {[key: string]: T; [key: number]: T}}>({keys: [], rows: [], maps: {}});
+  const [reviewMode, setReviewMode] = useState((props.selectedRowKeys || props.selectedRows || []).length > 0);
+
+  const updateSelected = useCallback((keys: Key[], rows: T[], maps: {[key: string]: T}) => {
+    refData.current.selectedIds = keys;
+    setSelected({keys, rows, maps});
+    if (keys.length === 0) {
+      setReviewMode(false);
+    }
+    const onSelectedChange = refData.current.onSelectedChange;
+    onSelectedChange && onSelectedChange(keys, rows, maps);
+  }, []);
 
   useMemo(() => {
     const keys: Key[] = props.selectedRowKeys || (props.selectedRows || []).map((item) => item[rowKey as string]);
@@ -63,13 +75,10 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
       pre[cur[rowKey as string]] = cur;
       return pre;
     }, {} as {[key: string]: T; [key: number]: T});
-    refData.current.selectedIds = keys;
-    setSelected({keys, rows, maps});
-  }, [props.selectedRowKeys, props.selectedRows, rowKey]);
+    updateSelected(keys, rows, maps);
+  }, [props.selectedRowKeys, props.selectedRows, rowKey, updateSelected]);
 
   const limitMax = typeof selectLimit === 'number' ? selectLimit : selectLimit[1];
-
-  const [reviewMode, setReviewMode] = useState(false);
 
   const batchMenu: ReactNode = useMemo(() => {
     if (batchActions) {
@@ -128,7 +137,6 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
         type: limitMax === 1 ? 'radio' : 'checkbox',
         selectedRowKeys: selected.keys,
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(selectedRowKeys, selectedRows);
           const rows: T[] = [];
           const maps: {[key: string]: T; [key: number]: T} = {};
           const keys = selectedRowKeys.map((key, index) => {
@@ -137,30 +145,23 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
             maps[key] = item;
             return key;
           });
-          refData.current.selectedIds = keys;
-          setSelected({keys, rows, maps});
-          if (keys.length === 0) {
-            setReviewMode(false);
-          }
+          updateSelected(keys, rows, maps);
         },
       };
     } else {
       return undefined;
     }
-  }, [batchMenu, limitMax, selected]);
+  }, [batchMenu, limitMax, selected, updateSelected]);
 
   const clearSelected = useCallback(() => {
-    refData.current.selectedIds = [];
-    setSelected({keys: [], rows: [], maps: {}});
-    setReviewMode(false);
-    onClear && onClear();
-  }, [onClear]);
+    updateSelected([], [], {});
+  }, [updateSelected]);
 
   const pagination = useMemo(
     () => ({
       showTotal: returnTotal,
       showQuickJumper: true,
-      pageSizeOptions: ['10', '50', '100'],
+      pageSizeOptions: ['10', '20', '50', '100'],
       showSizeChanger: true,
       current: pageCurrent,
       pageSize,
