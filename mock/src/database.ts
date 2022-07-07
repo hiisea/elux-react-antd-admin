@@ -1,4 +1,5 @@
 import mockjs from 'mockjs';
+import {ItemDetail as Article} from '@/modules/article/entity';
 import {ItemDetail as Member} from '@/modules/member/entity';
 import {CurUser} from '@/modules/stage/entity';
 
@@ -18,26 +19,6 @@ export const adminUser: CurUser = {
   avatar: 'imgs/admin.jpg',
   mobile: '18498982234',
 };
-
-// function createArticles(): {[id: string]: Article} {
-//   const listData = {};
-//   mockjs
-//     .mock({
-//       'list|50': [
-//         {
-//           'id|+1': 1,
-//           title: '@ctitle(10, 20)',
-//           summary: '@csentence(50, 60)',
-//           content: '@cparagraph(50, 100)',
-//         },
-//       ],
-//     })
-//     .list.forEach((item: Article) => {
-//       item.id = `${item.id}`;
-//       listData[item.id] = item;
-//     });
-//   return listData;
-// }
 
 function createMembers(): {[id: string]: Member} {
   const listData = {};
@@ -66,12 +47,56 @@ function createMembers(): {[id: string]: Member} {
   return listData;
 }
 
-export const database: {
-  curUser: CurUser;
-  members: {[id: string]: Member};
-  //articles: {[id: string]: Article};
-} = {
+const members = createMembers();
+
+function createArticles(): {[id: string]: Article} {
+  const authors: {id: string; name: string}[] = [];
+  const editors: {id: string; name: string}[] = [];
+
+  for (const id in members) {
+    const member = members[id];
+    authors.push({id, name: member.name});
+    if (member.role === 'editor') {
+      editors.push({id, name: member.name});
+    }
+    authors.splice(0, authors.length - 5);
+    editors.splice(0, editors.length - 5);
+  }
+
+  const listData = {};
+
+  mockjs
+    .mock({
+      'list|50': [
+        {
+          'id|+1': 1,
+          title: '@ctitle(10, 20)',
+          summary: '@cparagraph(5, 8)',
+          content: '@cparagraph(10, 20)',
+          'author|1': authors,
+          editors: () => {
+            const start = Math.floor(Math.random() * (editors.length - 1));
+            return editors.slice(start, start + 2);
+          },
+          createdTime: timestamp,
+          'status|1': ['pending', 'resolved', 'rejected'],
+        },
+      ],
+    })
+    .list.forEach((item: Article, index: number) => {
+      item.createdTime = timestamp + index * 1000;
+      item.id = `${item.id}`;
+      const authorId = item.author.id;
+      members[authorId].articles++;
+      listData[item.id] = item;
+    });
+  return listData;
+}
+
+const articles = createArticles();
+
+export const database = {
   curUser: guestUser,
-  members: createMembers(),
-  //articles: createArticles(),
+  members,
+  articles,
 };

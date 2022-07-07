@@ -5,6 +5,7 @@ import {FC, useCallback} from 'react';
 import {APPState, GetActions} from '@/Global';
 import DialogPage from '../../components/DialogPage';
 import {RegisterParams} from '../../entity';
+import {LoginUrl} from '../../utils/const';
 import {getFormDecorators} from '../../utils/tools';
 import styles from './index.module.less';
 
@@ -86,7 +87,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatc
             <Form.Item {...fromDecorators.agreement} noStyle>
               <Checkbox>我已阅读并同意</Checkbox>
             </Form.Item>
-            <Link to="/stage/agreement" action="push" target="window" classname="_dialog">
+            <Link to="/stage/agreement" action="push" target="window">
               注册协议
             </Link>
           </Form.Item>
@@ -95,7 +96,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatc
               <Button size="large" type="primary" htmlType="submit">
                 注册
               </Button>
-              <Link to={1} action="back">
+              <Link to={1} action="back" target="page">
                 <Button size="large">取消</Button>
               </Link>
             </div>
@@ -103,7 +104,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatc
         </Form>
         <div className="footer">
           <AliwangwangFilled /> <span>已注册用户？</span>
-          <Link to={`/stage/login?from=${fromUrl}`} classname="_dialog" action="relaunch">
+          <Link to={LoginUrl(fromUrl)} action="relaunch" target="window">
             登录
           </Link>
         </div>

@@ -12,55 +12,38 @@ import {
 } from '@elux-admin-antd/stage/utils/resource';
 import {enumOptions} from '@elux-admin-antd/stage/utils/tools';
 
-export enum Gender {
-  '男' = 'male',
-  '女' = 'female',
-  '未知' = 'unknow',
-}
-
-export const DGender = enumOptions(Gender);
-
 export enum Status {
-  '启用' = 'enable',
-  '禁用' = 'disable',
+  '待审核' = 'pending',
+  '审核通过' = 'resolved',
+  '审核拒绝' = 'rejected',
 }
 export const DStatus = enumOptions(Status);
-
-export enum Role {
-  '普通用户' = 'consumer',
-  '管理员' = 'admin',
-  '责任编辑' = 'editor',
-}
-
-export const DRole = enumOptions(Role);
 
 export type CurView = BaseCurView;
 export type CurRender = BaseCurRender;
 
 export interface ListSearch extends BaseListSearch {
-  name?: string;
-  nickname?: string;
-  email?: string;
-  role?: Role;
+  title?: string;
+  author?: string;
+  editor?: string;
   status?: Status;
 }
 export interface ListItem extends BaseListItem {
-  name: string;
-  nickname: string;
-  gender: Gender;
-  role: Role;
+  title: string;
+  summary: string;
+  content: string;
+  author: {id: string; name: string};
+  editors: Array<{id: string; name: string}>;
   status: Status;
-  articles: number;
-  email: string;
   createdTime: number;
 }
 export interface ListSummary extends BaseListSummary {}
 export interface ItemDetail extends ListItem {}
-export type UpdateItem = Omit<ItemDetail, 'id' | 'createdTime' | 'articles'>;
+export type UpdateItem = Pick<ItemDetail, 'title' | 'summary' | 'content' | 'editors'>;
 
 export type ListSearchFormData = Omit<ListSearch, keyof BaseListSearch>;
 
-export interface MemberResource extends DefineResource {
+export interface ArticleResource extends DefineResource {
   RouteParams: RouteParams;
   ModuleState: ModuleState;
   ListSearch: ListSearch;
@@ -73,18 +56,17 @@ export interface MemberResource extends DefineResource {
   CurRender: CurRender;
 }
 
-export type RouteParams = BaseRouteParams<MemberResource>;
-export type ModuleState = BaseModuleState<MemberResource>;
+export type RouteParams = BaseRouteParams<ArticleResource>;
+export type ModuleState = BaseModuleState<ArticleResource>;
 
 export const defaultListSearch: ListSearch = {
   pageCurrent: 1,
   pageSize: 10,
   sorterOrder: undefined,
   sorterField: '',
-  name: '',
-  nickname: '',
-  email: '',
-  role: undefined,
+  title: '',
+  author: '',
+  editor: '',
   status: undefined,
 };
 
@@ -97,7 +79,7 @@ export type ICreateItem = IRequest<ItemDetail, {id: string}>;
 
 export class API implements BaseApi {
   public getList(params: IGetList['Request']): Promise<IGetList['Response']> {
-    return request.get<{list: ListItem[]; listSummary: ListSummary}>('/api/member', {params}).then((res) => {
+    return request.get<{list: ListItem[]; listSummary: ListSummary}>('/api/article', {params}).then((res) => {
       return res.data;
     });
   }
@@ -106,7 +88,7 @@ export class API implements BaseApi {
     if (!params.id) {
       return Promise.resolve({} as any);
     }
-    return request.get<ItemDetail>(`/api/member/${params.id}`).then((res) => {
+    return request.get<ItemDetail>(`/api/article/${params.id}`).then((res) => {
       return res.data;
     });
   }
@@ -114,14 +96,14 @@ export class API implements BaseApi {
   public alterItems(params: IAlterItems['Request']): Promise<IAlterItems['Response']> {
     const {id, data} = params;
     const ids = typeof id === 'string' ? [id] : id;
-    return request.put<void>(`/api/member/${ids.join(',')}`, data).then((res) => {
+    return request.put<void>(`/api/article/${ids.join(',')}`, data).then((res) => {
       return res.data;
     });
   }
 
   public updateItem(params: IUpdateItem['Request']): Promise<IUpdateItem['Response']> {
     const {id, data} = params;
-    return request.put<void>(`/api/member/${id}`, data).then((res) => {
+    return request.put<void>(`/api/article/${id}`, data).then((res) => {
       return res.data;
     });
   }
@@ -129,13 +111,13 @@ export class API implements BaseApi {
   public deleteItems(params: IDeleteItems['Request']): Promise<IDeleteItems['Response']> {
     const {id} = params;
     const ids = typeof id === 'string' ? [id] : id;
-    return request.delete<void>(`/api/member/${ids.join(',')}`).then((res) => {
+    return request.delete<void>(`/api/article/${ids.join(',')}`).then((res) => {
       return res.data;
     });
   }
 
   public createItem(params: ICreateItem['Request']): Promise<ICreateItem['Response']> {
-    return request.post<{id: string}>(`/api/member`, params).then((res) => {
+    return request.post<{id: string}>(`/api/article`, params).then((res) => {
       return res.data;
     });
   }

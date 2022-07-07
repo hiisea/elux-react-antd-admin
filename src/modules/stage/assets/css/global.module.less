@@ -9,6 +9,11 @@
     }
   }
 
+  .ant-descriptions-view .ant-descriptions-item-label {
+    color: #666;
+    white-space: nowrap;
+  }
+
   :local(.component-loading) {
     position: relative;
     width: 100%;
@@ -44,9 +49,20 @@
 
   :local(.page-content) {
     padding: 30px 30px 50px;
+  }
 
-    .stage-comp-MSearch {
-      border-bottom: 1px solid @border-color-split;
+  :local(.actions) {
+    > * {
+      display: inline-block;
+      padding-right: 10px;
+      margin-right: 10px;
+      line-height: 1;
+      border-right: 1px solid #ddd;
+
+      &:last-child {
+        margin-right: 0;
+        border: none;
+      }
     }
   }
 
@@ -60,7 +76,7 @@
     text-align: center;
 
     > * {
-      margin: 0 5px;
+      margin: 0 6px;
     }
   }
 

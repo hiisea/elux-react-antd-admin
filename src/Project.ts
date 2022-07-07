@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import stage from '@elux-admin-antd/stage';
-import {AdminHomeUrl, HomeUrl} from '@elux-admin-antd/stage/utils/const';
+import {AdminHomeUrl} from '@elux-admin-antd/stage/utils/const';
 import {AppConfig, setConfig} from '@elux/react-web';
 import {parse, stringify} from 'query-string';
 
@@ -13,6 +13,7 @@ export const ModuleGetter = {
   admin: () => import('@elux-admin-antd/admin'),
   dashboard: () => import('@elux-admin-antd/dashboard'),
   member: () => import('@elux-admin-antd/member'),
+  article: () => import('@elux-admin-antd/article'),
 };
 
 //Elux全局设置，参见 https://eluxjs.com/api/react-web.setconfig.html
@@ -21,7 +22,6 @@ export const appConfig: AppConfig = setConfig({
   //Elux并没定死怎么解析路由参数，你可以使用常用的'query-string'或者'json'
   //只需要将parse(解析)和stringify(序列化)方法设置给Elux
   QueryString: {parse, stringify},
-  HomeUrl,
   NativePathnameMapping: {
     in(nativePathname) {
       if (nativePathname === '/') {

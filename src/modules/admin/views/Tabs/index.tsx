@@ -1,8 +1,8 @@
 import {PlusOutlined, ReloadOutlined} from '@ant-design/icons';
-import {Dispatch, connectRedux} from '@elux/react-web';
+import {Dispatch, Link, connectRedux} from '@elux/react-web';
 import {Tabs} from 'antd';
 import {FC, useCallback} from 'react';
-import {APPState, GetActions, GetClientRouter} from '@/Global';
+import {APPState, GetActions} from '@/Global';
 import {TabData} from '../../entity';
 import Editor from './Editor';
 import styles from './index.module.less';
@@ -32,9 +32,9 @@ const AddIcon = (
 );
 
 const Refresh = (
-  <div className="btn-refresh" title="刷新" onClick={() => GetClientRouter().replace(GetClientRouter().location)}>
+  <Link to={0} action="back" target="page" className="btn-refresh" title="刷新">
     <ReloadOutlined />
-  </div>
+  </Link>
 );
 
 const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, tabData, tabSelected}) => {

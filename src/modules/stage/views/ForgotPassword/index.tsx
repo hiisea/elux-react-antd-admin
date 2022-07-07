@@ -92,7 +92,7 @@ const Component: FC<{dispatch: Dispatch}> = ({dispatch}) => {
               <Button size="large" type="primary" htmlType="submit">
                 修改
               </Button>
-              <Link to={1} action="back">
+              <Link to={1} action="back" target="page">
                 <Button size="large">取消</Button>
               </Link>
             </div>

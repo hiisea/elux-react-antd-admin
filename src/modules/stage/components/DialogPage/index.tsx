@@ -1,8 +1,7 @@
-import {CloseOutlined} from '@ant-design/icons';
-import {DocumentHead} from '@elux/react-web';
-import {Button} from 'antd';
-import {FC, ReactNode, useCallback, useMemo} from 'react';
-import {GetClientRouter} from '@/Global';
+import {ArrowLeftOutlined, CloseOutlined, ReloadOutlined} from '@ant-design/icons';
+import {DocumentHead, Link} from '@elux/react-web';
+import {Tooltip} from 'antd';
+import {FC, ReactNode, useMemo} from 'react';
 import styles from './index.module.less';
 
 export interface Props {
@@ -11,49 +10,44 @@ export interface Props {
   subject?: string;
   children?: ReactNode;
   showBrand?: boolean;
+  showControls?: boolean;
   maskClosable?: boolean;
-  closeButton?: boolean;
   mask?: boolean;
   size?: 'max' | 'auto';
-  footer?: boolean | ReactNode;
   backOverflowRedirect?: string;
 }
 
-const Component: FC<Props> = ({
-  className = '',
-  title,
-  subject,
-  showBrand,
-  children,
-  footer,
-  maskClosable = true,
-  closeButton = true,
-  mask,
-  backOverflowRedirect,
-  size = 'auto',
-}) => {
-  const goBack = useCallback(() => GetClientRouter().back(1, 'window', null, backOverflowRedirect), [backOverflowRedirect]);
-  const footerArea: ReactNode = useMemo(() => {
-    return (
-      footer && (
-        <div className="footer">
-          {footer === true ? (
-            <Button type="primary" onClick={goBack}>
-              确定
-            </Button>
-          ) : (
-            footer
-          )}
-        </div>
-      )
-    );
-  }, [footer, goBack]);
+const Component: FC<Props> = (props) => {
+  const {className = '', title, subject, showBrand, children, maskClosable = true, mask, backOverflowRedirect, size = 'auto'} = props;
+  const showControls = props.showControls !== undefined ? props.showControls : !showBrand;
+
+  const controls = useMemo(() => {
+    return showControls ? (
+      <div className="control">
+        <Tooltip title="后退">
+          <Link to={1} action="back" target="page" overflowRedirect={backOverflowRedirect}>
+            <ArrowLeftOutlined />
+          </Link>
+        </Tooltip>
+        <Tooltip title="刷新">
+          <Link to={0} action="back" target="page">
+            <ReloadOutlined />
+          </Link>
+        </Tooltip>
+        <Tooltip title="关闭">
+          <Link to={1} action="back" target="window" overflowRedirect={backOverflowRedirect}>
+            <CloseOutlined />
+          </Link>
+        </Tooltip>
+      </div>
+    ) : null;
+  }, [backOverflowRedirect, showControls]);
 
   return (
     <>
       <div className={`${styles.root} ${showBrand ? 'show-brand' : ''} size-${size} ${className}`}>
         {title && <DocumentHead title={title} />}
-        <div className="control">{closeButton && <CloseOutlined onClick={goBack} />}</div>
+        {controls}
         {showBrand && (
           <div className="brand">
             Elux-管理系统<span className="ver"> V1.0</span>
@@ -62,11 +56,11 @@ const Component: FC<Props> = ({
         <div className="content">
           {subject && <h2 className="subject">{subject}</h2>}
           {children}
-          {footerArea}
-          <div></div>
         </div>
       </div>
-      {!!mask && <div className={styles.mask} onClick={() => maskClosable && goBack()}></div>}
+      {!!mask && (
+        <Link disabled={!maskClosable} className={styles.mask} to={1} action="back" target="window" overflowRedirect={backOverflowRedirect}></Link>
+      )}
     </>
   );
 };

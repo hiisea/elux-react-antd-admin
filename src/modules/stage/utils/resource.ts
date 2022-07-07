@@ -2,9 +2,10 @@ import {Action, BaseModel, Dispatch, LoadingState, StoreState, effect, reducer} 
 import {pathToRegexp} from 'path-to-regexp';
 import {useCallback, useMemo, useState} from 'react';
 import {GetClientRouter} from '@/Global';
-import {excludeDefaultParams, mergeDefaultParams} from './tools';
+import {excludeDefaultParams, mergeDefaultParams, message} from './tools';
 
-export type BaseCurView = 'list' | 'detail' | 'edit';
+export type BaseCurView = 'list' | 'item';
+export type BaseCurRender = 'maintain' | 'index' | 'selector' | 'edit' | 'detail';
 
 export interface BaseListSearch {
   pageCurrent?: number;
@@ -15,7 +16,6 @@ export interface BaseListSearch {
 
 export interface BaseListItem {
   id: string;
-  name: string;
 }
 
 export interface BaseListSummary {
@@ -30,8 +30,10 @@ export interface BaseItemDetail extends BaseListItem {}
 
 export interface BaseModuleState<TDefineResource extends DefineResource = DefineResource> {
   prefixPathname: string;
-  listSearch: TDefineResource['ListSearch'];
   curView?: TDefineResource['CurView'];
+  curRender?: TDefineResource['CurRender'];
+  listConfig?: {selectLimit?: number | [number, number]; showSearch?: {[key: string]: any}};
+  listSearch: TDefineResource['ListSearch'];
   list?: TDefineResource['ListItem'][];
   listSummary?: TDefineResource['ListSummary'];
   listLoading?: LoadingState;
@@ -42,7 +44,9 @@ export interface BaseModuleState<TDefineResource extends DefineResource = Define
 export interface BaseRouteParams<TDefineResource extends DefineResource = DefineResource> {
   prefixPathname: string;
   curView?: TDefineResource['CurView'];
-  listSearch: TDefineResource['ListSearch'];
+  curRender?: TDefineResource['CurRender'];
+  listConfig?: {selectLimit?: number | [number, number]; showSearch?: {[key: string]: any}};
+  listSearch?: TDefineResource['ListSearch'];
   itemId?: string;
 }
 
@@ -62,6 +66,7 @@ export interface DefineResource {
   ListItem: BaseListItem;
   ListSummary: BaseListSummary;
   CurView: BaseCurView;
+  CurRender: BaseCurRender;
   ItemDetail: BaseItemDetail;
   UpdateItem: any;
   CreateItem: any;
@@ -72,29 +77,41 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
   TStoreState
 > {
   protected abstract api: BaseApi;
-  protected abstract CurView: {[key: string]: TDefineResource['CurView']};
   protected abstract defaultListSearch: TDefineResource['ListSearch'];
   protected routeParams!: TDefineResource['RouteParams']; //保存从当前路由中提取的信息结果
   //因为要尽量避免使用public方法，所以构建this.privateActions来引用私有actions
   protected privateActions = this.getPrivateActions({putList: this.putList, putCurrentItem: this.putCurrentItem});
 
-  protected parseQuery(query: Record<string, string | undefined>): Record<string, string | undefined> {
-    return query;
+  protected parseListQuery(query: Record<string, string | undefined>): Record<string, any> {
+    const data = {...query} as Record<string, any>;
+    if (query.pageCurrent) {
+      data.pageCurrent = parseInt(query.pageCurrent) || undefined;
+    }
+    if (query.listConfig) {
+      data.listConfig = JSON.parse(query.listConfig);
+    }
+    return data;
   }
+
   //提取当前路由中的本模块感兴趣的信息
   protected getRouteParams(): TDefineResource['RouteParams'] {
     const {pathname, searchQuery} = this.getRouter().location;
-    const [, admin, subModule, curViewStr = ''] = pathToRegexp('/:admin/:subModule/:curView').exec(pathname) || [];
+    const [, admin = '', subModule = '', curViewStr = '', curRenderStr = '', id = ''] =
+      pathToRegexp('/:admin/:subModule/:curView/:curRender/:id?').exec(pathname) || [];
+    const curView = curViewStr as TDefineResource['CurView'];
+    const curRender = curRenderStr as TDefineResource['CurRender'];
     const prefixPathname = ['', admin, subModule].join('/');
-    const curView: TDefineResource['CurView'] | undefined = this.CurView[curViewStr] || undefined;
-    const {pageCurrent = '', id = '', ...others} = searchQuery as Record<string, string | undefined>;
-    const listSearch = {pageCurrent: parseInt(pageCurrent) || undefined, ...this.parseQuery(others)};
-    return {
-      prefixPathname,
-      curView,
-      itemId: id,
-      listSearch: mergeDefaultParams(this.defaultListSearch, listSearch),
-    } as TDefineResource['RouteParams'];
+    const routeParams: TDefineResource['RouteParams'] = {prefixPathname, curView};
+    if (curView === 'list') {
+      routeParams.curRender = curRender || 'maintain';
+      const listQuery = this.parseListQuery(searchQuery);
+      routeParams.listSearch = mergeDefaultParams(this.defaultListSearch, listQuery);
+      routeParams.listConfig = listQuery.listConfig;
+    } else if (curView === 'item') {
+      routeParams.curRender = curRender || 'detail';
+      routeParams.itemId = id;
+    }
+    return routeParams;
   }
 
   //每次路由发生变化，都会引起Model重新挂载到Store
@@ -105,11 +122,13 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
   //也可以不做任何await，直接Render，此时需要设计Loading界面
   public onMount(env: 'init' | 'route' | 'update'): void {
     this.routeParams = this.getRouteParams();
-    const {prefixPathname, curView, listSearch, itemId} = this.routeParams;
-    this.dispatch(this.privateActions._initState({prefixPathname, curView, listSearch} as TDefineResource['ModuleState']));
+    const {prefixPathname, curView, curRender, listSearch, listConfig, itemId} = this.routeParams;
+    this.dispatch(
+      this.privateActions._initState({prefixPathname, curView, curRender, listSearch, listConfig, itemId} as TDefineResource['ModuleState'])
+    );
     if (curView === 'list') {
       this.dispatch(this.actions.fetchList(listSearch));
-    } else if (curView === 'edit' || (curView && itemId)) {
+    } else if (curView === 'item') {
       this.dispatch(this.actions.fetchItem(itemId || ''));
     }
   }
@@ -144,39 +163,43 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
   @effect()
   public async alterItems(id: string | string[], data: Partial<TDefineResource['UpdateItem']>): Promise<void> {
     await this.api.alterItems!({id, data});
+    message.success('修改成功！');
     this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
   }
 
   @effect()
   public async updateItem(id: string, data: TDefineResource['UpdateItem']): Promise<void> {
     await this.api.updateItem!({id, data});
+    message.success('修改成功！');
     this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
   }
 
   @effect()
   public async createItem(data: TDefineResource['CreateItem']): Promise<void> {
     await this.api.createItem!(data);
-    this.state.curView === 'list' && this.dispatch(this.actions.fetchList(this.defaultListSearch));
+    message.success('创建成功！');
+    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
   }
 
   @effect()
   public async deleteItems(id: string | string[]): Promise<void> {
     await this.api.deleteItems!({id});
+    message.success('删除成功！');
     this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useSearch<TFormData>(pathname: string, defaultListSearch: Partial<TFormData>) {
+export function useSearch<TFormData>(listPathname: string, defaultListSearch: Partial<TFormData>) {
   const onSearch = useCallback(
     (values: TFormData) => {
-      GetClientRouter().push({pathname, searchQuery: excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1})});
+      GetClientRouter().push({url: `${listPathname}`, searchQuery: excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1})}, 'page');
     },
-    [defaultListSearch, pathname]
+    [defaultListSearch, listPathname]
   );
   const onReset = useCallback(() => {
-    GetClientRouter().push({pathname, searchQuery: defaultListSearch});
-  }, [defaultListSearch, pathname]);
+    GetClientRouter().push({url: `${listPathname}`}, 'page');
+  }, [listPathname]);
 
   return {onSearch, onReset};
 }
@@ -185,13 +208,13 @@ export function useSearch<TFormData>(pathname: string, defaultListSearch: Partia
 export function useShowDetail(prefixPathname: string) {
   const onShowDetail = useCallback(
     (id: string) => {
-      GetClientRouter().push({url: `${prefixPathname}/detail?id=${id}`, classname: '_dailog'}, 'window');
+      GetClientRouter().push({url: `${prefixPathname}/item/detail/${id}`, classname: '_dailog'}, 'window');
     },
     [prefixPathname]
   );
   const onShowEditor = useCallback(
     (id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
-      GetClientRouter().push({url: `${prefixPathname}/edit?id=${id}`, classname: '_dailog'}, 'window', {onSubmit});
+      GetClientRouter().push({url: `${prefixPathname}/item/edit/${id}`, classname: '_dailog'}, 'window', {onSubmit});
     },
     [prefixPathname]
   );
@@ -249,7 +272,7 @@ export function useAlter<T>(
 }
 
 //eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useTableChange<T extends BaseListSearch>(prefixPathname: string, defaultListSearch: T, listSearch?: T) {
+export function useTableChange<T extends BaseListSearch>(listPathname: string, defaultListSearch: T, listSearch?: T) {
   const sorterStr = [listSearch?.sorterField, listSearch?.sorterOrder].join('');
 
   return useCallback(
@@ -261,12 +284,15 @@ export function useTableChange<T extends BaseListSearch>(prefixPathname: string,
       const currentSorter = [sorterField, sorterOrder].join('');
       const pageCurrent = currentSorter !== sorterStr ? 1 : current;
 
-      GetClientRouter().push({
-        pathname: `${prefixPathname}/list`,
-        searchQuery: excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder}),
-      });
+      GetClientRouter().push(
+        {
+          pathname: `${listPathname}`,
+          searchQuery: excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder}),
+        },
+        'page'
+      );
     },
-    [defaultListSearch, listSearch, prefixPathname, sorterStr]
+    [defaultListSearch, listSearch, listPathname, sorterStr]
   );
 }
 

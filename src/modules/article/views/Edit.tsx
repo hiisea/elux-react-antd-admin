@@ -7,16 +7,17 @@ import {ItemDetail} from '../entity';
 import EditorForm from './EditorForm';
 
 interface Props {
+  listUrl: string;
   dispatch: Dispatch;
   itemDetail?: ItemDetail;
 }
 
-const Component: FC<Props> = ({itemDetail, dispatch}) => {
-  const title = loadingPlaceholder(itemDetail && (itemDetail.id ? '修改用户' : '新增用户'));
+const Component: FC<Props> = ({itemDetail, dispatch, listUrl}) => {
+  const title = loadingPlaceholder(itemDetail && (itemDetail.id ? '修改文章' : '新增文章'));
   return (
-    <DialogPage title={title} subject={title} mask>
-      <div className="g-dialog-content" style={{width: 600, height: 390}}>
-        {itemDetail ? <EditorForm itemDetail={itemDetail} dispatch={dispatch} /> : <Skeleton active />}
+    <DialogPage title={title} subject={title} size="max" mask>
+      <div className="g-dialog-content">
+        {itemDetail ? <EditorForm itemDetail={itemDetail} dispatch={dispatch} listUrl={listUrl} /> : <Skeleton active />}
       </div>
     </DialogPage>
   );

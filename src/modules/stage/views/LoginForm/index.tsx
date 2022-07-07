@@ -64,7 +64,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatc
             <Form.Item {...fromDecorators.keep} noStyle>
               <Checkbox>记住登录</Checkbox>
             </Form.Item>
-            <Link className="btn-forgot" to={`/stage/forgetPassword?from=${fromUrl}`} action="push" classname="_dialog">
+            <Link className="btn-forgot" to={`/stage/forgetPassword?from=${fromUrl}`} action="push" target="page">
               忘记密码？
             </Link>
           </Form.Item>
@@ -80,7 +80,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatc
           </Form.Item>
         </Form>
         <div className="footer">
-          <Link to={`/stage/registry?from=${fromUrl}`} action="push" classname="_dialog">
+          <Link to={`/stage/registry?from=${fromUrl}`} action="push" target="page">
             <AliwangwangFilled /> <span>注册新用户</span>
           </Link>
           <div className="other-login">

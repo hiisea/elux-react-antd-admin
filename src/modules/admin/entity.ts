@@ -5,6 +5,7 @@ import {arrayToMap} from '@elux-admin-antd/stage/utils/tools';
 export enum SubModule {
   'dashboard' = 'dashboard',
   'member' = 'member',
+  'article' = 'article',
 }
 
 export interface Notices {

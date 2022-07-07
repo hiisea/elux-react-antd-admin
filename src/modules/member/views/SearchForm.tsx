@@ -5,10 +5,10 @@ import {Dispatch, connectRedux} from '@elux/react-web';
 import {Input, Select} from 'antd';
 import {FC} from 'react';
 import {APPState} from '@/Global';
-import {DRole, DStatus, ListSearch, ListSearchFormData, defaultListSearch} from '../entity';
+import {CurRender, DRole, DStatus, ListSearch, ListSearchFormData, defaultListSearch} from '../entity';
 
 const formItems: SearchFromItems<ListSearchFormData> = [
-  {name: 'name', label: '用户名', formItem: <Input allowClear placeholder="请输入用户名" />},
+  {name: 'name', label: '用户名', formItem: <Input allowClear placeholder="请输入关键字" />},
   {name: 'nickname', label: '呢称', formItem: <Input allowClear placeholder="请输入呢称" />},
   {
     name: 'status',
@@ -29,16 +29,18 @@ const formItems: SearchFromItems<ListSearchFormData> = [
 
 interface StoreProps {
   prefixPathname: string;
+  curRender?: CurRender;
   listSearch: ListSearch;
+  listConfig?: {showSearch?: {[key: string]: any}};
 }
 
 const mapStateToProps: (state: APPState) => StoreProps = (state) => {
-  const {prefixPathname, listSearch} = state.member!;
-  return {prefixPathname, listSearch};
+  const {prefixPathname, curRender, listConfig, listSearch} = state.member!;
+  return {prefixPathname, curRender, listConfig, listSearch};
 };
 
-const Component: FC<StoreProps & {dispatch: Dispatch}> = ({prefixPathname, listSearch}) => {
-  const {onSearch, onReset} = useSearch<ListSearchFormData>(`${prefixPathname}/list`, defaultListSearch);
+const Component: FC<StoreProps & {dispatch: Dispatch}> = ({prefixPathname, curRender, listSearch}) => {
+  const {onSearch, onReset} = useSearch<ListSearchFormData>(`${prefixPathname}/list/${curRender}`, defaultListSearch);
 
   return <MSearch<ListSearchFormData> values={listSearch} expand={!!listSearch.email} items={formItems} onSearch={onSearch} onReset={onReset} />;
 };

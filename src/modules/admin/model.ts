@@ -77,7 +77,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
     const link = this.state.menuData.keyToLink[key];
     if (link) {
       if (link.startsWith('/')) {
-        this.getRouter().push({url: link});
+        this.getRouter().push({url: link}, 'page');
       } else {
         window.open(link);
       }
@@ -96,7 +96,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
       if (id === this.state.curTab.id) {
         this.dispatch(this.privateActions._updateState('showTabEditor', {tabEdit: item}));
       } else {
-        this.getRouter().push({url: item.url});
+        this.getRouter().push({url: item.url}, 'page');
       }
     } else {
       this.dispatch(this.privateActions._updateState('showTabEditor', {tabEdit: {...this.state.curTab, title: document.title}}));

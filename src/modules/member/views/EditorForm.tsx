@@ -27,16 +27,15 @@ const fromDecorators = getFormDecorators<UpdateItem>({
 });
 
 interface Props {
-  listUrl: string;
   dispatch: Dispatch;
   itemDetail: ItemDetail;
 }
 
 const {member: memberActions} = GetActions('member');
 
-const Component: FC<Props> = ({itemDetail, dispatch, listUrl}) => {
+const Component: FC<Props> = ({itemDetail, dispatch}) => {
   const [form] = Form.useForm();
-  const goBack = useCallback(() => GetClientRouter().back(1, 'window', null, listUrl), [listUrl]);
+  const goBack = useCallback(() => GetClientRouter().back(1, 'window'), []);
   const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, memberActions, goBack);
 
   const onReset = useCallback(() => {
@@ -46,7 +45,7 @@ const Component: FC<Props> = ({itemDetail, dispatch, listUrl}) => {
   return (
     <Form layout="horizontal" {...formItemLayout} form={form} initialValues={itemDetail} onFinish={onFinish}>
       <FormItem label="用户名" {...fromDecorators.name}>
-        <Input disabled={!!itemDetail.id} allowClear placeholder="请输入用户名" />
+        <Input disabled={!!itemDetail.id} allowClear placeholder="请输入" />
       </FormItem>
       <FormItem label="呢称" {...fromDecorators.nickname}>
         <Input allowClear placeholder="请输入" />
@@ -61,7 +60,7 @@ const Component: FC<Props> = ({itemDetail, dispatch, listUrl}) => {
         <Input allowClear placeholder="请输入" />
       </FormItem>
       <FormItem label="状态" {...fromDecorators.status}>
-        <Select allowClear placeholder="请选择用户状态" options={DStatus.options} />
+        <Select allowClear placeholder="请选择" options={DStatus.options} />
       </FormItem>
       <div className="g-form-actions">
         <Button type="primary" htmlType="submit" loading={loading}>

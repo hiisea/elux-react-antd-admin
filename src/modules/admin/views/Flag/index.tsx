@@ -7,7 +7,7 @@ import styles from './index.module.less';
 const Component: React.FC = () => {
   return (
     <div className={styles.root}>
-      <Link to={AdminHomeUrl} action="relaunch" className="wrap">
+      <Link to={AdminHomeUrl} action="relaunch" target="window" className="wrap">
         <img className="logo" width="40" src={Logo} />
         <div className="title">后台管理系统</div>
         <span className="ver">V1.0.0</span>

@@ -84,7 +84,7 @@ router.get('/menu', function (req, res, next) {
       label: '用户管理',
       icon: 'user',
       match: '/admin/member/',
-      link: '/admin/member/list',
+      link: '/admin/member/list/maintain',
     },
     {
       key: 'article',
@@ -94,14 +94,14 @@ router.get('/menu', function (req, res, next) {
         {
           key: 'articleList',
           label: '文章列表',
-          match: '/admin/article',
-          link: '/admin/article',
+          match: '/admin/article/',
+          link: '/admin/article/list/maintain',
         },
         {
           key: 'commentList',
           label: '评论列表',
-          match: '/admin/comment',
-          link: '/admin/comment',
+          match: '/admin/comment/',
+          link: '/admin/comment/list/maintain',
         },
       ],
     },

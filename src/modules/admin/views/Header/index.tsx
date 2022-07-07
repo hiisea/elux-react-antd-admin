@@ -60,7 +60,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curUser, notices, sid
         ) : (
           <MenuFoldOutlined className="toggle-sider" onClick={toggleSider} />
         )}
-        <Link to="">
+        <Link to="" action="back" target="page">
           <QuestionCircleOutlined /> 帮助指南
         </Link>
       </div>

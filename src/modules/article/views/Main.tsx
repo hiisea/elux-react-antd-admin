@@ -5,27 +5,28 @@ import {APPState} from '@/Global';
 import {CurRender, CurView, ItemDetail} from '../entity';
 import Detail from './Detail';
 import Edit from './Edit';
+import Index from './Index';
 import Maintain from './Maintain';
-import Selector from './Selector';
 
 export interface StoreProps {
+  prefixPathname: string;
   curView?: CurView;
   curRender?: CurRender;
   itemDetail?: ItemDetail;
 }
 
 function mapStateToProps(appState: APPState): StoreProps {
-  const {curView, curRender, itemDetail} = appState.member!;
-  return {curView, curRender, itemDetail};
+  const {curView, curRender, itemDetail, prefixPathname} = appState.article!;
+  return {curView, curRender, itemDetail, prefixPathname};
 }
 
-const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curView, curRender, itemDetail, dispatch}) => {
+const Component: FC<StoreProps & {dispatch: Dispatch}> = ({prefixPathname, curView, curRender, itemDetail, dispatch}) => {
   return (
     <Switch elseView={<ErrorPage />}>
       {curView === 'list' && curRender === 'maintain' && <Maintain />}
-      {curView === 'list' && curRender === 'selector' && <Selector />}
-      {curView === 'item' && curRender === 'detail' && <Detail itemDetail={itemDetail} />}
-      {curView === 'item' && curRender === 'edit' && <Edit itemDetail={itemDetail} dispatch={dispatch} />}
+      {curView === 'list' && curRender === 'index' && <Index />}
+      {curView === 'item' && curRender === 'detail' && <Detail itemDetail={itemDetail} listUrl={`${prefixPathname}/list/maintain`} />}
+      {curView === 'item' && curRender === 'edit' && <Edit itemDetail={itemDetail} listUrl={`${prefixPathname}/list/maintain`} dispatch={dispatch} />}
     </Switch>
   );
 };

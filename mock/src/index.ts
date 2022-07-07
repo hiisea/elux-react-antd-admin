@@ -1,6 +1,7 @@
 import path from 'path';
 import express, {Request, Response} from 'express';
 import logger from 'morgan';
+import articleRouter from './routes/article';
 import memberRouter from './routes/member';
 import sessionRouter from './routes/session';
 
@@ -33,5 +34,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/session', sessionRouter);
 app.use('/member', memberRouter);
+app.use('/article', articleRouter);
 
 export = app;

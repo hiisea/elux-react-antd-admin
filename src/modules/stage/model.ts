@@ -3,7 +3,7 @@ import {BaseModel, ErrorCodes, LoadingState, effect, reducer} from '@elux/react-
 import {pathToRegexp} from 'path-to-regexp';
 import {APPState} from '@/Global';
 import {CurView, SubModule, api, guest} from './entity';
-import {AdminHomeUrl, HomeUrl, LoginUrl} from './utils/const';
+import {AdminHomeUrl, GuestHomeUrl, LoginUrl} from './utils/const';
 import {CommonErrorCode, CustomError} from './utils/errors';
 import {message} from './utils/tools';
 import type {CurUser, LoginParams, RegisterParams, ResetPasswordParams, SendCaptchaParams} from './entity';
@@ -69,6 +69,9 @@ export class Model extends BaseModel<ModuleState, APPState> {
       //this.dispatch是this.store.dispatch的快捷方式
       //以下语句等于this.store.dispatch({type: 'stage._initState', payload: initState})
       this.dispatch(this.privateActions._initState(initState));
+      if (subModule) {
+        await this.store.mount(subModule as any, env);
+      }
     } catch (err: any) {
       //如果根模块初始化中出现错误，将错误放入ModuleState.error字段中，此时将展示该错误信息
       const initState: ModuleState = {curUser: {...guest}, subModule, curView, fromUrl, error: err.message || err.toString()};
@@ -109,7 +112,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
     const curUser = await api.logout();
     this.dispatch(this.privateActions.putCurUser(curUser));
     //用户登出后清空所有路由栈，并跳首页
-    this.getRouter().relaunch({url: HomeUrl}, 'window');
+    this.getRouter().relaunch({url: GuestHomeUrl}, 'window');
   }
 
   @effect()
@@ -124,7 +127,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
   public async resetPassword(args: ResetPasswordParams): Promise<void> {
     await api.resetPassword(args);
     message.success('您的密码已修改，请重新登录！');
-    this.getRouter().relaunch({pathname: LoginUrl, searchQuery: {from: this.state.fromUrl}, classname: '_dialog'}, 'window');
+    this.getRouter().relaunch({url: LoginUrl(this.state.fromUrl)}, 'window');
   }
 
   @effect()
@@ -140,9 +143,11 @@ export class Model extends BaseModel<ModuleState, APPState> {
   @effect(null)
   protected async ['this._error'](error: CustomError): Promise<void> {
     if (error.code === CommonErrorCode.unauthorized) {
-      this.getRouter().push({pathname: LoginUrl, searchQuery: {from: error.detail}, classname: '_dialog'}, 'window');
-    } else if (!error.quiet && error.code !== ErrorCodes.ROUTE_BACK_OVERFLOW) {
-      // ErrorCodes.ROUTE_BACK_OVERFLOW是路由后退溢出时抛出的错误，默认会回到首页，所以无需处理
+      this.getRouter().push({url: LoginUrl(error.detail)}, 'window');
+    } else if (error.code === ErrorCodes.ROUTE_BACK_OVERFLOW) {
+      const redirect: string = error.detail.redirect || (this.state.curUser.hasLogin ? AdminHomeUrl : GuestHomeUrl);
+      setTimeout(() => this.getRouter().relaunch({url: redirect}, 'window'), 0);
+    } else if (!error.quiet) {
       message.error(error.message);
     }
     throw error;

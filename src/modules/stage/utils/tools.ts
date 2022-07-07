@@ -62,20 +62,18 @@ function isMapObject(obj: any): Boolean {
 }
 
 export function mergeDefaultParams<T extends {[key: string]: any}>(defaultParams: T, targetParams: {[key: string]: any}): T {
-  return Object.keys(defaultParams)
-    .concat(Object.keys(targetParams))
-    .reduce((result, key) => {
-      const defVal = defaultParams[key];
-      const tgtVal = targetParams[key];
-      if (tgtVal == undefined) {
-        result[key] = defVal;
-      } else if (isMapObject(defVal) && isMapObject(tgtVal)) {
-        result[key] = mergeDefaultParams(defVal, tgtVal);
-      } else {
-        result[key] = tgtVal;
-      }
-      return result;
-    }, {}) as any;
+  return Object.keys(defaultParams).reduce((result, key) => {
+    const defVal = defaultParams[key];
+    const tgtVal = targetParams[key];
+    if (tgtVal == undefined) {
+      result[key] = defVal;
+    } else if (isMapObject(defVal) && isMapObject(tgtVal)) {
+      result[key] = mergeDefaultParams(defVal, tgtVal);
+    } else {
+      result[key] = tgtVal;
+    }
+    return result;
+  }, {}) as any;
 }
 
 export function excludeDefaultParams(defaultParams: {[key: string]: any}, targetParams: {[key: string]: any}): {[key: string]: any} | undefined {
