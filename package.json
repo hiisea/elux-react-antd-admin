@@ -52,7 +52,7 @@
     "@ant-design/icons"
   ],
   "dependencies": {
-    "@elux/react-web": "^2.2.2-h.0",
+    "@elux/react-web": "^2.2.2-j.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "axios": "^0.21.1",
@@ -73,7 +73,7 @@
     "@elux/stylelint-config": "^1.1.1",
     "npm-run-all": "~4.1.5",
     "cross-env": "~7.0.0",
-    "typescript": "~4.2.0",
+    "typescript": "~4.7.0",
     "autoprefixer": "~10.4.0",
     "less": "~3.12.2",
     "less-loader": "~7.1.0",

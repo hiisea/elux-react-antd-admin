@@ -1232,13 +1232,13 @@
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@elux/app@^2.2.2-h.0":
-  version "2.2.2-h.0"
-  resolved "http://localhost:4873/@elux%2fapp/-/app-2.2.2-h.0.tgz#de4263cbc5b5bdeeda3183a37dbbf5e39704b494"
-  integrity sha512-65w4bg39cZU6HYLGQ1RoxEcc3XVNGquZ4N4yOhq5oqI/IWHj7AtSTgHJOpcBlC7t94cbsXmqDKDIeqmw1uwAuA==
+"@elux/app@^2.2.2-j.0":
+  version "2.2.2-j.0"
+  resolved "http://localhost:4873/@elux%2fapp/-/app-2.2.2-j.0.tgz#ce5a1e7bfbdb84708e5f6de63819be6f39da6d2a"
+  integrity sha512-/MrLoc3huDLnGgsxrQxCjYWjvojdAtT5Ocn+cKtg/sw3tgg6aDjuWNtrE05torYbbqn9O0yzEyE0V/FP2ORKYg==
   dependencies:
-    "@elux/core" "^2.2.2-h.0"
-    "@elux/route" "^2.2.2-h.0"
+    "@elux/core" "^2.2.2-j.0"
+    "@elux/route" "^2.2.2-j.0"
 
 "@elux/babel-preset@^1.0.2":
   version "1.0.2"
@@ -1326,10 +1326,10 @@
     "@elux/cli-utils" "^2.3.1"
     commander "^7.0.0"
 
-"@elux/core@^2.2.2-h.0":
-  version "2.2.2-h.0"
-  resolved "http://localhost:4873/@elux%2fcore/-/core-2.2.2-h.0.tgz#4f97b42944d2bd8718ea45cdbfe80155904b4360"
-  integrity sha512-5RZLLeFu7je7oOKNKht2fvhBBVUvHwzYDtp1orVYaZZxW94HbfVxTkNbAv678J459rR2yHYUV8Fa+6MPC4v+Fw==
+"@elux/core@^2.2.2-j.0":
+  version "2.2.2-j.0"
+  resolved "http://localhost:4873/@elux%2fcore/-/core-2.2.2-j.0.tgz#1ac7d1c5afb15b2fd752cd9635f98f3246a382c2"
+  integrity sha512-gC+uaN0AKB3VyhtyzJFXnIFIxMrXpfEpKlu6aEIrZWTGfC4qImuXXEV4mmb/hv3bJMjSYvkB+GYrGvZmy7ijsQ==
 
 "@elux/eslint-plugin@^1.2.2":
   version "1.2.2"
@@ -1350,50 +1350,50 @@
     eslint-plugin-vue "^8.0.1"
     prettier "^2.4.0"
 
-"@elux/react-components@^2.2.2-h.0":
-  version "2.2.2-h.0"
-  resolved "http://localhost:4873/@elux%2freact-components/-/react-components-2.2.2-h.0.tgz#da51287ad6c4084256a5963809980baa2b12b4f1"
-  integrity sha512-buEUxnZVzBPFTJhFjlpCl74+GZBMdRHQFxXUqZgRLmhlftKlNPvIW6aGdglmarXqYGTT//7aI+arBYOpyneKxw==
+"@elux/react-components@^2.2.2-j.0":
+  version "2.2.2-j.0"
+  resolved "http://localhost:4873/@elux%2freact-components/-/react-components-2.2.2-j.0.tgz#c1adfb160e37fab5f046396f294616515c56af3c"
+  integrity sha512-mSaHZI7tFY/+qETDmsD/IaikZUC9PIg6H1NSe8K+7p0l0ZWAJPOKVgTjOssClXVOuUBGIOpyjqhOZI1cse5e9w==
   dependencies:
-    "@elux/core" "^2.2.2-h.0"
-    "@elux/route" "^2.2.2-h.0"
+    "@elux/core" "^2.2.2-j.0"
+    "@elux/route" "^2.2.2-j.0"
 
-"@elux/react-redux@^2.2.2-h.0":
-  version "2.2.2-h.0"
-  resolved "http://localhost:4873/@elux%2freact-redux/-/react-redux-2.2.2-h.0.tgz#483295875c448a3334d7774d565abd5a8017ac1f"
-  integrity sha512-aF97GRo2uSNuZLYrl6Bi979CwF1aKEo+mcohEelYwogHp1uUP5eKZ2jOOq1NsohwHZY04saPrLlrR0dJ1bq5mw==
+"@elux/react-redux@^2.2.2-j.0":
+  version "2.2.2-j.0"
+  resolved "http://localhost:4873/@elux%2freact-redux/-/react-redux-2.2.2-j.0.tgz#1ed8e67fbed3f40c46d7205d5bec5c3f042ac6bb"
+  integrity sha512-JUZ+2TqkX9a34AcoYSDnA0xIIjckuBtwv0cwhrzeQZAtPAxlnHXz249oRLlL6yXFNI9VnzAHyi9/yxL/H8vijg==
   dependencies:
-    "@elux/core" "^2.2.2-h.0"
+    "@elux/core" "^2.2.2-j.0"
     react-redux "^7.2.2"
 
-"@elux/react-web@^2.2.2-h.0":
-  version "2.2.2-h.0"
-  resolved "http://localhost:4873/@elux%2freact-web/-/react-web-2.2.2-h.0.tgz#6ce91eb5b4b1eca9bc4b55dc76b7b471902581cf"
-  integrity sha512-6+IvazhgnnrLQatQrjtsfZJPo9XbHOxgkMYQvhBZQR0Eibx+bkNenrUF1itgKdxwh9mTk0WbECG33GYwDnf2CA==
+"@elux/react-web@^2.2.2-j.0":
+  version "2.2.2-j.0"
+  resolved "http://localhost:4873/@elux%2freact-web/-/react-web-2.2.2-j.0.tgz#33d8dd3ca299fc6aae5fe35748f3c7a557202609"
+  integrity sha512-PyUsVFXHFZS87pJzGwAWxpjsNJyCKGBqHtVokDJT5qogKNhqNYeoB4lPaCbmWmiGsqjSIlkvcl/s4QEgql4sbw==
   dependencies:
-    "@elux/app" "^2.2.2-h.0"
-    "@elux/core" "^2.2.2-h.0"
-    "@elux/react-components" "^2.2.2-h.0"
-    "@elux/react-redux" "^2.2.2-h.0"
-    "@elux/route" "^2.2.2-h.0"
-    "@elux/route-browser" "^2.2.2-h.0"
+    "@elux/app" "^2.2.2-j.0"
+    "@elux/core" "^2.2.2-j.0"
+    "@elux/react-components" "^2.2.2-j.0"
+    "@elux/react-redux" "^2.2.2-j.0"
+    "@elux/route" "^2.2.2-j.0"
+    "@elux/route-browser" "^2.2.2-j.0"
 
-"@elux/route-browser@^2.2.2-h.0":
-  version "2.2.2-h.0"
-  resolved "http://localhost:4873/@elux%2froute-browser/-/route-browser-2.2.2-h.0.tgz#df12424ffe6029b0905bfdec3ce45dc00f9382cc"
-  integrity sha512-xRuVUORKXVZ6bwkLdXofzTcVBFXhfv2zdSU6SDxqncFBa0G0xyTIwUjt7T5+DzLYdCnV9ojX2h0L2fEhIfkXOQ==
+"@elux/route-browser@^2.2.2-j.0":
+  version "2.2.2-j.0"
+  resolved "http://localhost:4873/@elux%2froute-browser/-/route-browser-2.2.2-j.0.tgz#a6f3c3c484bd403ef4bd13a07ba0e54a2db4a04a"
+  integrity sha512-e+9kUx4RS1p/VJM1RKK2b77vB9xX6z4G60Z53l705SmHIHrp4CfDCxdErW11Cr9LQszUuEKRw7vpwdHrFaxJRQ==
   dependencies:
-    "@elux/core" "^2.2.2-h.0"
-    "@elux/route" "^2.2.2-h.0"
+    "@elux/core" "^2.2.2-j.0"
+    "@elux/route" "^2.2.2-j.0"
     "@types/history" "~4.7.7"
     history "~4.10.1"
 
-"@elux/route@^2.2.2-h.0":
-  version "2.2.2-h.0"
-  resolved "http://localhost:4873/@elux%2froute/-/route-2.2.2-h.0.tgz#92f68e0a2754f81df1ef2529cd7816f443899ef8"
-  integrity sha512-M89uioktXl09HwqSmOUQC84bpM+J6C6tJXcdHxV45cFQSC2AYUQAgSXeojoNZzXWWNbXPw7mulVp3vOclGOVWg==
+"@elux/route@^2.2.2-j.0":
+  version "2.2.2-j.0"
+  resolved "http://localhost:4873/@elux%2froute/-/route-2.2.2-j.0.tgz#b6e6777bcfd4b4808b14209d034fc78eb31c8cce"
+  integrity sha512-xTCWGQigepfg3Xmzry17hdwvYi85wyG5ahhpsz6LCeCG9hNoYQcJ4szqddVI0DusnRP90HuOnzdWbEw9QZYgxA==
   dependencies:
-    "@elux/core" "^2.2.2-h.0"
+    "@elux/core" "^2.2.2-j.0"
 
 "@elux/stylelint-config@^1.1.1":
   version "1.1.1"
@@ -9203,15 +9203,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^4.6.4:
+typescript@^4.6.4, typescript@~4.7.0:
   version "4.7.4"
   resolved "https://registry.npmmirror.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
   integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
-
-typescript@~4.2.0:
-  version "4.2.4"
-  resolved "https://registry.npmmirror.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
-  integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

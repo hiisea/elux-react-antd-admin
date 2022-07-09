@@ -101,7 +101,11 @@ router.put('/:id', function ({params, body}: {params: {id: string}; body: IAlter
 
 router.post('/', function ({body}: {body: ICreateItem['Request']}, res, next) {
   const id = (Object.keys(database.articles).length + 1).toString();
-  database.articles[id] = {...body, id};
+  const members = database.members;
+  const memberId = Object.keys(database.members).pop() as string;
+  const author = members[memberId];
+  database.articles[id] = {...body, author: {id: author.id, name: author.name}, id};
+  author.articles++;
   const result: ICreateItem['Response'] = {id};
   setTimeout(() => res.json(result), 500);
 });

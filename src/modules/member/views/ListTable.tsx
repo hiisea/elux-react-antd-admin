@@ -4,12 +4,10 @@ import {Link, LoadingState, connectRedux} from '@elux/react-web';
 import {Tooltip} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
 import {FC, ReactNode, useMemo} from 'react';
-import {APPState} from '@/Global';
-import {CurRender, DGender, DRole, DStatus, ListItem, ListSearch, ListSummary, defaultListSearch} from '../entity';
+import {APPState, useRouter} from '@/Global';
+import {DGender, DRole, DStatus, ListItem, ListSearch, ListSummary, defaultListSearch} from '../entity';
 
 interface StoreProps {
-  prefixPathname: string;
-  curRender?: CurRender;
   listSearch: ListSearch;
   list?: ListItem[];
   listSummary?: ListSummary;
@@ -17,23 +15,22 @@ interface StoreProps {
 }
 
 interface OwnerProps {
-  size?: 'small' | 'middle' | 'large';
+  listPathname: string;
   mergeColumns?: {[field: string]: MColumns<ListItem>};
   actionColumns?: ColumnProps<ListItem>;
   commonActions?: ReactNode;
   batchActions?: MBatchActions;
-  selectedRows?: ListItem[];
+  selectedRows?: Partial<ListItem>[];
   selection?: MSelection<ListItem>;
 }
 
 const mapStateToProps: (state: APPState) => StoreProps = (state) => {
-  const {prefixPathname, listSearch, list, listSummary, listLoading, curRender} = state.member!;
-  return {prefixPathname, listSearch, list, listSummary, listLoading, curRender};
+  const {listSearch, list, listSummary, listLoading} = state.member!;
+  return {listSearch, list, listSummary, listLoading};
 };
 
 const Component: FC<StoreProps & OwnerProps> = ({
-  prefixPathname,
-  size,
+  listPathname,
   mergeColumns,
   actionColumns,
   commonActions,
@@ -43,10 +40,9 @@ const Component: FC<StoreProps & OwnerProps> = ({
   list,
   listSummary,
   listLoading,
-  curRender,
   selectedRows,
 }) => {
-  const onTableChange = useTableChange(`${prefixPathname}/list/${curRender}`, defaultListSearch, listSearch);
+  const onTableChange = useTableChange(listPathname, defaultListSearch, listSearch);
 
   const columns = useMemo<MColumns<ListItem>[]>(() => {
     const cols: MColumns<ListItem>[] = [
@@ -80,7 +76,6 @@ const Component: FC<StoreProps & OwnerProps> = ({
         align: 'center',
         sorter: true,
         width: '120px',
-        disable: curRender !== 'maintain',
         render: (val: number, record) => (
           <Link to={`/admin/article/list/index?author=${record.id}`} action="push" target="singleWindow" cname="_dialog">
             {val}
@@ -123,11 +118,13 @@ const Component: FC<StoreProps & OwnerProps> = ({
       });
     }
     return cols;
-  }, [curRender, mergeColumns, actionColumns]);
+  }, [mergeColumns, actionColumns]);
+
+  const tableSize = useRouter().location.classname.startsWith('_') ? 'middle' : 'large';
 
   return (
     <MTable<ListItem>
-      size={size}
+      size={tableSize}
       commonActions={commonActions}
       batchActions={batchActions}
       onChange={onTableChange}

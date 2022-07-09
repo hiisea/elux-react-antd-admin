@@ -6,6 +6,7 @@
     "@ant-design/icons": "*",
     "@elux/react-web": "*",
     "path-to-regexp": "*",
+    "query-string": "*",
     "moment": "*",
     "antd": "*",
     "react": "*",

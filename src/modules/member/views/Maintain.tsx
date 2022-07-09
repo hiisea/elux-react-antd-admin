@@ -6,26 +6,27 @@ import {Button, Popconfirm} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
 import {FC, ReactNode, useMemo} from 'react';
 import {APPState, GetActions} from '@/Global';
-import {ListItem, Status} from '../entity';
+import {ListItem, ListSearch, Status} from '../entity';
 import ListTable from './ListTable';
 import SearchForm from './SearchForm';
 
 interface StoreProps {
   prefixPathname: string;
-  selectedRows?: ListItem[];
+  listSearch: ListSearch;
+  curRender?: string;
 }
 
 const mapStateToProps: (state: APPState) => StoreProps = (state) => {
-  const {prefixPathname} = state.member!;
-  return {prefixPathname};
+  const {prefixPathname, curRender, listSearch} = state.member!;
+  return {prefixPathname, curRender, listSearch};
 };
 
 const {member: memberActions} = GetActions('member');
 
 const Component: FC<StoreProps & {dispatch: Dispatch}> = (props) => {
-  const {prefixPathname, dispatch} = props;
+  const {prefixPathname, curRender, listSearch, dispatch} = props;
 
-  const {selectedRows, deleteItems, alterItems, updateItem} = useAlter(dispatch, memberActions, props.selectedRows);
+  const {selectedRows, deleteItems, alterItems, updateItem} = useAlter<ListItem>(dispatch, memberActions);
   const {onShowDetail, onShowEditor} = useShowDetail(prefixPathname);
 
   const commActions = useMemo<ReactNode>(
@@ -81,8 +82,14 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = (props) => {
     <div className="g-page-content">
       <DocumentHead title="用户列表" />
       <div>
-        <SearchForm />
-        <ListTable commonActions={commActions} batchActions={batchActions} actionColumns={actionColumns} selectedRows={selectedRows} />
+        <SearchForm listSearch={listSearch} listPathname={`${prefixPathname}/list/${curRender}`} />
+        <ListTable
+          commonActions={commActions}
+          batchActions={batchActions}
+          actionColumns={actionColumns}
+          selectedRows={selectedRows}
+          listPathname={`${prefixPathname}/list/${curRender}`}
+        />
       </div>
     </div>
   );

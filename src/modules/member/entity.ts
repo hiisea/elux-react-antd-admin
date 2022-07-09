@@ -6,6 +6,7 @@ import {
   BaseListItem,
   BaseListSearch,
   BaseListSummary,
+  BaseLocationState,
   BaseModuleState,
   BaseRouteParams,
   DefineResource,
@@ -36,6 +37,8 @@ export const DRole = enumOptions(Role);
 
 export type CurView = BaseCurView;
 export type CurRender = BaseCurRender;
+
+export type LocationState = BaseLocationState<ListItem>;
 
 export interface ListSearch extends BaseListSearch {
   name?: string;

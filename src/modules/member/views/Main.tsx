@@ -18,7 +18,7 @@ function mapStateToProps(appState: APPState): StoreProps {
   const {curView, curRender, itemDetail} = appState.member!;
   return {curView, curRender, itemDetail};
 }
-
+//
 const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curView, curRender, itemDetail, dispatch}) => {
   return (
     <Switch elseView={<ErrorPage />}>

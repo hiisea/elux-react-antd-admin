@@ -36,7 +36,7 @@ const {member: memberActions} = GetActions('member');
 const Component: FC<Props> = ({itemDetail, dispatch}) => {
   const [form] = Form.useForm();
   const goBack = useCallback(() => GetClientRouter().back(1, 'window'), []);
-  const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, memberActions, goBack);
+  const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, memberActions);
 
   const onReset = useCallback(() => {
     form.resetFields();

@@ -1,6 +1,7 @@
 import {DownOutlined, UpOutlined} from '@ant-design/icons';
 import {Button, Form} from 'antd';
-import {memo, useCallback, useMemo, useState} from 'react';
+import {cloneElement, memo, useCallback, useMemo, useRef, useState} from 'react';
+import {useRouter} from '@/Global';
 import {SearchFromItems} from '../../utils/tools';
 import styles from './index.module.less';
 
@@ -13,23 +14,28 @@ interface Props<TFormData> {
   senior?: number; //未展开时显示多少项
   cols?: number; //每行显示多少项
   expand?: boolean;
-  onReset?: () => void;
 }
 
 function Component<TFormData>(props: Props<TFormData>) {
-  const {className = '', items, onSearch, onReset, fixedFields, values, cols = 4} = props;
+  const {className = '', items, onSearch, fixedFields, values, cols = 4} = props;
   const [expand, setExpand] = useState(!!props.expand);
-  const list = useMemo(() => {
-    return fixedFields ? items.filter((item) => fixedFields[item.name as string] === undefined) : items;
-  }, [fixedFields, items]);
+  const router = useRouter();
+  const refSource = {
+    router,
+    onSearch,
+    fixedFields,
+  };
+  const refData = useRef({...refSource, initLoction: router.location});
+  Object.assign(refData.current, refSource);
+
   const {senior = 4} = props;
-  const shrink = expand ? list.length : senior;
+  const shrink = expand ? items.length : senior;
 
   const {colWidth, arr} = useMemo(() => {
     const cWidth = parseFloat((100 / cols).toFixed(2));
     const cArr: number[] = [];
     let cur = 0;
-    list.forEach((item) => {
+    items.forEach((item) => {
       // eslint-disable-next-line no-control-regex
       const label = Math.ceil(item.label!.replace(/[^\x00-\xff]/g, 'aa').length / 2);
       const col = item.col || 1;
@@ -43,26 +49,27 @@ function Component<TFormData>(props: Props<TFormData>) {
       cur += col;
     });
     return {colWidth: cWidth, arr: cArr};
-  }, [cols, list]);
+  }, [cols, items]);
 
   const fields = useMemo(() => {
-    return values ? list.map(({name}) => ({name: name as string, value: values[name as string]})) : [];
-  }, [list, values]);
+    return values ? items.map(({name}) => ({name: name as string, value: values[name as string]})) : [];
+  }, [items, values]);
 
-  const onFinish = useCallback(
-    (vals: TFormData) => {
-      Object.assign(vals, fixedFields);
-      onSearch(vals);
-    },
-    [fixedFields, onSearch]
-  );
+  const onReset = useCallback(() => {
+    refData.current.router.push(refData.current.initLoction, 'page');
+  }, []);
+
+  const onFinish = useCallback((vals: TFormData) => {
+    Object.assign(vals, refData.current.fixedFields);
+    refData.current.onSearch(vals);
+  }, []);
   const toggle = useCallback(() => {
     setExpand((_expand) => !_expand);
   }, []);
   return (
     <div className={styles.root + ' ' + className}>
       <Form layout="inline" onFinish={onFinish} fields={fields}>
-        {list.map((item, index) => (
+        {items.map((item, index) => (
           <Form.Item
             name={item.name as string}
             rules={item.rules}
@@ -74,7 +81,7 @@ function Component<TFormData>(props: Props<TFormData>) {
               </span>
             }
           >
-            {item.formItem!}
+            {fixedFields && fixedFields[item.name] ? cloneElement(item.formItem as any, {disabled: true}) : item.formItem}
           </Form.Item>
         ))}
         <div className="form-btns">
@@ -82,7 +89,7 @@ function Component<TFormData>(props: Props<TFormData>) {
             搜索
           </Button>
           <Button onClick={onReset}>重置</Button>
-          {list.length > senior && (
+          {items.length > senior && (
             <a className="expand" onClick={toggle}>
               {expand ? '收起' : '展开'} {expand ? <UpOutlined /> : <DownOutlined />}
             </a>

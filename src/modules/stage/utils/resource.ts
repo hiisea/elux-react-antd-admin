@@ -28,11 +28,18 @@ export interface BaseListSummary {
 
 export interface BaseItemDetail extends BaseListItem {}
 
+export interface BaseLocationState<TListItem = BaseListItem> {
+  selectLimit?: number | [number, number];
+  selectedRows?: Partial<TListItem>[];
+  showSearch?: boolean;
+  fixedSearch?: {[field: string]: any};
+  onEditSubmit?: (id: string, data: Record<string, any>) => Promise<void>;
+  onSelectedSubmit?: (rows: Partial<TListItem>[]) => void;
+}
 export interface BaseModuleState<TDefineResource extends DefineResource = DefineResource> {
   prefixPathname: string;
   curView?: TDefineResource['CurView'];
   curRender?: TDefineResource['CurRender'];
-  listConfig?: {selectLimit?: number | [number, number]; showSearch?: {[key: string]: any}};
   listSearch: TDefineResource['ListSearch'];
   list?: TDefineResource['ListItem'][];
   listSummary?: TDefineResource['ListSummary'];
@@ -45,7 +52,6 @@ export interface BaseRouteParams<TDefineResource extends DefineResource = Define
   prefixPathname: string;
   curView?: TDefineResource['CurView'];
   curRender?: TDefineResource['CurRender'];
-  listConfig?: {selectLimit?: number | [number, number]; showSearch?: {[key: string]: any}};
   listSearch?: TDefineResource['ListSearch'];
   itemId?: string;
 }
@@ -87,9 +93,6 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
     if (query.pageCurrent) {
       data.pageCurrent = parseInt(query.pageCurrent) || undefined;
     }
-    if (query.listConfig) {
-      data.listConfig = JSON.parse(query.listConfig);
-    }
     return data;
   }
 
@@ -106,7 +109,6 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
       routeParams.curRender = curRender || 'maintain';
       const listQuery = this.parseListQuery(searchQuery);
       routeParams.listSearch = mergeDefaultParams(this.defaultListSearch, listQuery);
-      routeParams.listConfig = listQuery.listConfig;
     } else if (curView === 'item') {
       routeParams.curRender = curRender || 'detail';
       routeParams.itemId = id;
@@ -122,9 +124,15 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
   //也可以不做任何await，直接Render，此时需要设计Loading界面
   public onMount(env: 'init' | 'route' | 'update'): void {
     this.routeParams = this.getRouteParams();
-    const {prefixPathname, curView, curRender, listSearch, listConfig, itemId} = this.routeParams;
+    const {prefixPathname, curView, curRender, listSearch, itemId} = this.routeParams;
     this.dispatch(
-      this.privateActions._initState({prefixPathname, curView, curRender, listSearch, listConfig, itemId} as TDefineResource['ModuleState'])
+      this.privateActions._initState({
+        prefixPathname,
+        curView,
+        curRender,
+        listSearch,
+        itemId,
+      } as TDefineResource['ModuleState'])
     );
     if (curView === 'list') {
       this.dispatch(this.actions.fetchList(listSearch));
@@ -193,15 +201,14 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
 export function useSearch<TFormData>(listPathname: string, defaultListSearch: Partial<TFormData>) {
   const onSearch = useCallback(
     (values: TFormData) => {
-      GetClientRouter().push({url: `${listPathname}`, searchQuery: excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1})}, 'page');
+      const router = GetClientRouter();
+      const searchQuery = excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1});
+      router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
     },
     [defaultListSearch, listPathname]
   );
-  const onReset = useCallback(() => {
-    GetClientRouter().push({url: `${listPathname}`}, 'page');
-  }, [listPathname]);
 
-  return {onSearch, onReset};
+  return {onSearch};
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -214,7 +221,7 @@ export function useShowDetail(prefixPathname: string) {
   );
   const onShowEditor = useCallback(
     (id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
-      GetClientRouter().push({url: `${prefixPathname}/item/edit/${id}`, classname: '_dailog'}, 'window', {onSubmit});
+      GetClientRouter().push({url: `${prefixPathname}/item/edit/${id}`, classname: '_dailog', state: {onSubmit}}, 'window');
     },
     [prefixPathname]
   );
@@ -284,13 +291,10 @@ export function useTableChange<T extends BaseListSearch>(listPathname: string, d
       const currentSorter = [sorterField, sorterOrder].join('');
       const pageCurrent = currentSorter !== sorterStr ? 1 : current;
 
-      GetClientRouter().push(
-        {
-          pathname: `${listPathname}`,
-          searchQuery: excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder}),
-        },
-        'page'
-      );
+      const searchQuery = excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder});
+
+      const router = GetClientRouter();
+      router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
     },
     [defaultListSearch, listSearch, listPathname, sorterStr]
   );
@@ -300,14 +304,13 @@ export function useTableChange<T extends BaseListSearch>(listPathname: string, d
 export function useUpdateItem(
   id: string,
   dispatch: Dispatch,
-  actions: {updateItem?(id: string, data: Record<string, any>): Action; createItem?(data: Record<string, any>): Action},
-  goBack: () => void
+  actions: {updateItem?(id: string, data: Record<string, any>): Action; createItem?(data: Record<string, any>): Action}
 ) {
   const [loading, setLoading] = useState(false);
 
   const onFinish = useCallback(
     (values: Record<string, any>) => {
-      const {onSubmit} = (GetClientRouter().runtime.payload || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
+      const {onSubmit} = (GetClientRouter().location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
       let result: Promise<void>;
       setLoading(true);
       if (onSubmit) {
@@ -319,9 +322,9 @@ export function useUpdateItem(
           result = dispatch(actions.createItem!(values)) as Promise<void>;
         }
       }
-      result.then(goBack).catch(() => setLoading(false));
+      result.then(() => GetClientRouter().back(1, 'window')).finally(() => setLoading(false));
     },
-    [goBack, id, dispatch, actions]
+    [id, dispatch, actions]
   );
 
   return {loading, onFinish};

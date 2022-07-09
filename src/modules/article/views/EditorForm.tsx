@@ -25,17 +25,16 @@ const fromDecorators = getFormDecorators<UpdateItem>({
 });
 
 interface Props {
-  listUrl: string;
   dispatch: Dispatch;
   itemDetail: ItemDetail;
 }
 
 const {article: articleActions} = GetActions('article');
 
-const Component: FC<Props> = ({itemDetail, dispatch, listUrl}) => {
+const Component: FC<Props> = ({itemDetail, dispatch}) => {
   const [form] = Form.useForm();
-  const goBack = useCallback(() => GetClientRouter().back(1, 'window', null, listUrl), [listUrl]);
-  const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, articleActions, goBack);
+  const goBack = useCallback(() => GetClientRouter().back(1, 'window'), []);
+  const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, articleActions);
 
   const onReset = useCallback(() => {
     form.resetFields();

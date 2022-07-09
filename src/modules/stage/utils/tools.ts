@@ -40,6 +40,11 @@ export function loadingPlaceholder(val: string | undefined): string {
   return val || '...';
 }
 
+// export function urlPushQuery(url: string, query: {[key: string]: any} = {}): string {
+//   const queryStr = stringify(query);
+//   return queryStr ? `${url}${url.indexOf('?') > -1 ? '&' : '?'}${queryStr}` : url;
+// }
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function enumOptions<T extends {[key: string]: any}>(data: T) {
   const options: {value: string; label: string}[] = [];

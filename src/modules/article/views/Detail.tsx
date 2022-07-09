@@ -8,13 +8,12 @@ import {DStatus, ItemDetail} from '../entity';
 const DescriptionsItem = Descriptions.Item;
 
 interface Props {
-  listUrl: string;
   itemDetail?: ItemDetail;
 }
 
-const Component: FC<Props> = ({itemDetail, listUrl}) => {
+const Component: FC<Props> = ({itemDetail}) => {
   return (
-    <DialogPage title="文章详情" subject="文章详情" backOverflowRedirect={listUrl} mask>
+    <DialogPage title="文章详情" subject="文章详情" mask>
       <div className="g-dialog-content" style={{width: 800}}>
         {itemDetail ? (
           <Descriptions bordered column={2}>

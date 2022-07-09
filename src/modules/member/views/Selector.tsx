@@ -1,29 +1,47 @@
 import DialogPage from '@elux-admin-antd/stage/components/DialogPage';
+import {MColumns} from '@elux-admin-antd/stage/components/MTable';
 import {connectRedux} from '@elux/react-web';
 import {FC, useMemo} from 'react';
-import {APPState} from '@/Global';
+import {APPState, useRouter} from '@/Global';
+import {ListItem, ListSearch, LocationState} from '../entity';
 import ListTable from './ListTable';
 import SearchForm from './SearchForm';
 
 interface StoreProps {
-  listConfig?: {selectLimit?: number | [number, number]; showSearch?: {[key: string]: any}};
+  prefixPathname: string;
+  listSearch: ListSearch;
+  curRender?: string;
 }
 
 const mapStateToProps: (state: APPState) => StoreProps = (state) => {
-  const {listConfig} = state.member!;
-  return {listConfig};
+  const {prefixPathname, curRender, listSearch} = state.member!;
+  return {prefixPathname, curRender, listSearch};
 };
 
-const Component: FC<StoreProps> = ({listConfig}) => {
+const Component: FC<StoreProps> = ({prefixPathname, curRender, listSearch}) => {
+  const router = useRouter();
+  const {selectLimit, showSearch, fixedSearch, selectedRows} = (router.location.state || {}) as LocationState;
+  const mergeColumns: {[field: string]: MColumns<ListItem>} = useMemo(
+    () => ({
+      articles: {disable: true},
+    }),
+    []
+  );
+
   const selection = useMemo(() => {
-    return {limit: listConfig?.selectLimit};
-  }, [listConfig?.selectLimit]);
+    return {limit: selectLimit};
+  }, [selectLimit]);
 
   return (
     <DialogPage subject="用户列表" mask>
       <div className="g-dialog-content" style={{width: 1100, height: 750}}>
-        <SearchForm />
-        <ListTable size="middle" selection={selection} />
+        {showSearch && <SearchForm listSearch={listSearch} fixedFields={fixedSearch} listPathname={`${prefixPathname}/list/${curRender}`} />}
+        <ListTable
+          selectedRows={selectedRows}
+          mergeColumns={mergeColumns}
+          selection={selection}
+          listPathname={`${prefixPathname}/list/${curRender}`}
+        />
       </div>
     </DialogPage>
   );
