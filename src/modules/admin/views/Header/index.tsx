@@ -2,7 +2,7 @@
 import {BellOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
 import {CurUser} from '@elux-admin-antd/stage/entity';
 import {AdminHomeUrl} from '@elux-admin-antd/stage/utils/const';
-import {Dispatch, Link, connectRedux} from '@elux/react-web';
+import {Dispatch, connectRedux} from '@elux/react-web';
 import {Avatar, Badge, Dropdown, Menu, MenuProps} from 'antd';
 import {FC, useCallback, useMemo} from 'react';
 import {APPState, GetActions, GetClientRouter, StaticPrefix} from '@/Global';
@@ -63,9 +63,9 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curUser, notices, sid
         ) : (
           <MenuFoldOutlined className="toggle-sider" onClick={toggleSider} />
         )}
-        <Link to="" action="back" target="page">
+        <a href="https://eluxjs.com" target="_blank" rel="noreferrer">
           <QuestionCircleOutlined /> 帮助指南
-        </Link>
+        </a>
       </div>
       <div className="main">
         <Badge count={notices?.num || 0} className="notice" offset={[-15, 13]}>

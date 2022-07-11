@@ -125,7 +125,7 @@ const Component: FC<StoreProps & OwnerProps> = ({
       });
     }
     return cols;
-  }, [mergeColumns, actionColumns]);
+  }, [actionColumns, mergeColumns, singleWindow]);
 
   const tableSize = useRouter().location.classname.startsWith('_') ? 'middle' : 'large';
 

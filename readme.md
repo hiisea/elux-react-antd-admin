@@ -1,47 +1,23 @@
-# 项目介绍
+## 在线预览
 
-本模版是一个使用elux框架、包含简单`增删改查`功能的案例。
+<http://admin-react-antd.eluxjs.com>
 
-## 安装依赖注意事项
+## 项目介绍
 
-- 因为使用了`npm workspace`，所以推荐使用yarn安装依赖。如果使用npm，请保证其版本>=7.0，并使用命令 npm install --legacy-peer-deps
-- @types/react不支持安装多版本，请保证只安装一份
+本项目基于`Elux+React+Antd`框架开发，其立意不在于展示多么漂亮的UI组件（`UI组件的轮子已经很多了`），而是通用的工程结构和可复用的增删改查逻辑和代码。借助于`Restful`的理念，任何业务动作其实都可以抽象为`对资源的增删改查`，所以对于并不追求个性化的后退管理系统来说，绝大部分工作都是**表单**和**增删改查**。如果能把它们编写成抽象的、可复用的、可扩展的通用代码，则可以节省我们大量的编码时间，这也是近来流行的`低代码平台`赖以发展的理论基础...
 
-## 运行脚本
+## 项目特色
 
-- `yarn start` 以开发模式运行，该命令通常包含2个子命令：yarn mock && yarn dev，也可以自己分开运行
-- `yarn mock` 在本地开起一个模拟api假数据的mock server，你也可不使用它
-- `yarn build` 编译到dist目录
-- `yarn demo` 模拟运行编译后的dist目录
+<http://admin-react-antd.eluxjs.com//admin/dashboard/workplace>
 
-默认开发服务器端口是4003(<http://localhost:4003/)，你可以在elux.config.js>中修改
+## 关于Elux
 
-# 关于“H5”与“Admin”风格说明
+基于“微模块”和“模型驱动”的跨平台、跨框架『同构方案』
 
-CSR浏览器项目提供了“H5”与“Admin”两种风格的模版，从中可以理解不一样的路由风格设置
+官网：<https://eluxjs.com/>
 
-# 关于“Taro”模版示例说明
+Github：<https://github.com/hiisea/elux-react-antd-admin>
 
-- 先运行`yarn mock`，在本地开起一个模拟api假数据的mock server
-- Taro工程使用的是Taro官方脚手架，具体使用方法见Taro官方
+Gitee：<https://gitee.com/hiisea/elux-react-antd-admin-fork>
 
-# 关于“微前端”模版示例说明
-
-案例中假设有3个Team来合作开发这个项目：
-
-1. basic-team 负责开发根模块：stage，独立运行端口：4003
-2. article-team 负责开发模块：article，独立运行端口：4001
-3. user-team 负责开发模块：my，独立运行端口：4002
-
-每个Team都是一个独立工程，它们都可以独立运行，示例中为了安装和演示方便将它们放在一个父工程中，并使用lerna进行管理，
-实际项目中不需要这个父工程中，而可以使用lerna管理子模块
-
-除此之外示例中还有3个独立工程：
-
-- app-build 集成案例：采用静态编译的方式集成以上3个Team的输出
-- app-runtime 集成案例：采用动态注入(模块联邦)的方式集成以上3个Team的输出，以此模式运行时，**需要将3个独立站点都跑起来**，可以在父工程中运行`yarn start`
-- app-api Mock一个API假数据Server
-
-# 更多信息
-
-更多信息请访问：[https://eluxjs.com](https://eluxjs.com)
+完全开源免费，喜欢拿去，觉得好用别忘了Github给个`Star`(-_-)...

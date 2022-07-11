@@ -1,6 +1,10 @@
 @import '../../assets/css/var.less';
 
 :global {
+  ._dialog > :local(.root) > .control {
+    display: block;
+  }
+
   :local(.root) {
     position: relative;
     background-color: #fff;
@@ -21,6 +25,7 @@
       top: 0;
       right: 0;
       z-index: 99999999;
+      display: none;
       padding: 0 10px;
       font-size: 13px;
       text-align: center;
