@@ -1,7 +1,7 @@
 import {Router} from 'express';
-import {IGetMenu, IGetNotices} from '@/modules/admin/entity';
-import {IGetCurUser, ILogin, ILogout, IRegistry, IResetPassword, ISendCaptcha} from '@/modules/stage/entity';
 import {adminUser, database, guestUser} from '../database';
+import type {IGetMenu, IGetNotices} from '@elux-admin-antd/admin/entity';
+import type {IGetCurUser, ILogin, ILogout, IRegistry, IResetPassword, ISendCaptcha} from '@elux-admin-antd/stage/entity';
 
 const router = Router();
 

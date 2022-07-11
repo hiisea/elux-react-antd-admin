@@ -24,12 +24,11 @@
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "rootDir": "../",
+    "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "@mock/*": ["./src/*"],
-      "@/*": ["../src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["./", "../src/"]
+  "include": ["./"]
 }

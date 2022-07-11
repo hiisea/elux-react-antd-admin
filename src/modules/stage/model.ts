@@ -69,9 +69,6 @@ export class Model extends BaseModel<ModuleState, APPState> {
       //this.dispatch是this.store.dispatch的快捷方式
       //以下语句等于this.store.dispatch({type: 'stage._initState', payload: initState})
       this.dispatch(this.privateActions._initState(initState));
-      if (subModule) {
-        await this.store.mount(subModule as any, env);
-      }
     } catch (err: any) {
       //如果根模块初始化中出现错误，将错误放入ModuleState.error字段中，此时将展示该错误信息
       const initState: ModuleState = {curUser: {...guest}, subModule, curView, fromUrl, error: err.message || err.toString()};

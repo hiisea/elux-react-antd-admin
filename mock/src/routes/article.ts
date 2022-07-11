@@ -1,6 +1,6 @@
 import {Router} from 'express';
-import {IAlterItems, ICreateItem, IGetItem, IGetList, ListItem} from '@/modules/article/entity';
 import {database} from '../database';
+import type {IAlterItems, ICreateItem, IGetItem, IGetList, ListItem, Status} from '@elux-admin-antd/article/entity';
 
 type Query<T> = {[K in keyof T]: string};
 
@@ -11,8 +11,8 @@ router.get('/', function ({query}: {query: Query<IGetList['Request']>}, res, nex
     pageCurrent: parseInt(query.pageCurrent || '1'),
     pageSize: parseInt(query.pageSize || '10'),
     title: query.title || '',
-    author: query.author || '',
-    editor: query.editor || '',
+    author: (query.author || '').split(',', 1)[0],
+    editor: (query.editor || '').split(',', 1)[0],
     status: query.status || '',
     sorterField: query.sorterField || '',
     sorterOrder: query.sorterOrder || '',
@@ -32,10 +32,12 @@ router.get('/', function ({query}: {query: Query<IGetList['Request']>}, res, nex
     listData = listData.filter((item) => item.title.includes(title));
   }
   if (author) {
-    listData = listData.filter((item) => item.author.id === author);
+    listData = listData.filter((item) => item.author.split(',', 1)[0] === author);
   }
   if (editor) {
-    listData = listData.filter((item) => item.editors[0].id === editor || (item.editors[1] && item.editors[1].id === editor));
+    listData = listData.filter(
+      (item) => item.editors[0].split(',', 1)[0] === editor || (item.editors[1] && item.editors[1].split(',', 1)[0] === editor)
+    );
   }
   if (status) {
     listData = listData.filter((item) => item.status === status);
@@ -55,11 +57,11 @@ router.get('/', function ({query}: {query: Query<IGetList['Request']>}, res, nex
   if (sorterField === 'author') {
     if (sorterOrder === 'ascend') {
       listData.sort((a: ListItem, b: ListItem) => {
-        return a.author.name.charCodeAt(0) - b.author.name.charCodeAt(0);
+        return a.author.split(',')[1].charCodeAt(0) - b.author.split(',')[1].charCodeAt(0);
       });
     } else if (sorterOrder === 'descend') {
       listData.sort((a, b) => {
-        return b.author.name.charCodeAt(0) - a.author.name.charCodeAt(0);
+        return b.author.split(',')[1].charCodeAt(0) - a.author.split(',')[1].charCodeAt(0);
       });
     }
   }
@@ -104,7 +106,7 @@ router.post('/', function ({body}: {body: ICreateItem['Request']}, res, next) {
   const members = database.members;
   const memberId = Object.keys(database.members).pop() as string;
   const author = members[memberId];
-  database.articles[id] = {...body, author: {id: author.id, name: author.name}, id};
+  database.articles[id] = {...body, author: [author.id, author.name].join(','), createdTime: Date.now(), status: 'pending' as Status, id};
   author.articles++;
   const result: ICreateItem['Response'] = {id};
   setTimeout(() => res.json(result), 500);

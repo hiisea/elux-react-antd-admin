@@ -1,6 +1,7 @@
 import {CloseCircleFilled, CloseOutlined, FullscreenOutlined} from '@ant-design/icons';
 import {memo, useCallback, useMemo, useRef} from 'react';
 import {useRouter} from '@/Global';
+import {DialogPageClassname} from '../../utils/const';
 import {BaseLocationState} from '../../utils/resource';
 import styles from './index.module.less';
 
@@ -80,7 +81,7 @@ function Component<TSearch>({
   const onSelect = useCallback(() => {
     const {limit, router, selectorPathname, showSearch, fixedSearch, selectedRows, onSelectedSubmit} = refData.current;
     const state: BaseLocationState = {selectLimit: limit, selectedRows, showSearch, fixedSearch, onSelectedSubmit};
-    router.push({pathname: selectorPathname, searchQuery: fixedSearch, classname: '_dialog', state}, 'window');
+    router.push({pathname: selectorPathname, searchQuery: fixedSearch, classname: DialogPageClassname, state}, 'window');
   }, []);
 
   const children = useMemo(() => {

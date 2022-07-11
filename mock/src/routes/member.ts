@@ -1,6 +1,6 @@
 import {Router} from 'express';
-import {IAlterItems, ICreateItem, IGetItem, IGetList, ListItem} from '@/modules/member/entity';
 import {database} from '../database';
+import type {IAlterItems, ICreateItem, IGetItem, IGetList, ListItem} from '@elux-admin-antd/member/entity';
 
 type Query<T> = {[K in keyof T]: string};
 
@@ -116,7 +116,7 @@ router.put('/:id', function ({params, body}: {params: {id: string}; body: IAlter
 
 router.post('/', function ({body}: {body: ICreateItem['Request']}, res, next) {
   const id = (Object.keys(database.members).length + 1).toString();
-  database.members[id] = {...body, id};
+  database.members[id] = {...body, articles: 0, createdTime: Date.now(), id};
   const result: ICreateItem['Response'] = {id};
   setTimeout(() => res.json(result), 500);
 });

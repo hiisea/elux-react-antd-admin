@@ -2,7 +2,7 @@ import {DashboardOutlined, ProfileOutlined, TeamOutlined} from '@ant-design/icon
 import {CurUser} from '@elux-admin-antd/stage/entity';
 import {Dispatch, connectRedux} from '@elux/react-web';
 import {Menu, MenuProps} from 'antd';
-import {ComponentType, FC, useCallback, useMemo} from 'react';
+import {ComponentType, FC, useCallback, useMemo, useState} from 'react';
 import {APPState, GetActions} from '@/Global';
 import {MenuItem} from '../../entity';
 import styles from './index.module.less';
@@ -46,18 +46,28 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, siderCollap
     return mappingMenuData(menuData);
   }, [menuData]);
 
+  const [openKeys, setOpenKeys] = useState(menuSelected.open);
+
+  useMemo(() => {
+    setOpenKeys(menuSelected.open);
+  }, [menuSelected.open]);
+
+  const onOpenChange = useCallback((val) => setOpenKeys(val), []);
+
   const onClick = useCallback(
     ({key}: any) => {
       dispatch(adminActions.clickMenu(key));
     },
     [dispatch]
   );
+
   return (
     <div className={styles.root}>
       <Menu
         onClick={onClick}
-        defaultSelectedKeys={menuSelected.selected}
-        defaultOpenKeys={menuSelected.open}
+        onOpenChange={onOpenChange}
+        selectedKeys={menuSelected.selected}
+        openKeys={openKeys}
         mode="inline"
         theme="dark"
         inlineCollapsed={siderCollapsed}

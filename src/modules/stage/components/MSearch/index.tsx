@@ -1,14 +1,13 @@
 import {DownOutlined, UpOutlined} from '@ant-design/icons';
 import {Button, Form} from 'antd';
 import {cloneElement, memo, useCallback, useMemo, useRef, useState} from 'react';
-import {useRouter} from '@/Global';
 import {SearchFromItems} from '../../utils/tools';
 import styles from './index.module.less';
 
 interface Props<TFormData> {
   className?: string;
   items: SearchFromItems<TFormData>;
-  onSearch: (values: TFormData) => void;
+  onSearch: (values: Partial<TFormData>) => void;
   values: TFormData;
   fixedFields?: Partial<TFormData>; //固定搜索值
   senior?: number; //未展开时显示多少项
@@ -19,13 +18,11 @@ interface Props<TFormData> {
 function Component<TFormData>(props: Props<TFormData>) {
   const {className = '', items, onSearch, fixedFields, values, cols = 4} = props;
   const [expand, setExpand] = useState(!!props.expand);
-  const router = useRouter();
   const refSource = {
-    router,
     onSearch,
     fixedFields,
   };
-  const refData = useRef({...refSource, initLoction: router.location});
+  const refData = useRef({...refSource});
   Object.assign(refData.current, refSource);
 
   const {senior = 4} = props;
@@ -55,8 +52,8 @@ function Component<TFormData>(props: Props<TFormData>) {
     return values ? items.map(({name}) => ({name: name as string, value: values[name as string]})) : [];
   }, [items, values]);
 
-  const onReset = useCallback(() => {
-    refData.current.router.push(refData.current.initLoction, 'page');
+  const onClear = useCallback(() => {
+    refData.current.onSearch(refData.current.fixedFields || {});
   }, []);
 
   const onFinish = useCallback((vals: TFormData) => {
@@ -88,7 +85,7 @@ function Component<TFormData>(props: Props<TFormData>) {
           <Button type="primary" htmlType="submit">
             搜索
           </Button>
-          <Button onClick={onReset}>重置</Button>
+          <Button onClick={onClear}>重置</Button>
           {items.length > senior && (
             <a className="expand" onClick={toggle}>
               {expand ? '收起' : '展开'} {expand ? <UpOutlined /> : <DownOutlined />}

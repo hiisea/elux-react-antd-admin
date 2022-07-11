@@ -1,11 +1,11 @@
 @import './var.less';
 
 :global {
-  .elux-window._dailog {
-    :local(.component-loading),
-    :local(.component-error) {
-      width: 400px;
-      height: 200px;
+  .elux-window._dialog {
+    > :local(.component-loading),
+    > :local(.component-error) {
+      width: 400px !important;
+      height: 200px !important;
     }
   }
 

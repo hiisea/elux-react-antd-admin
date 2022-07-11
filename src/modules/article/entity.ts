@@ -32,8 +32,8 @@ export interface ListItem extends BaseListItem {
   title: string;
   summary: string;
   content: string;
-  author: {id: string; name: string};
-  editors: Array<{id: string; name: string}>;
+  author: string;
+  editors: string[];
   status: Status;
   createdTime: number;
 }
@@ -79,9 +79,6 @@ export type ICreateItem = IRequest<ItemDetail, {id: string}>;
 
 export class API implements BaseApi {
   public getList(params: IGetList['Request']): Promise<IGetList['Response']> {
-    params = {...params};
-    params.author && (params.author = params.author.split(',', 1)[0]);
-    params.editor && (params.editor = params.editor.split(',', 1)[0]);
     return request.get<{list: ListItem[]; listSummary: ListSummary}>('/api/article', {params}).then((res) => {
       return res.data;
     });

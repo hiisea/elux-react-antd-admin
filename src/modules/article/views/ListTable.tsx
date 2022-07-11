@@ -1,5 +1,7 @@
 import MTable, {MBatchActions, MColumns, MSelection} from '@elux-admin-antd/stage/components/MTable';
-import {useTableChange} from '@elux-admin-antd/stage/utils/resource';
+import {DialogPageClassname} from '@elux-admin-antd/stage/utils/const';
+import {useSingleWindow, useTableChange} from '@elux-admin-antd/stage/utils/resource';
+import {splitIdName} from '@elux-admin-antd/stage/utils/tools';
 import {Link, LoadingState, connectRedux} from '@elux/react-web';
 import {Tooltip} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
@@ -43,6 +45,7 @@ const Component: FC<StoreProps & OwnerProps> = ({
   selectedRows,
 }) => {
   const onTableChange = useTableChange(listPathname, defaultListSearch, listSearch);
+  const singleWindow = useSingleWindow();
 
   const columns = useMemo<MColumns<ListItem>[]>(() => {
     const cols: MColumns<ListItem>[] = [
@@ -50,9 +53,11 @@ const Component: FC<StoreProps & OwnerProps> = ({
         title: '标题',
         dataIndex: 'title',
         ellipsis: {showTitle: false},
-        render: (title) => (
+        render: (title, record) => (
           <Tooltip placement="topLeft" title={title}>
-            {title}
+            <Link to={`/admin/article/item/detail/${record.id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
+              {title}
+            </Link>
           </Tooltip>
         ),
       },
@@ -61,23 +66,29 @@ const Component: FC<StoreProps & OwnerProps> = ({
         dataIndex: 'author',
         width: '10%',
         sorter: true,
-        render: (author: {id: string; name: string}) => (
-          <Link to={`/admin/member/item/detail/${author.id}`} action="push" target="singleWindow" cname="_dialog">
-            {author.name}
-          </Link>
-        ),
+        render: (author: string) => {
+          const {id, name} = splitIdName(author);
+          return (
+            <Link to={`/admin/member/item/detail/${id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
+              {name}
+            </Link>
+          );
+        },
       },
       {
         title: '责任编辑',
         dataIndex: 'editors',
         width: '20%',
         className: 'g-actions',
-        render: (editors: {id: string; name: string}[]) =>
-          editors.map((editor) => (
-            <Link key={editor.id} to={`/admin/member/item/detail/${editor.id}`} action="push" target="singleWindow" cname="_dialog">
-              {editor.name}
-            </Link>
-          )),
+        render: (editors: string[]) =>
+          editors.map((editor) => {
+            const {id, name} = splitIdName(editor);
+            return (
+              <Link key={id} to={`/admin/member/item/detail/${id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
+                {name}
+              </Link>
+            );
+          }),
       },
       {
         title: '创建时间',
@@ -107,7 +118,7 @@ const Component: FC<StoreProps & OwnerProps> = ({
       });
     }
     return cols;
-  }, [mergeColumns, actionColumns]);
+  }, [mergeColumns, actionColumns, singleWindow]);
 
   const tableSize = useRouter().location.classname.startsWith('_') ? 'middle' : 'large';
 

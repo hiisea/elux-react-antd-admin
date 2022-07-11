@@ -1,7 +1,8 @@
-import {Action, BaseModel, Dispatch, LoadingState, StoreState, effect, reducer} from '@elux/react-web';
+import {Action, BaseModel, Dispatch, LoadingState, RouteTarget, StoreState, effect, reducer} from '@elux/react-web';
 import {pathToRegexp} from 'path-to-regexp';
 import {useCallback, useMemo, useState} from 'react';
-import {GetClientRouter} from '@/Global';
+import {useRouter} from '@/Global';
+import {DialogPageClassname} from './const';
 import {excludeDefaultParams, mergeDefaultParams, message} from './tools';
 
 export type BaseCurView = 'list' | 'item';
@@ -199,13 +200,13 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useSearch<TFormData>(listPathname: string, defaultListSearch: Partial<TFormData>) {
+  const router = useRouter();
   const onSearch = useCallback(
-    (values: TFormData) => {
-      const router = GetClientRouter();
+    (values: Partial<TFormData>) => {
       const searchQuery = excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1});
       router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
     },
-    [defaultListSearch, listPathname]
+    [defaultListSearch, listPathname, router]
   );
 
   return {onSearch};
@@ -213,17 +214,18 @@ export function useSearch<TFormData>(listPathname: string, defaultListSearch: Pa
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useShowDetail(prefixPathname: string) {
+  const router = useRouter();
   const onShowDetail = useCallback(
     (id: string) => {
-      GetClientRouter().push({url: `${prefixPathname}/item/detail/${id}`, classname: '_dailog'}, 'window');
+      router.push({url: `${prefixPathname}/item/detail/${id}`, classname: DialogPageClassname}, 'window');
     },
-    [prefixPathname]
+    [prefixPathname, router]
   );
   const onShowEditor = useCallback(
     (id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
-      GetClientRouter().push({url: `${prefixPathname}/item/edit/${id}`, classname: '_dailog', state: {onSubmit}}, 'window');
+      router.push({url: `${prefixPathname}/item/edit/${id}`, classname: DialogPageClassname, state: {onSubmit}}, 'window');
     },
-    [prefixPathname]
+    [prefixPathname, router]
   );
 
   return {onShowDetail, onShowEditor};
@@ -278,10 +280,15 @@ export function useAlter<T>(
   return {selectedRows, setSelectedRows, deleteItems, alterItems, updateItem};
 }
 
+export function useSingleWindow(): RouteTarget {
+  const router = useRouter();
+  return router.location.classname.startsWith('_') ? 'page' : 'window';
+}
+
 //eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useTableChange<T extends BaseListSearch>(listPathname: string, defaultListSearch: T, listSearch?: T) {
   const sorterStr = [listSearch?.sorterField, listSearch?.sorterOrder].join('');
-
+  const router = useRouter();
   return useCallback(
     (pagination: any, filter: any, _sorter: any) => {
       const sorter = _sorter as {field: string; order: 'ascend' | 'descend' | undefined};
@@ -293,10 +300,9 @@ export function useTableChange<T extends BaseListSearch>(listPathname: string, d
 
       const searchQuery = excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder});
 
-      const router = GetClientRouter();
       router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
     },
-    [defaultListSearch, listSearch, listPathname, sorterStr]
+    [defaultListSearch, listSearch, listPathname, sorterStr, router]
   );
 }
 
@@ -307,10 +313,10 @@ export function useUpdateItem(
   actions: {updateItem?(id: string, data: Record<string, any>): Action; createItem?(data: Record<string, any>): Action}
 ) {
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   const onFinish = useCallback(
     (values: Record<string, any>) => {
-      const {onSubmit} = (GetClientRouter().location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
+      const {onSubmit} = (router.location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
       let result: Promise<void>;
       setLoading(true);
       if (onSubmit) {
@@ -322,9 +328,9 @@ export function useUpdateItem(
           result = dispatch(actions.createItem!(values)) as Promise<void>;
         }
       }
-      result.then(() => GetClientRouter().back(1, 'window')).finally(() => setLoading(false));
+      result.finally(() => setLoading(false)).then(() => router.back(1, 'window'));
     },
-    [id, dispatch, actions]
+    [router, id, dispatch, actions]
   );
 
   return {loading, onFinish};

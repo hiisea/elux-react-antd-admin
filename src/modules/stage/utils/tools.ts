@@ -40,6 +40,15 @@ export function loadingPlaceholder(val: string | undefined): string {
   return val || '...';
 }
 
+export function splitIdName(str: string): {id: string; name: string} {
+  if (str.includes(',')) {
+    const [id] = str.split(',', 1);
+    return {id, name: str.replace(id + ',', '')};
+  } else {
+    return {id: str, name: str};
+  }
+}
+
 // export function urlPushQuery(url: string, query: {[key: string]: any} = {}): string {
 //   const queryStr = stringify(query);
 //   return queryStr ? `${url}${url.indexOf('?') > -1 ? '&' : '?'}${queryStr}` : url;

@@ -1,7 +1,7 @@
+import {CurUser} from '@elux-admin-antd/stage/entity';
 import mockjs from 'mockjs';
-import {ItemDetail as Article} from '@/modules/article/entity';
-import {ItemDetail as Member} from '@/modules/member/entity';
-import {CurUser} from '@/modules/stage/entity';
+import type {ItemDetail as Article} from '@elux-admin-antd/article/entity';
+import type {ItemDetail as Member} from '@elux-admin-antd/member/entity';
 
 const timestamp = Date.now();
 
@@ -50,14 +50,14 @@ function createMembers(): {[id: string]: Member} {
 const members = createMembers();
 
 function createArticles(): {[id: string]: Article} {
-  const authors: {id: string; name: string}[] = [];
-  const editors: {id: string; name: string}[] = [];
+  const authors: string[] = [];
+  const editors: string[] = [];
 
   for (const id in members) {
     const member = members[id];
-    authors.push({id, name: member.name});
-    if (member.role === 'editor') {
-      editors.push({id, name: member.name});
+    authors.push([id, member.name].join(','));
+    if (member.role === 'editor' && member.status === 'enable') {
+      editors.push([id, member.name].join(','));
     }
     authors.splice(0, authors.length - 5);
     editors.splice(0, editors.length - 5);
@@ -86,7 +86,7 @@ function createArticles(): {[id: string]: Article} {
     .list.forEach((item: Article, index: number) => {
       item.createdTime = timestamp + index * 1000;
       item.id = `${item.id}`;
-      const authorId = item.author.id;
+      const authorId = item.author.split(',', 1)[0];
       members[authorId].articles++;
       listData[item.id] = item;
     });

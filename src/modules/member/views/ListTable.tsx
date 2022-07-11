@@ -1,5 +1,6 @@
 import MTable, {MBatchActions, MColumns, MSelection} from '@elux-admin-antd/stage/components/MTable';
-import {useTableChange} from '@elux-admin-antd/stage/utils/resource';
+import {DialogPageClassname} from '@elux-admin-antd/stage/utils/const';
+import {useSingleWindow, useTableChange} from '@elux-admin-antd/stage/utils/resource';
 import {Link, LoadingState, connectRedux} from '@elux/react-web';
 import {Tooltip} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
@@ -43,6 +44,7 @@ const Component: FC<StoreProps & OwnerProps> = ({
   selectedRows,
 }) => {
   const onTableChange = useTableChange(listPathname, defaultListSearch, listSearch);
+  const singleWindow = useSingleWindow();
 
   const columns = useMemo<MColumns<ListItem>[]>(() => {
     const cols: MColumns<ListItem>[] = [
@@ -51,6 +53,11 @@ const Component: FC<StoreProps & OwnerProps> = ({
         dataIndex: 'name',
         width: '10%',
         sorter: true,
+        render: (val: string, record) => (
+          <Link to={`/admin/member/item/detail/${record.id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
+            {val}
+          </Link>
+        ),
       },
       {
         title: '呢称',
@@ -77,7 +84,7 @@ const Component: FC<StoreProps & OwnerProps> = ({
         sorter: true,
         width: '120px',
         render: (val: number, record) => (
-          <Link to={`/admin/article/list/index?author=${record.id}`} action="push" target="singleWindow" cname="_dialog">
+          <Link to={`/admin/article/list/index?author=${record.id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
             {val}
           </Link>
         ),

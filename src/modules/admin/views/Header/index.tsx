@@ -1,10 +1,11 @@
 //通常模块可以定义一个根视图，根视图中显示什么由模块自行决定，父级不干涉，相当于子路由
 import {BellOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
 import {CurUser} from '@elux-admin-antd/stage/entity';
+import {AdminHomeUrl} from '@elux-admin-antd/stage/utils/const';
 import {Dispatch, Link, connectRedux} from '@elux/react-web';
 import {Avatar, Badge, Dropdown, Menu, MenuProps} from 'antd';
 import {FC, useCallback, useMemo} from 'react';
-import {APPState, GetActions, StaticPrefix} from '@/Global';
+import {APPState, GetActions, GetClientRouter, StaticPrefix} from '@/Global';
 import {Notices} from '../../entity';
 import styles from './index.module.less';
 
@@ -31,6 +32,8 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curUser, notices, sid
     ({key}: {key: string}) => {
       if (key === 'logout') {
         dispatch(stageActions.logout());
+      } else if (key === 'home') {
+        GetClientRouter().relaunch({url: AdminHomeUrl}, 'window');
       }
     },
     [dispatch]
@@ -40,7 +43,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curUser, notices, sid
     const items: MenuProps['items'] = [
       {
         label: '个人中心',
-        key: 'my',
+        key: 'home',
         icon: <UserOutlined />,
       },
       {

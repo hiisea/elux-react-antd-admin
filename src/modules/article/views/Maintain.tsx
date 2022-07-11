@@ -21,12 +21,12 @@ const mapStateToProps: (state: APPState) => StoreProps = (state) => {
   return {prefixPathname, curRender, listSearch};
 };
 
-const {member: memberActions} = GetActions('member');
+const {article: articleActions} = GetActions('article');
 
 const Component: FC<StoreProps & {dispatch: Dispatch}> = (props) => {
   const {prefixPathname, curRender, listSearch, dispatch} = props;
 
-  const {selectedRows, deleteItems, alterItems, updateItem} = useAlter<ListItem>(dispatch, memberActions);
+  const {selectedRows, deleteItems, alterItems, updateItem} = useAlter<ListItem>(dispatch, articleActions);
   const {onShowDetail, onShowEditor} = useShowDetail(prefixPathname);
 
   const commActions = useMemo<ReactNode>(

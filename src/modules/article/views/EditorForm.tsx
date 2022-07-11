@@ -1,3 +1,5 @@
+import {ListSearch as MemberListSearch, Role, Status} from '@elux-admin-antd/member/entity';
+import MSelect from '@elux-admin-antd/stage/components/MSelect';
 import {useUpdateItem} from '@elux-admin-antd/stage/utils/resource';
 import {getFormDecorators} from '@elux-admin-antd/stage/utils/tools';
 import {Dispatch, exportView} from '@elux/react-web';
@@ -43,7 +45,13 @@ const Component: FC<Props> = ({itemDetail, dispatch}) => {
   return (
     <Form layout="horizontal" {...formItemLayout} form={form} initialValues={itemDetail} onFinish={onFinish}>
       <FormItem label="责任编辑" {...fromDecorators.editors}>
-        <Input allowClear placeholder="请输入" />
+        <MSelect<MemberListSearch>
+          placeholder="请选择责任编辑"
+          selectorPathname="/admin/member/list/selector"
+          fixedSearch={{role: Role.责任编辑, status: Status.启用}}
+          limit={[1, 2]}
+          showSearch
+        ></MSelect>
       </FormItem>
       <FormItem label="标题" {...fromDecorators.title}>
         <Input allowClear placeholder="请输入" />
