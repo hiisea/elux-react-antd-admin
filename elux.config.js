@@ -5,7 +5,7 @@ const {getLocalIP} = require('@elux/cli-utils');
 const serverPort = 4003;
 const apiHosts = {
   local: `http://${getLocalIP()}:3003/`,
-  test: 'http://10.201.0.212:31088/',
+  demo: 'http://api-admin-demo.eluxjs.com/',
 };
 const APP_ENV = process.env.APP_ENV || 'local';
 module.exports = {

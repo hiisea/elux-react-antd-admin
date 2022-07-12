@@ -8,7 +8,7 @@
 
 ## 项目特色
 
-<http://admin-react-antd.eluxjs.com//admin/dashboard/workplace>
+<http://admin-react-antd.eluxjs.com/admin/dashboard/workplace>
 
 ## 关于Elux
 

@@ -4,7 +4,7 @@ import {ColumnProps, TableProps} from 'antd/lib/table';
 import {ComponentType, Key, ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useRouter} from '@/Global';
 import DateTime from '../../components/DateTime';
-import {BaseListSearch, BaseListSummary, BaseLocationState} from '../../utils/resource';
+import {BaseListSearch, BaseListSummary, BaseLocationState} from '../../utils/base';
 import styles from './index.module.less';
 
 export interface BatchAction {

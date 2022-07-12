@@ -24,6 +24,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "outDir": "../dist/mock",
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {

@@ -54,23 +54,6 @@ export function splitIdName(str: string): {id: string; name: string} {
 //   return queryStr ? `${url}${url.indexOf('?') > -1 ? '&' : '?'}${queryStr}` : url;
 // }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function enumOptions<T extends {[key: string]: any}>(data: T) {
-  const options: {value: string; label: string}[] = [];
-  const labelToValue: {[key in keyof T]: T[key]} = {} as any;
-  const valueToLabel: {[key in T[keyof T]]: string} = {} as any;
-  Object.keys(data).forEach((label) => {
-    options.push({label, value: data[label]});
-    (labelToValue as any)[label] = data[label];
-    valueToLabel[data[label]] = label;
-  });
-  return {
-    valueToLabel,
-    labelToValue,
-    options,
-  };
-}
-
 function isMapObject(obj: any): Boolean {
   return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
 }

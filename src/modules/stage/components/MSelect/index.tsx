@@ -1,8 +1,8 @@
 import {CloseCircleFilled, CloseOutlined, FullscreenOutlined} from '@ant-design/icons';
 import {memo, useCallback, useMemo, useRef} from 'react';
 import {useRouter} from '@/Global';
+import {BaseLocationState} from '../../utils/base';
 import {DialogPageClassname} from '../../utils/const';
-import {BaseLocationState} from '../../utils/resource';
 import styles from './index.module.less';
 
 interface Props<T> {

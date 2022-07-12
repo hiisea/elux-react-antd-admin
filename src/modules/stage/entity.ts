@@ -1,6 +1,4 @@
-//定义本模块涉及的业务实体和数据API
-import {isServer} from '@elux/react-web';
-import request, {IRequest} from './utils/request';
+import {IRequest} from '@elux-admin-antd/stage/utils/base';
 
 export interface CurUser {
   id: string;
@@ -9,14 +7,6 @@ export interface CurUser {
   mobile: string;
   hasLogin: boolean;
 }
-
-export const guest: CurUser = {
-  id: '',
-  username: '游客',
-  hasLogin: false,
-  avatar: '',
-  mobile: '',
-};
 
 export interface LoginParams {
   username: string;
@@ -62,50 +52,3 @@ export enum CurView {
   'agreement' = 'agreement',
   'forgetPassword' = 'forgetPassword',
 }
-
-class API {
-  public getCurUser(): Promise<IGetCurUser['Response']> {
-    if (isServer()) {
-      return Promise.resolve(guest);
-    }
-    return request
-      .get<CurUser>('/api/session')
-      .then((res) => {
-        return res.data;
-      })
-      .catch(() => {
-        return guest;
-      });
-  }
-  public login(params: ILogin['Request']): Promise<ILogin['Response']> {
-    return request.put<CurUser>('/api/session', params).then((res) => {
-      return res.data;
-    });
-  }
-
-  public logout(): Promise<ILogout['Response']> {
-    return request.delete<CurUser>('/api/session').then((res) => {
-      return res.data;
-    });
-  }
-
-  public registry(params: IRegistry['Request']): Promise<IRegistry['Response']> {
-    return request.post<CurUser>('/api/session', params).then((res) => {
-      return res.data;
-    });
-  }
-
-  public resetPassword(params: IResetPassword['Request']): Promise<IResetPassword['Response']> {
-    return request.put<CurUser>('/api/session/resetPassword', params).then((res) => {
-      return res.data;
-    });
-  }
-
-  public sendCaptcha(params: ISendCaptcha['Request']): Promise<ISendCaptcha['Response']> {
-    return request.post<void>('/api/session/sendCaptcha', params).then((res) => {
-      return res.data;
-    });
-  }
-}
-
-export const api = new API();

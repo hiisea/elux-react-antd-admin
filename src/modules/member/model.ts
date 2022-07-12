@@ -1,5 +1,6 @@
 import {BaseResource} from '@elux-admin-antd/stage/utils/resource';
-import {MemberResource, api, defaultListSearch} from './entity';
+import api from './api';
+import {MemberResource, defaultListSearch} from './entity';
 
 export class Model extends BaseResource<MemberResource> {
   protected api = api;

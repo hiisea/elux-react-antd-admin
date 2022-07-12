@@ -2,7 +2,8 @@
 import {BaseModel, effect, reducer} from '@elux/react-web';
 import {pathToRegexp} from 'path-to-regexp';
 import {APPState} from '@/Global';
-import {MenuData, Notices, SubModule, api} from './entity';
+import api from './api';
+import {MenuData, Notices, SubModule} from './entity';
 import type {Tab, TabData} from './entity';
 
 //定义本模块的状态结构

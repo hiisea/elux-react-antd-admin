@@ -2,11 +2,6 @@ import axios, {AxiosError, AxiosResponse} from 'axios';
 import {ApiPrefix} from '@/Global';
 import {CommonErrorCode, CustomError} from './errors';
 
-export interface IRequest<Req, Res> {
-  Request: Req;
-  Response: Res;
-}
-
 function mapHttpErrorCode(code: string): CommonErrorCode {
   const HttpErrorCode = {
     '401': CommonErrorCode.unauthorized,

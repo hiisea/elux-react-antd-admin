@@ -2,7 +2,8 @@
 import {BaseModel, ErrorCodes, LoadingState, effect, reducer} from '@elux/react-web';
 import {pathToRegexp} from 'path-to-regexp';
 import {APPState} from '@/Global';
-import {CurView, SubModule, api, guest} from './entity';
+import api, {guest} from './api';
+import {CurView, SubModule} from './entity';
 import {AdminHomeUrl, GuestHomeUrl, LoginUrl} from './utils/const';
 import {CommonErrorCode, CustomError} from './utils/errors';
 import {message} from './utils/tools';

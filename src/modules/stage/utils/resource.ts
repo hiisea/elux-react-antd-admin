@@ -1,83 +1,10 @@
-import {Action, BaseModel, Dispatch, LoadingState, RouteTarget, StoreState, effect, reducer} from '@elux/react-web';
+import {Action, BaseModel, Dispatch, RouteTarget, StoreState, effect, reducer} from '@elux/react-web';
 import {pathToRegexp} from 'path-to-regexp';
 import {useCallback, useMemo, useState} from 'react';
 import {useRouter} from '@/Global';
+import {BaseApi, BaseListSearch, DefineResource} from './base';
 import {DialogPageClassname} from './const';
 import {excludeDefaultParams, mergeDefaultParams, message} from './tools';
-
-export type BaseCurView = 'list' | 'item';
-export type BaseCurRender = 'maintain' | 'index' | 'selector' | 'edit' | 'detail';
-
-export interface BaseListSearch {
-  pageCurrent?: number;
-  pageSize?: number;
-  sorterOrder?: 'ascend' | 'descend';
-  sorterField?: string;
-}
-
-export interface BaseListItem {
-  id: string;
-}
-
-export interface BaseListSummary {
-  pageCurrent: number;
-  pageSize: number;
-  totalItems: number;
-  totalPages: number;
-  categorys?: {id: string; name: string; ids: string[]}[];
-}
-
-export interface BaseItemDetail extends BaseListItem {}
-
-export interface BaseLocationState<TListItem = BaseListItem> {
-  selectLimit?: number | [number, number];
-  selectedRows?: Partial<TListItem>[];
-  showSearch?: boolean;
-  fixedSearch?: {[field: string]: any};
-  onEditSubmit?: (id: string, data: Record<string, any>) => Promise<void>;
-  onSelectedSubmit?: (rows: Partial<TListItem>[]) => void;
-}
-export interface BaseModuleState<TDefineResource extends DefineResource = DefineResource> {
-  prefixPathname: string;
-  curView?: TDefineResource['CurView'];
-  curRender?: TDefineResource['CurRender'];
-  listSearch: TDefineResource['ListSearch'];
-  list?: TDefineResource['ListItem'][];
-  listSummary?: TDefineResource['ListSummary'];
-  listLoading?: LoadingState;
-  itemId?: string;
-  itemDetail?: TDefineResource['ItemDetail'];
-}
-
-export interface BaseRouteParams<TDefineResource extends DefineResource = DefineResource> {
-  prefixPathname: string;
-  curView?: TDefineResource['CurView'];
-  curRender?: TDefineResource['CurRender'];
-  listSearch?: TDefineResource['ListSearch'];
-  itemId?: string;
-}
-
-export interface BaseApi {
-  getList?(params: BaseListSearch): Promise<{list: BaseListItem[]; listSummary: BaseListSummary}>;
-  getItem?(params: {id: string}): Promise<BaseItemDetail>;
-  alterItems?(params: {id: string | string[]; data: Record<string, any>}): Promise<void>;
-  updateItem?(params: {id: string; data: any}): Promise<void>;
-  createItem?(params: Record<string, any>): Promise<{id: string}>;
-  deleteItems?(params: {id: string | string[]}): Promise<void>;
-}
-
-export interface DefineResource {
-  RouteParams: BaseRouteParams;
-  ModuleState: BaseModuleState;
-  ListSearch: BaseListSearch;
-  ListItem: BaseListItem;
-  ListSummary: BaseListSummary;
-  CurView: BaseCurView;
-  CurRender: BaseCurRender;
-  ItemDetail: BaseItemDetail;
-  UpdateItem: any;
-  CreateItem: any;
-}
 
 export abstract class BaseResource<TDefineResource extends DefineResource, TStoreState extends StoreState = StoreState> extends BaseModel<
   TDefineResource['ModuleState'],
