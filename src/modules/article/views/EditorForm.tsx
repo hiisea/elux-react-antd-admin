@@ -1,6 +1,6 @@
 import {ListSearch as MemberListSearch, Role, Status} from '@elux-admin-antd/member/entity';
 import MSelect from '@elux-admin-antd/stage/components/MSelect';
-import {useUpdateItem} from '@elux-admin-antd/stage/utils/resource';
+//import {useUpdateItem} from '@elux-admin-antd/stage/utils/resource';
 import {getFormDecorators} from '@elux-admin-antd/stage/utils/tools';
 import {Dispatch, exportView} from '@elux/react-web';
 import {Button, Form, Input} from 'antd';
@@ -36,8 +36,19 @@ const {article: articleActions} = GetActions('article');
 const Component: FC<Props> = ({itemDetail, dispatch}) => {
   const [form] = Form.useForm();
   const goBack = useCallback(() => GetClientRouter().back(1, 'window'), []);
-  const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, articleActions);
+  //const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, articleActions);
 
+  const onFinish = useCallback(
+    (values: UpdateItem) => {
+      const id = itemDetail.id;
+      if (id) {
+        dispatch(articleActions.updateItem!(id, values));
+      } else {
+        dispatch(articleActions.createItem!(values));
+      }
+    },
+    [dispatch, itemDetail.id]
+  );
   const onReset = useCallback(() => {
     form.resetFields();
   }, [form]);
@@ -64,7 +75,7 @@ const Component: FC<Props> = ({itemDetail, dispatch}) => {
       </FormItem>
 
       <div className="g-form-actions">
-        <Button type="primary" htmlType="submit" loading={loading}>
+        <Button type="primary" htmlType="submit">
           提交
         </Button>
         <Button type="dashed" onClick={onReset}>

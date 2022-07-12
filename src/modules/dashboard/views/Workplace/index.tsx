@@ -5,14 +5,22 @@ import styles from './index.module.less';
 const ProjectDirs = `
   src
   ├── modules
-  │      ├── stage
-  │      ├── admin
-  │      ├── dashboard
-  │      ├── article
-  │      └── member
+  │      ├── stage //总的根模块
+  │      ├── admin //admin根模块
+  │      ├── dashboard //工作台模块
+  │      ├── article //文章模块
+  │      ├── comment //评论模块
+  │      └── member //用户模块
 
 `;
 
+const RouterCodding = `
+  await api.createItem!({id, data}); //await 创建API
+  await this.getRouter().back(1, 'window'); //await 返回列表页面
+  message.success('新增成功！'); //提示
+  this.getRouter().back(0, 'page'); //刷新页面
+
+`;
 const Component: FC = () => {
   return (
     <div className={styles.root}>
@@ -65,7 +73,9 @@ const Component: FC = () => {
           </Link>
         </li>
         <li>
-          提供双栈单链<cite>虚拟路由</cite>，不仅可以拥有二维的历史栈，还能访问历史记录、保持历史快照。
+          提供双栈单链<cite>虚拟路由</cite>
+          ，不仅可以拥有二维的历史栈，还能访问历史记录、保持历史快照、对路由编程、等待。例如新增用户后，需要返回列表页面并刷新：
+          <pre>{RouterCodding}</pre>
         </li>
         <li>
           支持<cite>虚拟窗口</cite>：
@@ -102,59 +112,59 @@ const Component: FC = () => {
               发送给好友后，其可以通过<cite>Url记录</cite>还原窗口
             </li>
           </ul>
-          <li>
-            基于抽象的<cite>增删改查</cite>逻辑：
-            <ul>
-              <li>
-                通过类的继承<cite>class Model extends BaseResource</cite>复用Model业务逻辑
-              </li>
-              <li>
-                通过<cite>React Hooks</cite>复用UI逻辑
-              </li>
-              <li>
-                将视图抽象成为2大类：<em>列表</em>(List)和<em>单条</em>(Item)
-              </li>
-              <li>
-                在此基础上引入<em>视图渲染器</em>(Render)概念，如：
-                <ul>
-                  <li>
-                    render=<cite>maintain</cite>(列表+维护)，如：
-                    <Link to="/admin/member/list/maintain" action="push" target="page">
-                      /admin/member/list/maintain
-                    </Link>
-                  </li>
-                  <li>
-                    render=<cite>index</cite>(列表+展示)，如：
-                    <Link to="/admin/article/list/index?author=49" action="push" target="window" cname="_dialog">
-                      /admin/article/list/index
-                    </Link>
-                  </li>
-                  <li>
-                    render=<cite>selector</cite>(列表+选择)，如：
-                    <Link to="/admin/member/list/selector?role=editor&status=enable" action="push" target="window" cname="_dialog">
-                      /admin/member/list/selector
-                    </Link>
-                  </li>
-                  <li>
-                    render=<cite>detail</cite>(单条+展示)，如：
-                    <Link to="/admin/member/item/detail/49" action="push" target="window" cname="_dialog">
-                      /admin/member/item/detail/49
-                    </Link>
-                  </li>
-                  <li>
-                    render=<cite>detail</cite>(单条+编辑)，如：
-                    <Link to="/admin/member/item/edit/49" action="push" target="window" cname="_dialog">
-                      /admin/member/item/edit/49
-                    </Link>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
+        </li>
+        <li>
+          基于抽象的<cite>增删改查</cite>逻辑：
+          <ul>
+            <li>
+              通过类的继承<cite>class Model extends BaseResource</cite>复用Model业务逻辑
+            </li>
+            <li>
+              通过<cite>React Hooks</cite>复用UI逻辑
+            </li>
+            <li>
+              将视图抽象成为2大类：<em>列表</em>(List)和<em>单条</em>(Item)
+            </li>
+            <li>
+              在此基础上引入<em>视图渲染器</em>(Render)概念，如：
+              <ul>
+                <li>
+                  render=<cite>maintain</cite>(列表+维护)，如：
+                  <Link to="/admin/member/list/maintain" action="push" target="page">
+                    /admin/member/list/maintain
+                  </Link>
+                </li>
+                <li>
+                  render=<cite>index</cite>(列表+展示)，如：
+                  <Link to="/admin/article/list/index?author=49" action="push" target="window" cname="_dialog">
+                    /admin/article/list/index
+                  </Link>
+                </li>
+                <li>
+                  render=<cite>selector</cite>(列表+选择)，如：
+                  <Link to="/admin/member/list/selector?role=editor&status=enable" action="push" target="window" cname="_dialog">
+                    /admin/member/list/selector
+                  </Link>
+                </li>
+                <li>
+                  render=<cite>detail</cite>(单条+展示)，如：
+                  <Link to="/admin/member/item/detail/49" action="push" target="window" cname="_dialog">
+                    /admin/member/item/detail/49
+                  </Link>
+                </li>
+                <li>
+                  render=<cite>detail</cite>(单条+编辑)，如：
+                  <Link to="/admin/member/item/edit/49" action="push" target="window" cname="_dialog">
+                    /admin/member/item/edit/49
+                  </Link>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </li>
         <li>
           基于<cite>微模块</cite>架构，每个业务功能封装成一个独立的<cite>功能模块</cite>
-          ，想要哪个功能就安装哪个模块，支持按需加载，src下不再凌乱不堪：
+          ，想要哪个功能就安装哪个模块，并支持异步按需加载，src下不再凌乱不堪：
           <pre>{ProjectDirs}</pre>
         </li>
         <li>还有更多彩蛋有待补充，或者自己探索吧...</li>

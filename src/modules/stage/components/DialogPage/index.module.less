@@ -82,24 +82,7 @@
         font-weight: bold;
         border-bottom: 1px solid @border-color-split;
       }
-
-      > .footer {
-        margin: 20px;
-        text-align: center;
-      }
     }
-
-    // > .title {
-    //   padding-bottom: 10px;
-    //   font-size: 14px;
-    //   color: #777;
-    //   border-bottom: 1px solid red;
-
-    //   &::before {
-    //     margin-right: 5px;
-    //     content: '◎';
-    //   }
-    // }
   }
 
   :local(.mask) {
@@ -111,5 +94,9 @@
     z-index: -1;
     cursor: default;
     background: rgba(0, 0, 0, 0.2);
+
+    &.no-mask {
+      background-color: rgba(0, 0, 0, 0);
+    }
   }
 }

@@ -51,7 +51,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatc
   }, [dispatch]);
 
   return (
-    <DialogPage title="用户登录" subject="用户登录" showBrand>
+    <DialogPage title="用户登录" subject="用户登录" maskClosable={false} showBrand>
       <div className={`${styles.root} g-dialog-content`}>
         <Form form={form} onFinish={onSubmit} initialValues={initialValues}>
           <Form.Item {...fromDecorators.username}>

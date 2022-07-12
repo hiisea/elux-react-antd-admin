@@ -6,7 +6,7 @@ import styles from './index.module.less';
 
 const Component: FC = () => {
   return (
-    <DialogPage title="用户协议" subject="用户协议" showBrand>
+    <DialogPage title="用户协议" subject="用户协议" maskClosable={false} showBrand>
       <div className={`${styles.root} g-dialog-content`}>
         <div>
           您在使用百度公司提供的各项服务之前，请您务必审慎阅读、充分理解本协议各条款内容，特别是以粗体标注的部分，包括但不限于免除或者限制责任的条款。如您不同意本服务协议及/或随时对其的修改，您可以主动停止使用百度公司提供的服务；您一旦使用百度公司提供的服务，即视为您已了解并完全同意本服务协议各项内容，包括百度公司对服务协议随时所做的任何修改，并成为我们的用户。

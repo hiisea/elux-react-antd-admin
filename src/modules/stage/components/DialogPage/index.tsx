@@ -58,9 +58,14 @@ const Component: FC<Props> = (props) => {
           {children}
         </div>
       </div>
-      {!!mask && (
-        <Link disabled={!maskClosable} className={styles.mask} to={1} action="back" target="window" overflowRedirect={backOverflowRedirect}></Link>
-      )}
+      <Link
+        disabled={!maskClosable}
+        className={`${styles.mask} ${!mask ? 'no-mask' : ''}`}
+        to={1}
+        action="back"
+        target="window"
+        overflowRedirect={backOverflowRedirect}
+      ></Link>
     </>
   );
 };

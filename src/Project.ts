@@ -22,6 +22,7 @@ export const appConfig: AppConfig = setConfig({
   //Elux并没定死怎么解析路由参数，你可以使用常用的'query-string'或者'json'
   //只需要将parse(解析)和stringify(序列化)方法设置给Elux
   QueryString: {parse, stringify},
+  //elux内部使用的虚拟路由是独立自主的，但可以映射到原生路由
   NativePathnameMapping: {
     in(nativePathname) {
       if (nativePathname === '/') {

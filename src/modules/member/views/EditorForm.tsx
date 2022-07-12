@@ -1,4 +1,4 @@
-import {useUpdateItem} from '@elux-admin-antd/stage/utils/resource';
+// import {useUpdateItem} from '@elux-admin-antd/stage/utils/resource';
 import {getFormDecorators} from '@elux-admin-antd/stage/utils/tools';
 import {Dispatch, exportView} from '@elux/react-web';
 import {Button, Form, Input, Select} from 'antd';
@@ -36,7 +36,19 @@ const {member: memberActions} = GetActions('member');
 const Component: FC<Props> = ({itemDetail, dispatch}) => {
   const [form] = Form.useForm();
   const goBack = useCallback(() => GetClientRouter().back(1, 'window'), []);
-  const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, memberActions);
+  // const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, memberActions);
+
+  const onFinish = useCallback(
+    (values: UpdateItem) => {
+      const id = itemDetail.id;
+      if (id) {
+        dispatch(memberActions.updateItem(id, values));
+      } else {
+        dispatch(memberActions.createItem(values));
+      }
+    },
+    [dispatch, itemDetail.id]
+  );
 
   const onReset = useCallback(() => {
     form.resetFields();
@@ -63,7 +75,7 @@ const Component: FC<Props> = ({itemDetail, dispatch}) => {
         <Select allowClear placeholder="请选择" options={DStatus.options} />
       </FormItem>
       <div className="g-form-actions">
-        <Button type="primary" htmlType="submit" loading={loading}>
+        <Button type="primary" htmlType="submit">
           提交
         </Button>
         <Button type="dashed" onClick={onReset}>

@@ -177,24 +177,26 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
   }
 
   @effect()
+  public async deleteItems(id: string | string[]): Promise<void> {
+    await this.api.deleteItems!({id});
+    message.success('删除成功！');
+    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
+  }
+
+  @effect()
   public async updateItem(id: string, data: TDefineResource['UpdateItem']): Promise<void> {
     await this.api.updateItem!({id, data});
-    message.success('修改成功！');
-    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
+    await this.getRouter().back(1, 'window');
+    message.success('编辑成功！');
+    this.getRouter().back(0, 'page');
   }
 
   @effect()
   public async createItem(data: TDefineResource['CreateItem']): Promise<void> {
     await this.api.createItem!(data);
+    await this.getRouter().back(1, 'window');
     message.success('创建成功！');
-    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
-  }
-
-  @effect()
-  public async deleteItems(id: string | string[]): Promise<void> {
-    await this.api.deleteItems!({id});
-    message.success('删除成功！');
-    this.state.curView === 'list' && this.dispatch(this.actions.fetchList());
+    this.getRouter().back(0, 'page');
   }
 }
 
@@ -306,32 +308,32 @@ export function useTableChange<T extends BaseListSearch>(listPathname: string, d
   );
 }
 
-//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useUpdateItem(
-  id: string,
-  dispatch: Dispatch,
-  actions: {updateItem?(id: string, data: Record<string, any>): Action; createItem?(data: Record<string, any>): Action}
-) {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const onFinish = useCallback(
-    (values: Record<string, any>) => {
-      const {onSubmit} = (router.location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
-      let result: Promise<void>;
-      setLoading(true);
-      if (onSubmit) {
-        result = onSubmit(id, values);
-      } else {
-        if (id) {
-          result = dispatch(actions.updateItem!(id, values)) as Promise<void>;
-        } else {
-          result = dispatch(actions.createItem!(values)) as Promise<void>;
-        }
-      }
-      result.finally(() => setLoading(false)).then(() => router.back(1, 'window'));
-    },
-    [router, id, dispatch, actions]
-  );
+//也可以使用回调到方法创建和编辑，但使用await 路由跳转更简单
+// export function useUpdateItem(
+//   id: string,
+//   dispatch: Dispatch,
+//   actions: {updateItem?(id: string, data: Record<string, any>): Action; createItem?(data: Record<string, any>): Action}
+// ) {
+//   const [loading, setLoading] = useState(false);
+//   const router = useRouter();
+//   const onFinish = useCallback(
+//     (values: Record<string, any>) => {
+//       const {onSubmit} = (router.location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
+//       let result: Promise<void>;
+//       setLoading(true);
+//       if (onSubmit) {
+//         result = onSubmit(id, values);
+//       } else {
+//         if (id) {
+//           result = dispatch(actions.updateItem!(id, values)) as Promise<void>;
+//         } else {
+//           result = dispatch(actions.createItem!(values)) as Promise<void>;
+//         }
+//       }
+//       result.finally(() => setLoading(false)).then(() => router.back(1, 'window'));
+//     },
+//     [router, id, dispatch, actions]
+//   );
 
-  return {loading, onFinish};
-}
+//   return {loading, onFinish};
+// }

@@ -67,7 +67,7 @@ const Component: FC<{dispatch: Dispatch}> = ({dispatch}) => {
   );
 
   return (
-    <DialogPage title="忘记密码" subject="忘记密码" showBrand>
+    <DialogPage title="忘记密码" subject="忘记密码" maskClosable={false} showBrand>
       <div className={`${styles.root} g-dialog-content`}>
         <Form form={form} onFinish={onSubmit} initialValues={initialValues}>
           <Form.Item {...fromDecorators.phone}>
