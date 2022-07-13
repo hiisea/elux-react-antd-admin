@@ -22,24 +22,27 @@ class API {
   }
   public login(params: ILogin['Request']): Promise<ILogin['Response']> {
     return request.put<CurUser>('/api/session', params).then((res) => {
+      localStorage.setItem('token', res.data.id + res.data.username);
       return res.data;
     });
   }
 
   public logout(): Promise<ILogout['Response']> {
     return request.delete<CurUser>('/api/session').then((res) => {
+      localStorage.removeItem('token');
       return res.data;
     });
   }
 
   public registry(params: IRegistry['Request']): Promise<IRegistry['Response']> {
     return request.post<CurUser>('/api/session', params).then((res) => {
+      localStorage.setItem('token', res.data.id + res.data.username);
       return res.data;
     });
   }
 
   public resetPassword(params: IResetPassword['Request']): Promise<IResetPassword['Response']> {
-    return request.put<CurUser>('/api/session/resetPassword', params).then((res) => {
+    return request.put<void>('/api/session/resetPassword', params).then((res) => {
       return res.data;
     });
   }

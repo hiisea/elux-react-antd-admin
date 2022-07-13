@@ -39,7 +39,7 @@ export type IRegistry = IRequest<RegisterParams, CurUser>;
 
 export type ISendCaptcha = IRequest<SendCaptchaParams, void>;
 
-export type IResetPassword = IRequest<ResetPasswordParams, CurUser>;
+export type IResetPassword = IRequest<ResetPasswordParams, void>;
 
 export enum SubModule {
   'shop' = 'shop',
