@@ -16,4 +16,7 @@ return {
   getOperation(options) {
     return [{action: 'copy', from: './source', to: '$'}];
   },
+  getNpmLockFile(){
+    return;
+  }
 };
