@@ -1,0 +1,93 @@
+{
+  "name": "elux-admin-antd",
+  "version": "1.0.0",
+  "description": "",
+  "author": "hiisea <hiisea@qq.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "private": true,
+  "workspaces": [
+    "./mock",
+    "./public",
+    "./src/modules/*"
+  ],
+  "browserslist": [
+    "chrome >= 80"
+  ],
+  "scripts": {
+    "lint:type": "tsc --project ./src --noEmit --emitDeclarationOnly false",
+    "lint:es": "cross-env NODE_ENV=production eslint --fix --cache \"**/*.{js,ts,tsx}\"",
+    "lint:css": "cross-env NODE_ENV=production stylelint --fix --cache \"**/*.{css,less}\"",
+    "lint:json": "prettier --write **/*.json",
+    "recommit": "git commit --amend --no-edit",
+    "demote": "elux demote",
+    "dev": "elux webpack-dev",
+    "build": "elux webpack-build",
+    "build:demo": "cross-env APP_ENV=demo elux webpack-build",
+    "build:analyzer": "elux webpack-build -a",
+    "build:mock": "tsc --project ./mock",
+    "mock": "elux mock --watch",
+    "start": "run-p mock dev",
+    "dist": "node ./dist/local/start.js",
+    "demo": "run-p mock dist"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": "cross-env NODE_ENV=production eslint --fix --quiet --cache",
+    "*.{css,less}": "cross-env NODE_ENV=production stylelint --fix --quiet --cache",
+    "*.json": "prettier --write"
+  },
+  "bundledDependencies": [
+    "moment",
+    "@ant-design/icons"
+  ],
+  "dependencies": {
+    "@elux/react-web": "^2.3.1",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "axios": "^0.21.1",
+    "query-string": "^7.1.1",
+    "path-to-regexp": "^6.2.0",
+    "antd": "^4.21.3",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@elux/cli": "^2.5.2",
+    "@elux/cli-utils": "^2.3.1",
+    "@elux/cli-webpack": "^2.2.1",
+    "@elux/cli-mock": "^2.1.0",
+    "@elux/babel-preset": "^1.0.2",
+    "@elux/eslint-plugin": "^1.2.2",
+    "@elux/stylelint-config": "^1.1.1",
+    "npm-run-all": "~4.1.5",
+    "cross-env": "~7.0.0",
+    "typescript": "~4.7.0",
+    "autoprefixer": "~10.4.0",
+    "less": "~3.12.2",
+    "less-loader": "~7.1.0",
+    "@commitlint/cli": "~12.1.1",
+    "@commitlint/config-conventional": "~12.1.1",
+    "husky": "~4.3.8",
+    "commitizen": "~4.2.3",
+    "cz-lerna-changelog": "~2.0.3",
+    "lint-staged": "~10.5.4"
+  },
+  "resolutions": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0"
+  }
+}

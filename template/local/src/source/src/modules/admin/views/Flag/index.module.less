@@ -1,0 +1,46 @@
+@import '@elux-admin-antd/stage/assets/css/var.less';
+
+:global {
+  :local(.root) {
+    height: 85px;
+    overflow: hidden;
+    background-color: @menu-dark-inline-submenu-bg;
+
+    > .wrap {
+      display: block;
+      width: 180px;
+      padding: 20px 0 0 10px;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .ver {
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 12px;
+      line-height: 14px;
+      color: black;
+      background: #fff;
+      border-radius: 10px;
+      opacity: 0.5;
+    }
+
+    .logo {
+      float: left;
+      padding-top: 2px;
+      margin-right: 8px;
+      margin-left: 8px;
+    }
+  }
+
+  .ant-layout-sider-collapsed :local(.root) {
+    .title,
+    .ver {
+      display: none;
+    }
+  }
+}

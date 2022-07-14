@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <link rel="shortcut icon" href="<%%= htmlWebpackPlugin.options.clientPublicPath %%>favicon.ico" />
+    <style>
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #fff;
+        font-size: 14px;
+        overflow: hidden;
+        background-image: linear-gradient(-45deg, #fff, #f0f2f5, #fff, #dbdee2, #fff, #dbdee2, #f0f2f5, #fff);
+      }
+      body::before {
+        content: '';
+        display: block;
+        width: 60vw;
+        height: 60vw;
+        border-radius: 60vw;
+        position: absolute;
+        left: -30vw;
+        top: -30vw;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 0 10vw;
+        background-image: linear-gradient(90deg, #d0d5da, #d0d5da, #fff);
+      }
+      body::after {
+        content: '';
+        display: block;
+        width: 44vw;
+        height: 44vw;
+        border-radius: 44vw;
+        position: absolute;
+        right: -22vw;
+        bottom: -22vw;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 0 10vw;
+        background-image: linear-gradient(#fff, #d0d5da, #d0d5da);
+      }
+      .elux-app {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+      .elux-window {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: none;
+        transition: opacity 0.2s ease-out;
+      }
+      .elux-window:last-child {
+        display: flex;
+      }
+      .elux-push .elux-window {
+        transition: none;
+      }
+      .elux-animation .elux-window:nth-last-child(2) {
+        display: flex;
+      }
+      .elux-change .elux-window:last-child {
+        opacity: 0;
+      }
+      .elux-app > div:last-of-type {
+        display: flex !important;
+      }
+      .elux-animation > div:nth-last-of-type(2) {
+        display: flex !important;
+      }
+      /* .elux-app > article::after {
+        content: '';
+        display: block;
+        position: absolute;
+        background: #000;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: -2;
+        opacity: 0;
+      } */
+      .elux-app > article > :first-child {
+        overflow: hidden;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 5px 1px;
+        position: relative;
+        max-width: calc(100vw - 30px);
+        max-height: calc(100vh - 30px);
+      }
+      .elux-app > article > .size-max{
+        width: calc(100vw - 30px);
+        height: calc(100vh - 30px);
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+      }
+      #root-loading {
+        display: block;
+        position: fixed;
+        z-index: 100000;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+      @keyframes root-loading-ball {
+        0% {
+          transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+      @keyframes root-loading-text {
+        0% {
+          opacity: 0.1;
+        }
+
+        50% {
+          opacity: 1;
+        }
+
+        100% {
+          opacity: 0.1;
+        }
+      }
+      #root-loading::before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        content: '.';
+        font-size: 0;
+        width: 64px;
+        height: 64px;
+        background: #ddd;
+        border-radius: 64px;
+        transform: translate(-50%, -50%) scale(0.5);
+        -ms-transform: translate(-50%, -50%) scale(0.5);
+        animation: root-loading-ball 1s infinite;
+      }
+      #root-loading::after {
+        font-size: 12px;
+        font-family: sans-serif;
+        color: #888;
+        position: absolute;
+        content: 'Loading';
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        animation: root-loading-text 1s infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root-loading"></div>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "@elux-admin-antd/demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "start.js",
+  "scripts": {
+    "start": "node ./start.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "express": "^4.0.0",
+    "express-history-api-fallback": "^2.0.0",
+    "http-proxy-middleware": "^1.0.0"
+  }
+}

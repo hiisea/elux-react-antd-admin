@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "types": ["node"],
+    "lib": ["es2020"],
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "declaration": true,
+    "allowJs": true,
+    "checkJs": false,
+    "strict": true,
+    "isolatedModules": true,
+    "preserveConstEnums": true,
+    "sourceMap": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "newLine": "LF",
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "noImplicitReturns": true,
+    "importHelpers": false,
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "outDir": "../dist/mock",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["./"]
+}

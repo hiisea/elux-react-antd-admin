@@ -1,0 +1,65 @@
+@import '../../assets/css/var.less';
+
+:global {
+  :local(.root) {
+    padding: 15px 0 10px !important;
+    border-bottom: 1px solid @border-color-split;
+
+    .ant-form {
+      display: flex;
+      flex-flow: row wrap;
+
+      > div {
+        display: flex;
+        padding-right: 1%;
+        padding-left: 1%;
+        margin: 0;
+        margin-bottom: 15px;
+      }
+    }
+
+    > .col4 {
+      > div {
+        width: 25%;
+      }
+    }
+
+    > .col3 {
+      > div {
+        width: 33.3%;
+      }
+    }
+
+    .ant-form-item-label {
+      flex: none;
+
+      .label {
+        display: inline-block;
+      }
+    }
+
+    .ant-form-item-control {
+      flex: auto;
+    }
+
+    .ant-calendar-picker {
+      width: 100% !important;
+    }
+
+    .form-btns {
+      flex: 1;
+      align-items: center;
+      justify-content: flex-end;
+
+      > * {
+        margin-left: 10px;
+      }
+
+      .expand {
+        display: block;
+        padding: 5px;
+        font-size: 12px;
+      }
+    }
+  }
+}
