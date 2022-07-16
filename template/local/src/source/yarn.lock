@@ -989,7 +989,7 @@
     "@babel/plugin-transform-react-jsx-development" "^7.16.7"
     "@babel/plugin-transform-react-pure-annotations" "^7.16.7"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.18.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.18.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.18.6"
   resolved "https://registry.npmmirror.com/@babel/runtime/-/runtime-7.18.6.tgz#6a1ef59f838debd670421f8c7f2cbb8da9751580"
   integrity sha512-t9wi7/AW6XtKahAe20Yw0/mMljKq0B1r2fPdvaAdV/KPDZewFXdaaa6K7lxmZBZ8FBNpCiAT6iHPmd6QO9bKfQ==
@@ -1239,13 +1239,13 @@
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@elux/app@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.npmmirror.com/@elux/app/-/app-2.3.2.tgz#69666f8311873d71b4fcef6de24f352fd30a370e"
-  integrity sha512-JyjYNDfhMVHBRUz89hoQhO6ZTCM5wcTbpoI1yBNfwG3JU19AXtyUHjkV1RCl8IPY/dW+duF+1s5mFb2njk2MBg==
+"@elux/app@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@elux/app/-/app-2.4.0.tgz#3fc397fc09efa62fd2ff2fb5376d071550e85968"
+  integrity sha512-+bPfOJkX7ukmCrdSo6Cv9o9j92aw8Ckp2Ttuixh+yUGKHNmA2GqnB/ePIQ2sVgGU3byfdIcgrw//d2cSSVoTFw==
   dependencies:
-    "@elux/core" "^2.3.2"
-    "@elux/route" "^2.3.2"
+    "@elux/core" "^2.4.0"
+    "@elux/route" "^2.4.0"
 
 "@elux/babel-preset@^1.0.2":
   version "1.0.2"
@@ -1333,10 +1333,10 @@
     "@elux/cli-utils" "^2.3.1"
     commander "^7.0.0"
 
-"@elux/core@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.npmmirror.com/@elux/core/-/core-2.3.2.tgz#d2e2cb755dd10ad83e4223aa717b4fb338adf2da"
-  integrity sha512-2DrmJOqx9F55zQloem0zxx37KXICSfRfyGWrYdNyq0vSuNWTKkdPpmS+RyH1uu+wbFDagflkYgcOu3r1MdAXpQ==
+"@elux/core@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@elux/core/-/core-2.4.0.tgz#bedd0dbdaf0221ee0a5f2d1fdfcffed5f1825d18"
+  integrity sha512-bGuANHeYP6N0arf8KHkGGY+RnVu0fjl+iOHTCDoxq70PkpiQDAUQ10srqujFgtE1cT+kL+Fq9/rN7V2FFHLRGQ==
 
 "@elux/eslint-plugin@^1.2.2":
   version "1.2.2"
@@ -1357,50 +1357,48 @@
     eslint-plugin-vue "^8.0.1"
     prettier "^2.4.0"
 
-"@elux/react-components@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.npmmirror.com/@elux/react-components/-/react-components-2.3.2.tgz#ee1ed26a57cfa90fdc36c085946182c2ee3210e2"
-  integrity sha512-ZNETZh5ExIXhcOoTRvpBw+uiUes/Sx8UEYUKdbuCJctcvHhRNoooRwINONpLjJKH55WG/n1qZo4ow9AdNZIfkA==
+"@elux/react-components@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@elux/react-components/-/react-components-2.4.0.tgz#83986adbd97a0f86afb466c5f4c17d2189a372bf"
+  integrity sha512-tQdfhcpkSbRbrsodEqAPLMQFTdo31r+vkM9PDkl969HsDsTOIdKS3lYbEbVNHmM/6r85ZTTm7MB7U2z5aioZaQ==
   dependencies:
-    "@elux/core" "^2.3.2"
-    "@elux/route" "^2.3.2"
+    "@elux/core" "^2.4.0"
+    "@elux/route" "^2.4.0"
 
-"@elux/react-redux@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.npmmirror.com/@elux/react-redux/-/react-redux-2.3.2.tgz#cb4c4e527068f98a26b11947b3d31d3b67459f2b"
-  integrity sha512-f8EGJj/PSj4nymGuiP9u63B5VubYP9nl3o1bAQIuJmCvrfq4t27F8xoBnaOabINgQTN/qDTYwh0wJ2LWAJmOtw==
+"@elux/react-redux@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@elux/react-redux/-/react-redux-2.4.0.tgz#3668df6d9e29023a45fd644de85c1f65217fd3ee"
+  integrity sha512-STQBIYJDQaUMC6WkJ56Dpb6rppH4GHA1wfTLlLF0GQdEog36yv56TmD2Beko+nvRVMdKEk2inp979vLWL+fOAQ==
   dependencies:
-    "@elux/core" "^2.3.2"
+    "@elux/core" "^2.4.0"
     react-redux "^7.2.2"
 
-"@elux/react-web@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.npmmirror.com/@elux/react-web/-/react-web-2.3.2.tgz#17ff50cafa609b6e9c50982f04d79b8d2406ffc9"
-  integrity sha512-o+FX2OYAGap9jZcakRBRm4QL/AzxDb17b9S84Tcb8NgfwkS+OoViXP3uRKVngv95m/ac/ebdqzvwWBNq9toxuw==
+"@elux/react-web@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@elux/react-web/-/react-web-2.4.0.tgz#a1ca3f37a47e5717ac14a64d54496d2e14b664b9"
+  integrity sha512-OsuiSwY/AvhJOpPDVWiDNlRC9DscK7S3CJVSNXr9n7LeHi5hQs7fYJNSExiW/4gogq8Qt03c3iAwJeerrQVgSA==
   dependencies:
-    "@elux/app" "^2.3.2"
-    "@elux/core" "^2.3.2"
-    "@elux/react-components" "^2.3.2"
-    "@elux/react-redux" "^2.3.2"
-    "@elux/route" "^2.3.2"
-    "@elux/route-browser" "^2.3.2"
+    "@elux/app" "^2.4.0"
+    "@elux/core" "^2.4.0"
+    "@elux/react-components" "^2.4.0"
+    "@elux/react-redux" "^2.4.0"
+    "@elux/route" "^2.4.0"
+    "@elux/route-browser" "^2.4.0"
 
-"@elux/route-browser@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.npmmirror.com/@elux/route-browser/-/route-browser-2.3.2.tgz#1e759d92151b901489e17cacc2cc0246bcc50543"
-  integrity sha512-A7clUPkN8kyMs6ojzRoxarK7nt1abc57ERxPZlywNIMGP+K//s5m51MLcI5+PJoAAmekLriHBGpv0QQsHJvTKQ==
+"@elux/route-browser@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@elux/route-browser/-/route-browser-2.4.0.tgz#677b5d772359988d2394526c053b938d372f6a35"
+  integrity sha512-35UNZbTxdT95DaKBv2M8417G4bAovMx5WyXalanlah7xohL4Uxmnn9O9/OSrnRDdiEdvzygazSjkyeYAe+X38w==
   dependencies:
-    "@elux/core" "^2.3.2"
-    "@elux/route" "^2.3.2"
-    "@types/history" "~4.7.7"
-    history "~4.10.1"
+    "@elux/core" "^2.4.0"
+    "@elux/route" "^2.4.0"
 
-"@elux/route@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.npmmirror.com/@elux/route/-/route-2.3.2.tgz#5036a605170aa92efe564d23e47d18b6e40d8feb"
-  integrity sha512-G0infg1lvHZP1nfqwjUO8IptQSZl5U7rqzxIo5uGF/cHOuDi4coIvFQGnYN+nka+qNMp2jLunjCDd65B+rgliA==
+"@elux/route@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@elux/route/-/route-2.4.0.tgz#5251b3cf897be91180d54209b5b2ff54f2746b0b"
+  integrity sha512-v3in8H/hdxZmdo/Ra83iBCXlPSjZxW/Epi+o2sp7Kv3qgWNSEegRBrAx40BoyhNEBuLMOk4TzWHZ159gw3xU7w==
   dependencies:
-    "@elux/core" "^2.3.2"
+    "@elux/core" "^2.4.0"
 
 "@elux/stylelint-config@^1.1.1":
   version "1.1.1"
@@ -1669,11 +1667,6 @@
   dependencies:
     "@types/minimatch" "*"
     "@types/node" "*"
-
-"@types/history@~4.7.7":
-  version "4.7.11"
-  resolved "https://registry.npmmirror.com/@types/history/-/history-4.7.11.tgz#56588b17ae8f50c53983a524fc3cc47437969d64"
-  integrity sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==
 
 "@types/hoist-non-react-statics@^3.3.0":
   version "3.3.1"
@@ -4772,18 +4765,6 @@ he@^1.2.0:
   resolved "https://registry.npmmirror.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
-history@~4.10.1:
-  version "4.10.1"
-  resolved "https://registry.npmmirror.com/history/-/history-4.10.1.tgz#33371a65e3a83b267434e2b3f3b1b4c58aad4cf3"
-  integrity sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
-  dependencies:
-    "@babel/runtime" "^7.1.2"
-    loose-envify "^1.2.0"
-    resolve-pathname "^3.0.0"
-    tiny-invariant "^1.0.2"
-    tiny-warning "^1.0.0"
-    value-equal "^1.0.1"
-
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmmirror.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
@@ -5806,7 +5787,7 @@ longest@^2.0.1:
   resolved "https://registry.npmmirror.com/longest/-/longest-2.0.1.tgz#781e183296aa94f6d4d916dc335d0d17aefa23f8"
   integrity sha512-Ajzxb8CM6WAnFjgiloPsI3bF+WCxcvhdIG3KNA2KN962+tdBsHcuQ4k4qX/EcS/2CRkcc0iAkR956Nib6aXU/Q==
 
-loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.4.0:
+loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmmirror.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -7807,11 +7788,6 @@ resolve-global@1.0.0, resolve-global@^1.0.0:
   dependencies:
     global-dirs "^0.1.1"
 
-resolve-pathname@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmmirror.com/resolve-pathname/-/resolve-pathname-3.0.0.tgz#99d02224d3cf263689becbb393bc560313025dcd"
-  integrity sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==
-
 resolve@^1.1.6, resolve@^1.10.0, resolve@^1.13.1, resolve@^1.14.2, resolve@^1.20.0, resolve@^1.22.0:
   version "1.22.1"
   resolved "https://registry.npmmirror.com/resolve/-/resolve-1.22.1.tgz#27cb2ebb53f91abb49470a928bba7558066ac177"
@@ -8760,16 +8736,6 @@ thunky@^1.0.2:
   resolved "https://registry.npmmirror.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
 
-tiny-invariant@^1.0.2:
-  version "1.2.0"
-  resolved "https://registry.npmmirror.com/tiny-invariant/-/tiny-invariant-1.2.0.tgz#a1141f86b672a9148c72e978a19a73b9b94a15a9"
-  integrity sha512-1Uhn/aqw5C6RI4KejVeTg6mIS7IqxnLJ8Mv2tV5rTc0qWobay7pDUz6Wi392Cnc8ak1H0F2cjoRzb2/AW4+Fvg==
-
-tiny-warning@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.npmmirror.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
-  integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
-
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.npmmirror.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
@@ -9067,11 +9033,6 @@ validate-npm-package-name@^4.0.0:
   integrity sha512-mzR0L8ZDktZjpX4OB46KT+56MAhl4EIazWP/+G/HPGuvfdaqg4YsCdtOm6U9+LOFyYDoh4dpnpxZRB9MQQns5Q==
   dependencies:
     builtins "^5.0.0"
-
-value-equal@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmmirror.com/value-equal/-/value-equal-1.0.1.tgz#1e0b794c734c5c0cade179c437d356d931a34d6c"
-  integrity sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==
 
 vary@~1.1.2:
   version "1.1.2"
