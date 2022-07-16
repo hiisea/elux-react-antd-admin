@@ -143,8 +143,14 @@ export class Model extends BaseModel<ModuleState, APPState> {
     if (error.code === CommonErrorCode.unauthorized) {
       this.getRouter().push({url: LoginUrl(error.detail)}, 'window');
     } else if (error.code === ErrorCodes.ROUTE_BACK_OVERFLOW) {
+      //用户后退溢出时会触发这个错误
       const redirect: string = error.detail.redirect || (this.state.curUser.hasLogin ? AdminHomeUrl : GuestHomeUrl);
-      setTimeout(() => this.getRouter().relaunch({url: redirect}, 'window'), 0);
+      if (this.getRouter().location.url === redirect && window.confirm('确定要退出本站吗？')) {
+        //注意: back('')可以退出本站
+        setTimeout(() => this.getRouter().back('', 'window'), 0);
+      } else {
+        setTimeout(() => this.getRouter().relaunch({url: redirect}, 'window'), 0);
+      }
     } else if (!error.quiet) {
       message.error(error.message);
     }
