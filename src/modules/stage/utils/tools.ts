@@ -1,5 +1,30 @@
 import {Rule} from 'antd/lib/form';
 import {FormItemProps} from 'antd/lib/form/FormItem';
+import {useCallback, useEffect, useRef, useState} from 'react';
+
+export function useEvent<F extends Function>(callback: F): F {
+  const callbackRef = useRef<any>(null);
+
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
+
+  const event = useCallback((...args) => {
+    if (callbackRef.current) {
+      callbackRef.current.apply(null, args);
+    }
+  }, []);
+
+  return event as any;
+}
+
+export function useInit(): boolean {
+  const [initializing, setInitializing] = useState(true);
+  useEffect(() => {
+    setInitializing(false);
+  }, []);
+  return initializing;
+}
 
 export {message} from 'antd';
 

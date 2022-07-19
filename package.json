@@ -21,6 +21,7 @@
     "lint:es": "cross-env NODE_ENV=production eslint --fix --cache \"**/*.{js,ts,tsx}\"",
     "lint:css": "cross-env NODE_ENV=production stylelint --fix --cache \"**/*.{css,less}\"",
     "lint:json": "prettier --write **/*.json",
+    "commit": "git-cz",
     "recommit": "git commit --amend --no-edit",
     "demote": "elux demote",
     "dev": "elux webpack-dev",

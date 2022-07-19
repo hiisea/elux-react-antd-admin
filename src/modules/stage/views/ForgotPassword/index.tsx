@@ -81,7 +81,7 @@ const Component: FC<{dispatch: Dispatch}> = ({dispatch}) => {
           </Form.Item>
           <Form.Item>
             <Form.Item {...fromDecorators.captcha} noStyle>
-              <Input size="large" prefix={<NumberOutlined />} placeholder="短信验证码" style={{width: 220}} />
+              <Input size="large" prefix={<NumberOutlined />} placeholder="短信验证码" style={{width: 250}} />
             </Form.Item>
             <Button size="large" className="btn-send-captcha" disabled={!!countDown} onClick={sendCaptcha}>
               {countDown ? `${countDown}秒后重试` : '发送验证码'}

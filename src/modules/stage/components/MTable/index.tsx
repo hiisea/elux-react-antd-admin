@@ -1,7 +1,7 @@
 import {AlignLeftOutlined, CheckOutlined, DownOutlined, InfoCircleOutlined, LeftOutlined} from '@ant-design/icons';
 import {Alert, Button, Dropdown, Menu, Modal, Table, message} from 'antd';
 import {ColumnProps, TableProps} from 'antd/lib/table';
-import {ComponentType, Key, ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {ComponentType, Key, ReactNode, memo, useEffect, useMemo, useRef, useState} from 'react';
 import {useRouter} from '@/Global';
 import DateTime from '../../components/DateTime';
 import {BaseListSearch, BaseListSummary, BaseLocationState} from '../../utils/base';
@@ -19,7 +19,7 @@ export type MBatchActions = {actions: BatchAction[]; handler: (target: BatchActi
 export type MColumns<T> = ColumnProps<T> & {timestamp?: boolean; disable?: boolean};
 
 export type MSelection<T> = {
-  onChange?: (keys: Key[], rows: Partial<T>[], maps: {[key: Key]: Partial<T>}) => void;
+  onChange?: (data: {keys: Key[]; rows: Partial<T>[]; maps: {[key: Key]: Partial<T>}}) => void;
   limit?: number | [number, number];
   autoSubmit?: boolean;
 };
@@ -36,84 +36,91 @@ interface Props<T> extends TableProps<T> {
   selection?: MSelection<T>;
 }
 
+function computeSelected<T>(rowKey: Key, selectedRowKeys?: Key[], selectedRows?: Partial<T>[]) {
+  const keys = selectedRowKeys || (selectedRows || []).map((item) => item[rowKey as string] as Key);
+  const rows = selectedRows || (selectedRowKeys || []).map((key) => ({[rowKey as string]: key} as any));
+  const maps = rows.reduce((data, cur) => {
+    data[cur[rowKey as string] as Key] = cur;
+    return data;
+  }, {} as {[key: Key]: Partial<T>});
+  return {keys, rows, maps};
+}
+function returnTotal(total: number) {
+  return `共${total}条`;
+}
 function Component<T extends {[key: string]: any}>(props: Props<T>) {
   const {
+    selectedRowKeys,
+    selectedRows,
+    dataSource,
+    selection,
+    batchActions,
+    columns,
+    listSummary,
+    listSearch,
     className = '',
     commonActions,
-    listSummary = {pageCurrent: 1, pageSize: 10, totalItems: 0, totalPages: 0},
-    listSearch = {},
-    dataSource,
-    rowKey = 'id',
-    batchActions,
-    selection,
-    columns,
     ...otherPops
   } = props;
-  const {pageCurrent, pageSize, totalItems} = listSummary;
-  const {sorterField, sorterOrder} = listSearch;
+  const rowKey: Key = (props.rowKey || 'id') as any;
+  const router = useRouter();
   //-1 表示不允许选，0 表示不限制选
   const {limit: selectLimit = 0, onChange: onSelectedChange, autoSubmit = true} = selection || {};
-  const router = useRouter();
-  const refData = useRef<typeof refSource>({} as any);
-  const [selected, setSelected] = useState<{keys: Key[]; rows: Partial<T>[]; maps: {[key: Key]: Partial<T>}}>({
-    keys: [],
-    rows: [],
-    maps: {},
+  const immutable = useRef({
+    initializing: true,
+    updateSelected(data: {keys: Key[]; rows: Partial<T>[]; maps: {[key: Key]: Partial<T>}}) {
+      setSelected(data);
+      if (data.keys.length === 0) {
+        setReviewMode(false);
+      }
+      const onSelectedChange = mutable.current.onSelectedChange;
+      onSelectedChange && onSelectedChange(data);
+    },
+    clearSelected() {
+      immutable.current.updateSelected({keys: [], rows: [], maps: {}});
+    },
+    onSelectedSubmit() {
+      const selected = mutable.current.selected;
+      router.back(1, 'window');
+      const {onSelectedSubmit} = (router.location.state || {}) as BaseLocationState;
+      onSelectedSubmit && onSelectedSubmit(selected.rows);
+    },
   });
+  useEffect(() => {
+    immutable.current.initializing = false;
+  }, []);
 
-  const updateSelected = useCallback((keys: Key[], rows: Partial<T>[], maps: {[key: Key]: Partial<T>}) => {
-    setSelected({keys, rows, maps});
-    if (keys.length === 0) {
+  const limit = useMemo(() => {
+    const limitArr = typeof selectLimit === 'number' ? [selectLimit] : selectLimit;
+    const limitMax = limitArr[1] !== undefined ? limitArr[1] : limitArr[0];
+    const limitMin = limitArr[1] !== undefined ? limitArr[0] : 0;
+    return {limitMax, limitMin, limitArr};
+  }, [selectLimit]);
+
+  const [reviewMode, setReviewMode] = useState((selectedRowKeys || selectedRows || []).length > 0);
+  useMemo(() => {
+    if (!immutable.current.initializing) {
       setReviewMode(false);
     }
-    const onSelectedChange = refData.current.onSelectedChange;
-    onSelectedChange && onSelectedChange(keys, rows, maps);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataSource]);
 
-  const clearSelected = useCallback((): void => refData.current.updateSelected([], [], {}), []);
-
-  const returnTotal = useCallback((total: number) => {
-    return `共${total}条`;
-  }, []);
-
-  const onSelectedSubmit = useCallback(() => {
-    const {router, selected} = refData.current;
-    router.back(1, 'window');
-    const {onSelectedSubmit} = (router.location.state || {}) as BaseLocationState;
-    onSelectedSubmit && onSelectedSubmit(selected.rows);
-  }, []);
-
-  const refSource = {
-    router,
-    selectLimit: typeof selectLimit === 'number' ? [selectLimit] : selectLimit,
-    selected,
-    autoSubmit,
-    onSelectedSubmit,
-    onSelectedChange,
-    updateSelected,
-    clearSelected,
-    returnTotal,
-  };
-  const limitMax = refSource.selectLimit[1] !== undefined ? refSource.selectLimit[1] : refSource.selectLimit[0];
-  const limitMin = refSource.selectLimit[1] !== undefined ? refSource.selectLimit[0] : 0;
-  Object.assign(refData.current, refSource);
-
-  const [reviewMode, setReviewMode] = useState((props.selectedRowKeys || props.selectedRows || []).length > 0);
-
+  const [selected, setSelected] = useState(computeSelected(rowKey, selectedRowKeys, selectedRows));
   useMemo(() => {
-    const keys = props.selectedRowKeys || (props.selectedRows || []).map((item) => item[rowKey as string] as Key);
-    const rows = props.selectedRows || (props.selectedRowKeys || []).map((key) => ({[rowKey as string]: key} as Partial<T>));
-    const maps = rows.reduce((data, cur) => {
-      data[cur[rowKey as string] as Key] = cur;
-      return data;
-    }, {} as {[key: Key]: Partial<T>});
-    refData.current.updateSelected(keys, rows, maps);
-  }, [props.selectedRowKeys, props.selectedRows, rowKey]);
+    if (!immutable.current.initializing) {
+      const selected = computeSelected(rowKey, selectedRowKeys, selectedRows);
+      immutable.current.updateSelected(selected);
+    }
+  }, [rowKey, selectedRowKeys, selectedRows]);
+
+  const currentData = {onSelectedChange, selected, autoSubmit};
+  const mutable = useRef<typeof currentData>({} as any);
+  Object.assign(mutable.current, currentData);
 
   const batchMenu: ReactNode = useMemo(() => {
     if (batchActions) {
       const onClick = ({key}: {key: string}) => {
-        const {keys} = refData.current.selected;
+        const {keys} = mutable.current.selected;
         const {actions, handler} = batchActions;
         const target = actions.find((item) => item.key === key);
         if (target && target.confirm) {
@@ -156,11 +163,8 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
     return null;
   }, [batchActions]);
 
-  useEffect(() => {
-    setReviewMode(false);
-  }, [dataSource]);
-
   const rowSelection: TableProps<T>['rowSelection'] | undefined = useMemo(() => {
+    const limitMax = limit.limitMax;
     if (limitMax > -1) {
       return {
         preserveSelectedRowKeys: true,
@@ -182,9 +186,9 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
             maps[key] = item;
             return key;
           });
-          refData.current.updateSelected(keys, rows, maps);
-          if (limitMax > 0 && selectedRowKeys.length === limitMax && refData.current.autoSubmit) {
-            setTimeout(refData.current.onSelectedSubmit, 0);
+          immutable.current.updateSelected({keys, rows, maps});
+          if (limitMax > 0 && selectedRowKeys.length === limitMax && mutable.current.autoSubmit) {
+            setTimeout(immutable.current.onSelectedSubmit, 0);
             return;
           }
         },
@@ -192,11 +196,12 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
     } else {
       return undefined;
     }
-  }, [limitMax, selected]);
+  }, [limit.limitMax, selected]);
 
+  const {pageCurrent, pageSize, totalItems} = listSummary || {pageCurrent: 1, pageSize: 10, totalItems: 0, totalPages: 0};
   const pagination = useMemo(
     () => ({
-      showTotal: refData.current.returnTotal,
+      showTotal: returnTotal,
       showQuickJumper: true,
       pageSizeOptions: ['10', '20', '50', '100'],
       showSizeChanger: true,
@@ -207,6 +212,7 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
     [pageCurrent, pageSize, totalItems]
   );
 
+  const {sorterField, sorterOrder} = listSearch || {};
   const columnList = useMemo(() => {
     return columns
       .filter((col) => !col.disable)
@@ -223,6 +229,8 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
   }, [columns, sorterField, sorterOrder]);
 
   const headArea = useMemo(() => {
+    const {limitMax, limitMin, limitArr} = limit;
+    const {keys} = selected;
     if (!commonActions && !batchMenu && limitMax < 0) {
       return;
     }
@@ -230,38 +238,38 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
       <div className="hd">
         {limitMax > -1 && !batchMenu && (
           <Button
-            onClick={refData.current.onSelectedSubmit}
-            disabled={!!limitMin && selected.keys.length < limitMin}
+            onClick={immutable.current.onSelectedSubmit}
+            disabled={!!limitMin && keys.length < limitMin}
             type="primary"
             icon={<CheckOutlined />}
           >
-            提交<span className="tip">{`(可选${refData.current.selectLimit.map((n) => (n === 0 ? '多' : n)).join('-')}项)`}</span>
+            提交<span className="tip">{`(可选${limitArr.map((n) => (n === 0 ? '多' : n)).join('-')}项)`}</span>
           </Button>
         )}
-        {selected.keys.length === 0 ? commonActions : batchMenu}
+        {keys.length === 0 ? commonActions : batchMenu}
         {reviewMode && (
           <Button onClick={() => setReviewMode(false)} type="dashed" icon={<LeftOutlined />}>
             返回列表
           </Button>
         )}
-        {selected.keys.length > 0 && (
+        {keys.length > 0 && (
           <Alert
             message={
               <div>
                 <span>已选 </span>
                 <a onClick={() => setReviewMode(true)} className="em">
-                  {selected.keys.length}
+                  {keys.length}
                 </a>
                 <span> 项，</span>
                 {limitMax > 0 && (
                   <>
                     <span>剩余可选 </span>
-                    <span className="em">{limitMax - selected.keys.length}</span> 项，
+                    <span className="em">{limitMax - keys.length}</span> 项，
                   </>
                 )}
                 <a onClick={() => setReviewMode(!reviewMode)}>{reviewMode ? '返回' : '查看'}</a>
                 <span> 或 </span>
-                <a onClick={refData.current.clearSelected}>清空选择</a>
+                <a onClick={immutable.current.clearSelected}>清空选择</a>
               </div>
             }
             type="info"
@@ -270,7 +278,7 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
         )}
       </div>
     );
-  }, [batchMenu, commonActions, limitMax, limitMin, reviewMode, selected]);
+  }, [batchMenu, commonActions, limit, reviewMode, selected]);
 
   return (
     <div className={styles.root + ' ' + className}>
@@ -280,7 +288,7 @@ function Component<T extends {[key: string]: any}>(props: Props<T>) {
         pagination={reviewMode ? false : pagination}
         rowSelection={rowSelection}
         dataSource={reviewMode ? (selected.rows as T[]) : dataSource}
-        rowKey={rowKey}
+        rowKey={rowKey as any}
         {...otherPops}
       />
     </div>

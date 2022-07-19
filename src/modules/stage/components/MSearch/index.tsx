@@ -1,7 +1,7 @@
 import {DownOutlined, UpOutlined} from '@ant-design/icons';
 import {Button, Form} from 'antd';
-import {cloneElement, memo, useCallback, useMemo, useRef, useState} from 'react';
-import {SearchFromItems} from '../../utils/tools';
+import {cloneElement, memo, useCallback, useMemo, useState} from 'react';
+import {SearchFromItems, useEvent} from '../../utils/tools';
 import styles from './index.module.less';
 
 interface Props<TFormData> {
@@ -18,13 +18,6 @@ interface Props<TFormData> {
 function Component<TFormData>(props: Props<TFormData>) {
   const {className = '', items, onSearch, fixedFields, values, cols = 4} = props;
   const [expand, setExpand] = useState(!!props.expand);
-  const refSource = {
-    onSearch,
-    fixedFields,
-  };
-  const refData = useRef({...refSource});
-  Object.assign(refData.current, refSource);
-
   const {senior = 4} = props;
   const shrink = expand ? items.length : senior;
 
@@ -52,17 +45,19 @@ function Component<TFormData>(props: Props<TFormData>) {
     return values ? items.map(({name}) => ({name: name as string, value: values[name as string]})) : [];
   }, [items, values]);
 
-  const onClear = useCallback(() => {
-    refData.current.onSearch(refData.current.fixedFields || {});
-  }, []);
+  const onClear = useEvent(() => {
+    onSearch(fixedFields || {});
+  });
 
-  const onFinish = useCallback((vals: TFormData) => {
-    Object.assign(vals, refData.current.fixedFields);
-    refData.current.onSearch(vals);
-  }, []);
+  const onFinish = useEvent((vals: TFormData) => {
+    Object.assign(vals, fixedFields);
+    onSearch(vals);
+  });
+
   const toggle = useCallback(() => {
     setExpand((_expand) => !_expand);
   }, []);
+
   return (
     <div className={styles.root + ' ' + className}>
       <Form layout="inline" onFinish={onFinish} fields={fields}>
