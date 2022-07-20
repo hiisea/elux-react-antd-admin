@@ -18,15 +18,13 @@ const mapStateToProps: (state: APPState) => StoreProps = (state) => {
   return {prefixPathname, curRender, listSearch};
 };
 
+const mergeColumns: {[field: string]: MColumns<ListItem>} = {
+  articles: {disable: true},
+};
+
 const Component: FC<StoreProps> = ({prefixPathname, curRender, listSearch}) => {
   const router = useRouter();
   const {selectLimit, showSearch, fixedSearch, selectedRows} = (router.location.state || {}) as LocationState;
-  const mergeColumns: {[field: string]: MColumns<ListItem>} = useMemo(
-    () => ({
-      articles: {disable: true},
-    }),
-    []
-  );
 
   const selection = useMemo(() => {
     return {limit: selectLimit};

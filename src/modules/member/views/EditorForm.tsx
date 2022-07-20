@@ -18,12 +18,12 @@ export const formItemLayout = {
 };
 
 const fromDecorators = getFormDecorators<UpdateItem>({
-  name: {rules: [{required: true, message: '请输入用户名'}]},
-  nickname: {rules: [{required: true, message: '请输入呢称'}]},
-  role: {rules: [{required: true, message: '请选择角色'}]},
-  gender: {rules: [{required: true, message: '请选择性别'}]},
-  email: {rules: [{required: true, type: 'email', message: '请输入Email'}]},
-  status: {rules: [{required: true, message: '请选择用户状态'}]},
+  name: {label: '用户名', rules: [{required: true, message: '请输入用户名'}]},
+  nickname: {label: '呢称', rules: [{required: true, message: '请输入呢称'}]},
+  role: {label: '角色', rules: [{required: true, message: '请选择角色'}]},
+  gender: {label: '性别', rules: [{required: true, message: '请选择性别'}]},
+  email: {label: 'Email', rules: [{required: true, type: 'email', message: '请输入Email'}]},
+  status: {label: '状态', rules: [{required: true, message: '请选择用户状态'}]},
 });
 
 interface Props {
@@ -56,22 +56,22 @@ const Component: FC<Props> = ({itemDetail, dispatch}) => {
 
   return (
     <Form layout="horizontal" {...formItemLayout} form={form} initialValues={itemDetail} onFinish={onFinish}>
-      <FormItem label="用户名" {...fromDecorators.name}>
-        <Input disabled={!!itemDetail.id} allowClear placeholder="请输入" />
-      </FormItem>
-      <FormItem label="呢称" {...fromDecorators.nickname}>
+      <FormItem {...fromDecorators.name}>
         <Input allowClear placeholder="请输入" />
       </FormItem>
-      <FormItem label="角色" {...fromDecorators.role}>
+      <FormItem {...fromDecorators.nickname}>
+        <Input allowClear placeholder="请输入" />
+      </FormItem>
+      <FormItem {...fromDecorators.role}>
         <Select allowClear placeholder="请选择" options={DRole.options} />
       </FormItem>
-      <FormItem label="性别" {...fromDecorators.gender}>
+      <FormItem {...fromDecorators.gender}>
         <Select allowClear placeholder="请选择" options={DGender.options} />
       </FormItem>
-      <FormItem label="Email" {...fromDecorators.email}>
+      <FormItem {...fromDecorators.email}>
         <Input allowClear placeholder="请输入" />
       </FormItem>
-      <FormItem label="状态" {...fromDecorators.status}>
+      <FormItem {...fromDecorators.status}>
         <Select allowClear placeholder="请选择" options={DStatus.options} />
       </FormItem>
       <div className="g-form-actions">

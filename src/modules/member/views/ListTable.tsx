@@ -1,11 +1,11 @@
 import MTable, {MBatchActions, MColumns, MSelection} from '@elux-admin-antd/stage/components/MTable';
 import {DialogPageClassname} from '@elux-admin-antd/stage/utils/const';
-import {useSingleWindow, useTableChange} from '@elux-admin-antd/stage/utils/resource';
+import {useSingleWindow, useTableChange, useTableSize} from '@elux-admin-antd/stage/utils/resource';
 import {Link, LoadingState, connectRedux} from '@elux/react-web';
 import {Tooltip} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
 import {FC, ReactNode, useMemo} from 'react';
-import {APPState, useRouter} from '@/Global';
+import {APPState} from '@/Global';
 import {DGender, DRole, DStatus, ListItem, ListSearch, ListSummary, defaultListSearch} from '../entity';
 
 interface StoreProps {
@@ -45,6 +45,7 @@ const Component: FC<StoreProps & OwnerProps> = ({
 }) => {
   const onTableChange = useTableChange(listPathname, defaultListSearch, listSearch);
   const singleWindow = useSingleWindow();
+  const tableSize = useTableSize();
 
   const columns = useMemo<MColumns<ListItem>[]>(() => {
     const cols: MColumns<ListItem>[] = [
@@ -126,8 +127,6 @@ const Component: FC<StoreProps & OwnerProps> = ({
     }
     return cols;
   }, [actionColumns, mergeColumns, singleWindow]);
-
-  const tableSize = useRouter().location.classname.startsWith('_') ? 'middle' : 'large';
 
   return (
     <MTable<ListItem>

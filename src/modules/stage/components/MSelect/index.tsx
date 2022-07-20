@@ -16,6 +16,7 @@ interface Props<T> {
   rowKey?: string;
   rowName?: string;
   value?: string | string[];
+  returnArray?: boolean;
   onChange?: (value?: string | string[]) => void;
 }
 
@@ -29,6 +30,7 @@ function Component<TSearch>({
   limit,
   placeholder,
   value,
+  returnArray,
   onChange,
 }: Props<TSearch>) {
   const selectedRows = useMemo(() => {
@@ -45,16 +47,16 @@ function Component<TSearch>({
       .slice(0, index)
       .concat(selectedRows.slice(index + 1))
       .map((row) => [row[rowKey], row[rowName]].join(','));
-    onChange && onChange(rows.length === 1 ? rows[0] : rows);
+    onChange && onChange(rows.length === 1 && !returnArray ? rows[0] : rows);
   });
 
-  const onSelectedSubmit = useEvent((rows: Record<string, any>[]) => {
-    const selectedItems = rows.map((item) => [item[rowKey], item[rowName]].filter(Boolean).join(','));
-    onChange && onChange(selectedItems);
+  const onSelectedSubmit = useEvent((selectedItems: Record<string, any>[]) => {
+    const rows = selectedItems.map((item) => [item[rowKey], item[rowName]].filter(Boolean).join(','));
+    onChange && onChange(rows.length === 1 && !returnArray ? rows[0] : rows);
   });
 
   const removeAll = useEvent(() => {
-    onChange && onChange();
+    onChange && onChange(returnArray ? [] : '');
   });
 
   const router = useRouter();

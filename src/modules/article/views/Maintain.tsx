@@ -92,7 +92,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = (props) => {
 
   return (
     <div className="g-page-content">
-      <DocumentHead title="文章列表" />
+      <DocumentHead title="文章管理" />
       <div>
         <SearchForm listSearch={listSearch} listPathname={`${prefixPathname}/list/${curRender}`} />
         <ListTable

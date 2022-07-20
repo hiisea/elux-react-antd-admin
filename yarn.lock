@@ -1239,10 +1239,10 @@
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@elux/app@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@elux/app/-/app-2.4.0.tgz#3fc397fc09efa62fd2ff2fb5376d071550e85968"
-  integrity sha512-+bPfOJkX7ukmCrdSo6Cv9o9j92aw8Ckp2Ttuixh+yUGKHNmA2GqnB/ePIQ2sVgGU3byfdIcgrw//d2cSSVoTFw==
+"@elux/app@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmjs.org/@elux/app/-/app-2.5.0.tgz#4775e0a98c5b9ddd9fac0a1cf3c8d0458b87acab"
+  integrity sha512-gwRbXXKF4TY5KI11FyDFBYlDMmigYD9gXtuEAHyTdxPJQGoQ8CLrUVTh/JfPSDv1iyarc7E30fnJv0XhMMQEyw==
   dependencies:
     "@elux/core" "^2.4.0"
     "@elux/route" "^2.4.0"
@@ -1365,23 +1365,23 @@
     "@elux/core" "^2.4.0"
     "@elux/route" "^2.4.0"
 
-"@elux/react-redux@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@elux/react-redux/-/react-redux-2.4.0.tgz#3668df6d9e29023a45fd644de85c1f65217fd3ee"
-  integrity sha512-STQBIYJDQaUMC6WkJ56Dpb6rppH4GHA1wfTLlLF0GQdEog36yv56TmD2Beko+nvRVMdKEk2inp979vLWL+fOAQ==
+"@elux/react-redux@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmjs.org/@elux/react-redux/-/react-redux-2.5.0.tgz#cde442443dd4352ecc1f5fd1a86fb77a013a827a"
+  integrity sha512-/LDd81u2jacStrRN/Qde3frYtrCpjBtJKrVCU5tFN5EIsGiqx9YudPxgLUGBNIFx0ONib9/mzeGnx2XBxxULLA==
   dependencies:
     "@elux/core" "^2.4.0"
     react-redux "^7.2.2"
 
-"@elux/react-web@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@elux/react-web/-/react-web-2.4.0.tgz#a1ca3f37a47e5717ac14a64d54496d2e14b664b9"
-  integrity sha512-OsuiSwY/AvhJOpPDVWiDNlRC9DscK7S3CJVSNXr9n7LeHi5hQs7fYJNSExiW/4gogq8Qt03c3iAwJeerrQVgSA==
+"@elux/react-web@^2.4.1":
+  version "2.5.0"
+  resolved "https://registry.npmjs.org/@elux/react-web/-/react-web-2.5.0.tgz#d54e932976adca41754071ccc46bcd5816b6657c"
+  integrity sha512-kKtd5iXPkfOLPoPAPyCsWPG83G8esQzF+YpAPvAgnmYGmaVaGtpVmlUZQ1KOg5DywIJ3xhy1Oo7K+4gjtnpN+g==
   dependencies:
-    "@elux/app" "^2.4.0"
+    "@elux/app" "^2.5.0"
     "@elux/core" "^2.4.0"
     "@elux/react-components" "^2.4.0"
-    "@elux/react-redux" "^2.4.0"
+    "@elux/react-redux" "^2.5.0"
     "@elux/route" "^2.4.0"
     "@elux/route-browser" "^2.4.0"
 
