@@ -174,7 +174,7 @@ const Component: FC = () => {
                   </Link>
                 </li>
                 <li>
-                  type=item,render=<cite>detail</cite>(单条+编辑)，如：
+                  type=item,render=<cite>edit</cite>(单条+编辑)，如：
                   <Link to="/admin/member/item/edit/49" action="push" target="window" cname="_dialog">
                     /admin/member/item/edit/49
                   </Link>

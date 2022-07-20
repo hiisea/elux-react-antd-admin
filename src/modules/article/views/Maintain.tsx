@@ -1,7 +1,7 @@
 import {PlusOutlined} from '@ant-design/icons';
 import {MBatchActions} from '@elux-admin-antd/stage/components/MTable';
 import {useAlter, useShowDetail} from '@elux-admin-antd/stage/utils/resource';
-import {Dispatch, DocumentHead, connectRedux} from '@elux/react-web';
+import {Dispatch, DocumentHead, connectStore} from '@elux/react-web';
 import {Button, Dropdown, Menu, Popconfirm} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
 import {FC, ReactNode, useMemo} from 'react';
@@ -92,7 +92,7 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = (props) => {
 
   return (
     <div className="g-page-content">
-      <DocumentHead title="文章列表" />
+      <DocumentHead title="文章管理" />
       <div>
         <SearchForm listSearch={listSearch} listPathname={`${prefixPathname}/list/${curRender}`} />
         <ListTable
@@ -107,4 +107,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = (props) => {
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

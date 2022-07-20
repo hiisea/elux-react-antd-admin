@@ -1,5 +1,5 @@
 import ErrorPage from '@elux-admin-antd/stage/components/ErrorPage';
-import {Dispatch, Switch, connectRedux} from '@elux/react-web';
+import {Dispatch, Switch, connectStore} from '@elux/react-web';
 import {FC} from 'react';
 import {APPState} from '@/Global';
 import {CurRender, CurView, ItemDetail} from '../entity';
@@ -30,4 +30,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curView, curRender, i
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

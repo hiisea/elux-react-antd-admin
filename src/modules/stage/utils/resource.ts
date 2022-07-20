@@ -1,10 +1,10 @@
 import {Action, BaseModel, Dispatch, RouteTarget, StoreState, effect, reducer} from '@elux/react-web';
 import {pathToRegexp} from 'path-to-regexp';
-import {useCallback, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 import {useRouter} from '@/Global';
 import {BaseApi, BaseListSearch, DefineResource} from './base';
 import {DialogPageClassname} from './const';
-import {excludeDefaultParams, mergeDefaultParams, message} from './tools';
+import {excludeDefaultParams, mergeDefaultParams, message, useEvent} from './tools';
 
 export abstract class BaseResource<TDefineResource extends DefineResource, TStoreState extends StoreState = StoreState> extends BaseModel<
   TDefineResource['ModuleState'],
@@ -130,13 +130,10 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useSearch<TFormData>(listPathname: string, defaultListSearch: Partial<TFormData>) {
   const router = useRouter();
-  const onSearch = useCallback(
-    (values: Partial<TFormData>) => {
-      const searchQuery = excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1});
-      router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
-    },
-    [defaultListSearch, listPathname, router]
-  );
+  const onSearch = useEvent((values: Partial<TFormData>) => {
+    const searchQuery = excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1});
+    router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
+  });
 
   return {onSearch};
 }
@@ -144,18 +141,12 @@ export function useSearch<TFormData>(listPathname: string, defaultListSearch: Pa
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useShowDetail(prefixPathname: string) {
   const router = useRouter();
-  const onShowDetail = useCallback(
-    (id: string) => {
-      router.push({url: `${prefixPathname}/item/detail/${id}`, classname: DialogPageClassname}, 'window');
-    },
-    [prefixPathname, router]
-  );
-  const onShowEditor = useCallback(
-    (id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
-      router.push({url: `${prefixPathname}/item/edit/${id}`, classname: DialogPageClassname, state: {onSubmit}}, 'window');
-    },
-    [prefixPathname, router]
-  );
+  const onShowDetail = useEvent((id: string) => {
+    router.push({url: `${prefixPathname}/item/detail/${id}`, classname: DialogPageClassname}, 'window');
+  });
+  const onShowEditor = useEvent((id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
+    router.push({url: `${prefixPathname}/item/edit/${id}`, classname: DialogPageClassname, state: {onSubmit}}, 'window');
+  });
 
   return {onShowDetail, onShowEditor};
 }
@@ -177,34 +168,25 @@ export function useAlter<T>(
     setSelectedRows(propsSelectedRows);
   }, [propsSelectedRows]);
 
-  const deleteItems = useCallback(
-    async (id: string | string[]) => {
-      await dispatch(actions.deleteItems!(id));
-      setSelectedRows([]);
-    },
-    [actions, dispatch]
-  );
+  const deleteItems = useEvent(async (id: string | string[]) => {
+    await dispatch(actions.deleteItems!(id));
+    setSelectedRows([]);
+  });
 
-  const alterItems = useCallback(
-    async (id: string | string[], data: Record<string, any>) => {
-      await dispatch(actions.alterItems!(id, data));
-      setSelectedRows([]);
-    },
-    [actions, dispatch]
-  );
+  const alterItems = useEvent(async (id: string | string[], data: Record<string, any>) => {
+    await dispatch(actions.alterItems!(id, data));
+    setSelectedRows([]);
+  });
 
-  const updateItem = useCallback(
-    async (id: string, data: Record<string, any>) => {
-      if (id) {
-        await dispatch(actions.updateItem!(id, data));
-      } else {
-        await dispatch(actions.createItem!(data));
-      }
+  const updateItem = useEvent(async (id: string, data: Record<string, any>) => {
+    if (id) {
+      await dispatch(actions.updateItem!(id, data));
+    } else {
+      await dispatch(actions.createItem!(data));
+    }
 
-      setSelectedRows([]);
-    },
-    [actions, dispatch]
-  );
+    setSelectedRows([]);
+  });
 
   return {selectedRows, setSelectedRows, deleteItems, alterItems, updateItem};
 }
@@ -214,25 +196,27 @@ export function useSingleWindow(): RouteTarget {
   return router.location.classname.startsWith('_') ? 'page' : 'window';
 }
 
+export function useTableSize(): 'middle' | 'large' {
+  const router = useRouter();
+  return router.location.classname.startsWith('_') ? 'middle' : 'large';
+}
+
 //eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useTableChange<T extends BaseListSearch>(listPathname: string, defaultListSearch: T, listSearch?: T) {
   const sorterStr = [listSearch?.sorterField, listSearch?.sorterOrder].join('');
   const router = useRouter();
-  return useCallback(
-    (pagination: any, filter: any, _sorter: any) => {
-      const sorter = _sorter as {field: string; order: 'ascend' | 'descend' | undefined};
-      const {current, pageSize} = pagination as {current: number; pageSize: number};
-      const sorterField = (sorter.order && sorter.field) || undefined;
-      const sorterOrder = sorter.order || undefined;
-      const currentSorter = [sorterField, sorterOrder].join('');
-      const pageCurrent = currentSorter !== sorterStr ? 1 : current;
+  return useEvent((pagination: any, filter: any, _sorter: any) => {
+    const sorter = _sorter as {field: string; order: 'ascend' | 'descend' | undefined};
+    const {current, pageSize} = pagination as {current: number; pageSize: number};
+    const sorterField = (sorter.order && sorter.field) || undefined;
+    const sorterOrder = sorter.order || undefined;
+    const currentSorter = [sorterField, sorterOrder].join('');
+    const pageCurrent = currentSorter !== sorterStr ? 1 : current;
 
-      const searchQuery = excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder});
+    const searchQuery = excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder});
 
-      router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
-    },
-    [defaultListSearch, listSearch, listPathname, sorterStr, router]
-  );
+    router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
+  });
 }
 
 //也可以使用回调到方法创建和编辑，但使用await 路由跳转更简单
@@ -243,24 +227,21 @@ export function useTableChange<T extends BaseListSearch>(listPathname: string, d
 // ) {
 //   const [loading, setLoading] = useState(false);
 //   const router = useRouter();
-//   const onFinish = useCallback(
-//     (values: Record<string, any>) => {
-//       const {onSubmit} = (router.location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
-//       let result: Promise<void>;
-//       setLoading(true);
-//       if (onSubmit) {
-//         result = onSubmit(id, values);
+//   const onFinish = useEvent((values: Record<string, any>) => {
+//     const {onSubmit} = (router.location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
+//     let result: Promise<void>;
+//     setLoading(true);
+//     if (onSubmit) {
+//       result = onSubmit(id, values);
+//     } else {
+//       if (id) {
+//         result = dispatch(actions.updateItem!(id, values)) as Promise<void>;
 //       } else {
-//         if (id) {
-//           result = dispatch(actions.updateItem!(id, values)) as Promise<void>;
-//         } else {
-//           result = dispatch(actions.createItem!(values)) as Promise<void>;
-//         }
+//         result = dispatch(actions.createItem!(values)) as Promise<void>;
 //       }
-//       result.finally(() => setLoading(false)).then(() => router.back(1, 'window'));
-//     },
-//     [router, id, dispatch, actions]
-//   );
+//     }
+//     result.finally(() => setLoading(false)).then(() => router.back(1, 'window'));
+//   });
 
 //   return {loading, onFinish};
 // }
