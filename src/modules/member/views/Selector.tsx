@@ -1,6 +1,6 @@
 import DialogPage from '@elux-admin-antd/stage/components/DialogPage';
 import {MColumns} from '@elux-admin-antd/stage/components/MTable';
-import {connectRedux} from '@elux/react-web';
+import {connectStore} from '@elux/react-web';
 import {FC, useMemo} from 'react';
 import {APPState, useRouter} from '@/Global';
 import {ListItem, ListSearch, LocationState} from '../entity';
@@ -45,4 +45,4 @@ const Component: FC<StoreProps> = ({prefixPathname, curRender, listSearch}) => {
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

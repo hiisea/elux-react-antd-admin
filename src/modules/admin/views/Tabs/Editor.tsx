@@ -1,5 +1,5 @@
 import {getFormDecorators} from '@elux-admin-antd/stage/utils/tools';
-import {Dispatch, connectRedux} from '@elux/react-web';
+import {Dispatch, connectStore} from '@elux/react-web';
 import {Button, Form, Input, Modal} from 'antd';
 import {FC, useCallback, useEffect} from 'react';
 import {APPState, GetActions} from '@/Global';
@@ -62,4 +62,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, tabEdit}) =
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

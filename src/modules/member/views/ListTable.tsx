@@ -1,7 +1,7 @@
 import MTable, {MBatchActions, MColumns, MSelection} from '@elux-admin-antd/stage/components/MTable';
 import {DialogPageClassname} from '@elux-admin-antd/stage/utils/const';
 import {useSingleWindow, useTableChange, useTableSize} from '@elux-admin-antd/stage/utils/resource';
-import {Link, LoadingState, connectRedux} from '@elux/react-web';
+import {Link, LoadingState, connectStore} from '@elux/react-web';
 import {Tooltip} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
 import {FC, ReactNode, useMemo} from 'react';
@@ -145,4 +145,4 @@ const Component: FC<StoreProps & OwnerProps> = ({
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

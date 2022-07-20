@@ -1,5 +1,5 @@
 import DialogPage from '@elux-admin-antd/stage/components/DialogPage';
-import {connectRedux} from '@elux/react-web';
+import {connectStore} from '@elux/react-web';
 import {FC} from 'react';
 import {APPState} from '@/Global';
 import ListTable from './ListTable';
@@ -26,4 +26,4 @@ const Component: FC<StoreProps> = ({prefixPathname, curRender}) => {
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

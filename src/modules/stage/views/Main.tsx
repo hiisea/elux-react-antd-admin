@@ -1,7 +1,7 @@
 import '../assets/css/var.less';
 import '../assets/css/global.module.less';
 import 'antd/dist/antd.less';
-import {DocumentHead, LoadingState, Switch, connectRedux} from '@elux/react-web';
+import {DocumentHead, LoadingState, Switch, connectStore} from '@elux/react-web';
 import {ConfigProvider} from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import {FC} from 'react';
@@ -51,4 +51,4 @@ const Component: FC<StoreProps> = ({subModule, curView, globalLoading, error}) =
 };
 
 //connectRedux中包含了exportView()的执行
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

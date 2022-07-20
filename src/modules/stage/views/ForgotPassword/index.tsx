@@ -1,5 +1,5 @@
 import {LockOutlined, MobileOutlined, NumberOutlined} from '@ant-design/icons';
-import {Dispatch, Link, connectRedux} from '@elux/react-web';
+import {Dispatch, Link, connectStore} from '@elux/react-web';
 import {Button, Form, Input} from 'antd';
 import {FC, useCallback, useEffect, useState} from 'react';
 import {GetActions} from '@/Global';
@@ -104,4 +104,4 @@ const Component: FC<{dispatch: Dispatch}> = ({dispatch}) => {
 };
 
 //connectRedux中包含了exportView()的执行
-export default connectRedux()(Component);
+export default connectStore()(Component);

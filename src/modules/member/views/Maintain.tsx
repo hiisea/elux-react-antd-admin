@@ -1,7 +1,7 @@
 import {PlusOutlined} from '@ant-design/icons';
 import {MBatchActions} from '@elux-admin-antd/stage/components/MTable';
 import {useAlter, useShowDetail} from '@elux-admin-antd/stage/utils/resource';
-import {Dispatch, DocumentHead, connectRedux} from '@elux/react-web';
+import {Dispatch, DocumentHead, connectStore} from '@elux/react-web';
 import {Button, Popconfirm} from 'antd';
 import {ColumnProps} from 'antd/lib/table';
 import {FC, ReactNode, useMemo} from 'react';
@@ -98,4 +98,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = (props) => {
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);
