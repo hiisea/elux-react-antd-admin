@@ -1,5 +1,5 @@
 import {AliwangwangFilled, LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Dispatch, Link, connectRedux} from '@elux/react-web';
+import {Dispatch, Link, connectStore} from '@elux/react-web';
 import {Button, Checkbox, Form, Input} from 'antd';
 import {FC, useCallback} from 'react';
 import {APPState, GetActions} from '@/Global';
@@ -114,4 +114,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({fromUrl = '', dispatc
 };
 
 //connectRedux中包含了exportView()的执行
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

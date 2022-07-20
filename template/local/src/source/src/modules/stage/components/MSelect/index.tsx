@@ -1,8 +1,9 @@
 import {CloseCircleFilled, CloseOutlined, FullscreenOutlined} from '@ant-design/icons';
-import {memo, useCallback, useMemo, useRef} from 'react';
+import {memo, useMemo} from 'react';
 import {useRouter} from '@/Global';
 import {BaseLocationState} from '../../utils/base';
 import {DialogPageClassname} from '../../utils/const';
+import {useEvent} from '../../utils/tools';
 import styles from './index.module.less';
 
 interface Props<T> {
@@ -15,19 +16,21 @@ interface Props<T> {
   rowKey?: string;
   rowName?: string;
   value?: string | string[];
+  returnArray?: boolean;
   onChange?: (value?: string | string[]) => void;
 }
 
 function Component<TSearch>({
+  className = '',
+  rowKey = 'id',
+  rowName = 'name',
   selectorPathname,
   showSearch,
   fixedSearch,
-  className = '',
   limit,
   placeholder,
-  rowKey = 'id',
-  rowName = 'name',
   value,
+  returnArray,
   onChange,
 }: Props<TSearch>) {
   const selectedRows = useMemo(() => {
@@ -39,54 +42,31 @@ function Component<TSearch>({
     });
   }, [rowKey, rowName, value]);
 
-  const removeItem = useCallback((index: number) => {
-    const {selectedRows, rowKey, rowName, onChange} = refData.current;
+  const removeItem = useEvent((index: number) => {
     const rows = selectedRows
       .slice(0, index)
       .concat(selectedRows.slice(index + 1))
       .map((row) => [row[rowKey], row[rowName]].join(','));
-    onChange && onChange(rows.length === 1 ? rows[0] : rows);
-  }, []);
+    onChange && onChange(rows.length === 1 && !returnArray ? rows[0] : rows);
+  });
 
-  const onSelectedSubmit = useCallback((rows: Record<string, any>[]) => {
-    const {rowKey, rowName, onChange} = refData.current;
-    const selectedItems = rows.map((item) => [item[rowKey], item[rowName]].filter(Boolean).join(','));
-    onChange && onChange(selectedItems);
-  }, []);
+  const onSelectedSubmit = useEvent((selectedItems: Record<string, any>[]) => {
+    const rows = selectedItems.map((item) => [item[rowKey], item[rowName]].filter(Boolean).join(','));
+    onChange && onChange(rows.length === 1 && !returnArray ? rows[0] : rows);
+  });
 
-  const removeAll = useCallback(() => {
-    const {onChange} = refData.current;
-    onChange && onChange();
-  }, []);
+  const removeAll = useEvent(() => {
+    onChange && onChange(returnArray ? [] : '');
+  });
 
   const router = useRouter();
 
-  const refSource = {
-    selectedRows,
-    rowKey,
-    rowName,
-    limit,
-    showSearch,
-    fixedSearch,
-    router,
-    selectorPathname,
-    onSelectedSubmit,
-    onChange,
-    removeAll,
-    removeItem,
-  };
-  const refData = useRef(refSource);
-  Object.assign(refData.current, refSource);
-
-  const onSelect = useCallback(() => {
-    const {limit, router, selectorPathname, showSearch, fixedSearch, selectedRows, onSelectedSubmit} = refData.current;
+  const onSelect = useEvent(() => {
     const state: BaseLocationState = {selectLimit: limit, selectedRows, showSearch, fixedSearch, onSelectedSubmit};
     router.push({pathname: selectorPathname, searchQuery: fixedSearch, classname: DialogPageClassname, state}, 'window');
-  }, []);
+  });
 
   const children = useMemo(() => {
-    const {removeAll, removeItem, rowKey, rowName} = refData.current;
-
     return (
       <>
         <div className="ant-select-selector" onClick={onSelect}>
@@ -122,7 +102,7 @@ function Component<TSearch>({
         )}
       </>
     );
-  }, [selectedRows, onSelect, placeholder]);
+  }, [onSelect, selectedRows, placeholder, removeAll, rowKey, rowName, removeItem]);
 
   return <div className={`${styles.root} ${className} ant-select ant-select-multiple ant-select-show-search ant-select-allow-clear`}>{children}</div>;
 }

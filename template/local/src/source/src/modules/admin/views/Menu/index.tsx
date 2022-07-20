@@ -1,6 +1,6 @@
 import {DashboardOutlined, ProfileOutlined, TeamOutlined} from '@ant-design/icons';
 import {CurUser} from '@elux-admin-antd/stage/entity';
-import {Dispatch, connectRedux} from '@elux/react-web';
+import {Dispatch, connectStore} from '@elux/react-web';
 import {Menu, MenuProps} from 'antd';
 import {ComponentType, FC, useCallback, useMemo, useState} from 'react';
 import {APPState, GetActions} from '@/Global';
@@ -16,7 +16,7 @@ type AntdMenuItem = Required<MenuProps>['items'][number];
 
 function mappingMenuData(menuData: MenuItem[]): AntdMenuItem[] {
   return menuData.map(({label, key, match, link, icon, children}) => {
-    const Icon = icon ? ICONS[icon] || ICONS['dashboard'] : undefined;
+    const Icon: any = icon ? ICONS[icon] || ICONS['dashboard'] : undefined;
     return {
       label,
       key,
@@ -28,20 +28,19 @@ function mappingMenuData(menuData: MenuItem[]): AntdMenuItem[] {
 
 export interface StoreProps {
   curUser: CurUser;
-  siderCollapsed?: boolean;
   menuData: MenuItem[];
   menuSelected: {selected: string[]; open: string[]};
 }
 
 function mapStateToProps(appState: APPState): StoreProps {
   const {curUser} = appState.stage!;
-  const {siderCollapsed, menuData, menuSelected} = appState.admin!;
-  return {curUser, siderCollapsed, menuData: menuData.items, menuSelected};
+  const {menuData, menuSelected} = appState.admin!;
+  return {curUser, menuData: menuData.items, menuSelected};
 }
 
 const {admin: adminActions} = GetActions('admin');
 
-const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, siderCollapsed, menuData, menuSelected}) => {
+const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, menuData, menuSelected}) => {
   const menuItems = useMemo(() => {
     return mappingMenuData(menuData);
   }, [menuData]);
@@ -70,11 +69,10 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, siderCollap
         openKeys={openKeys}
         mode="inline"
         theme="dark"
-        inlineCollapsed={siderCollapsed}
         items={menuItems}
       />
     </div>
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);
