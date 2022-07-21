@@ -1,6 +1,6 @@
 import DialogPage from '@elux-admin-antd/stage/components/DialogPage';
 import {MColumns} from '@elux-admin-antd/stage/components/MTable';
-import {connectRedux} from '@elux/react-web';
+import {connectStore} from '@elux/react-web';
 import {FC, useMemo} from 'react';
 import {APPState, useRouter} from '@/Global';
 import {ListItem, ListSearch, LocationState} from '../entity';
@@ -18,15 +18,13 @@ const mapStateToProps: (state: APPState) => StoreProps = (state) => {
   return {prefixPathname, curRender, listSearch};
 };
 
+const mergeColumns: {[field: string]: MColumns<ListItem>} = {
+  articles: {disable: true},
+};
+
 const Component: FC<StoreProps> = ({prefixPathname, curRender, listSearch}) => {
   const router = useRouter();
   const {selectLimit, showSearch, fixedSearch, selectedRows} = (router.location.state || {}) as LocationState;
-  const mergeColumns: {[field: string]: MColumns<ListItem>} = useMemo(
-    () => ({
-      articles: {disable: true},
-    }),
-    []
-  );
 
   const selection = useMemo(() => {
     return {limit: selectLimit};
@@ -47,4 +45,4 @@ const Component: FC<StoreProps> = ({prefixPathname, curRender, listSearch}) => {
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

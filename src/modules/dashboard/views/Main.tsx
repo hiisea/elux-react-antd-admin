@@ -1,5 +1,5 @@
 import ErrorPage from '@elux-admin-antd/stage/components/ErrorPage';
-import {Switch, connectRedux} from '@elux/react-web';
+import {Switch, connectStore} from '@elux/react-web';
 import {FC} from 'react';
 import {APPState} from '@/Global';
 import {CurView} from '../entity';
@@ -17,4 +17,4 @@ const Component: FC<StoreProps> = ({curView}) => {
   return <Switch elseView={<ErrorPage />}>{curView === 'workplace' && <Workplace />}</Switch>;
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

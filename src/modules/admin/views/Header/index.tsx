@@ -2,7 +2,7 @@
 import {BellOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
 import {CurUser} from '@elux-admin-antd/stage/entity';
 import {AdminHomeUrl} from '@elux-admin-antd/stage/utils/const';
-import {Dispatch, connectRedux} from '@elux/react-web';
+import {Dispatch, connectStore} from '@elux/react-web';
 import {Avatar, Badge, Dropdown, Menu, MenuProps} from 'antd';
 import {FC, useCallback, useMemo} from 'react';
 import {APPState, GetActions, GetClientRouter, StaticPrefix} from '@/Global';
@@ -82,4 +82,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({curUser, notices, sid
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

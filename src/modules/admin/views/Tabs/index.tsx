@@ -1,5 +1,5 @@
 import {PlusOutlined, ReloadOutlined} from '@ant-design/icons';
-import {Dispatch, Link, connectRedux} from '@elux/react-web';
+import {Dispatch, Link, connectStore} from '@elux/react-web';
 import {Tabs} from 'antd';
 import {FC, useCallback} from 'react';
 import {APPState, GetActions} from '@/Global';
@@ -76,4 +76,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, tabData, ta
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

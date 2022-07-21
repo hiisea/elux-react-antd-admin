@@ -1,7 +1,7 @@
 //通常模块可以定义一个根视图，根视图中显示什么由模块自行决定，父级不干涉，相当于子路由
 import ErrorPage from '@elux-admin-antd/stage/components/ErrorPage';
 import {CurUser} from '@elux-admin-antd/stage/entity';
-import {Switch, connectRedux} from '@elux/react-web';
+import {Switch, connectStore} from '@elux/react-web';
 import {Layout} from 'antd';
 import {FC, useMemo} from 'react';
 import {APPState, LoadComponent} from '@/Global';
@@ -75,4 +75,4 @@ const Component: FC<StoreProps> = ({curUser, subModule, dialogMode, siderCollaps
 };
 
 //connectRedux中包含了exportView()的执行
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);

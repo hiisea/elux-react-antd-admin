@@ -29,6 +29,7 @@ export function useInit(): boolean {
 export {message} from 'antd';
 
 export interface FormDecorator<T = string> {
+  label?: string;
   dependencies?: T[];
   rules?: Rule[];
   valuePropName?: string;

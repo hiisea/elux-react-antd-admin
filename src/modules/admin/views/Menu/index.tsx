@@ -1,6 +1,6 @@
 import {DashboardOutlined, ProfileOutlined, TeamOutlined} from '@ant-design/icons';
 import {CurUser} from '@elux-admin-antd/stage/entity';
-import {Dispatch, connectRedux} from '@elux/react-web';
+import {Dispatch, connectStore} from '@elux/react-web';
 import {Menu, MenuProps} from 'antd';
 import {ComponentType, FC, useCallback, useMemo, useState} from 'react';
 import {APPState, GetActions} from '@/Global';
@@ -75,4 +75,4 @@ const Component: FC<StoreProps & {dispatch: Dispatch}> = ({dispatch, menuData, m
   );
 };
 
-export default connectRedux(mapStateToProps)(Component);
+export default connectStore(mapStateToProps)(Component);
