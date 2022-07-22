@@ -51,6 +51,43 @@
       }
     }
 
+    > .resize {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      z-index: 99999999;
+      font-size: 10px;
+      line-height: 0;
+      cursor: zoom-in;
+      background-color: #fff;
+      border-radius: 100px;
+
+      .btn {
+        display: block;
+        width: 1.6em;
+        height: 1.6em;
+        overflow: hidden;
+        line-height: 1.4em;
+        transform: rotate(45deg);
+      }
+
+      .anticon {
+        color: #999;
+
+        &:last-child {
+          margin-left: -0.4em;
+        }
+      }
+
+      &:hover {
+        background-color: #4d5763;
+
+        .anticon {
+          color: #fff;
+        }
+      }
+    }
+
     > .brand {
       position: absolute;
       top: 0;
@@ -81,6 +118,16 @@
         font-size: 18px;
         font-weight: bold;
         border-bottom: 1px solid @border-color-split;
+      }
+    }
+
+    &.size-max {
+      > .resize {
+        cursor: zoom-out;
+
+        .anticon {
+          transform: scale(-1);
+        }
       }
     }
   }

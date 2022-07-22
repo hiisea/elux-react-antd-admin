@@ -1,7 +1,8 @@
-import {ArrowLeftOutlined, CloseOutlined, ReloadOutlined} from '@ant-design/icons';
+import {ArrowLeftOutlined, CaretLeftOutlined, CaretRightOutlined, CloseOutlined, ReloadOutlined} from '@ant-design/icons';
 import {DocumentHead, Link} from '@elux/react-web';
 import {Tooltip} from 'antd';
-import {FC, ReactNode, useMemo} from 'react';
+import {FC, ReactNode, useMemo, useState} from 'react';
+import {useEvent} from '../../utils/tools';
 import styles from './index.module.less';
 
 export interface Props {
@@ -14,12 +15,25 @@ export interface Props {
   maskClosable?: boolean;
   mask?: boolean;
   size?: 'max' | 'auto';
+  minSize?: number[];
   backOverflowRedirect?: string;
 }
 
 const Component: FC<Props> = (props) => {
-  const {className = '', title, subject, showBrand, children, maskClosable = true, mask, backOverflowRedirect, size = 'auto'} = props;
+  const {className = '', title, subject, showBrand, children, maskClosable = true, mask, backOverflowRedirect, minSize = []} = props;
   const showControls = props.showControls !== undefined ? props.showControls : !showBrand;
+  const showResize = minSize[0];
+  const [size, setSize] = useState(props.size || 'auto');
+  const toggleSize = useEvent(() => {
+    setSize(size === 'auto' ? 'max' : 'auto');
+  });
+  const style = {};
+  if (minSize[0] && size === 'auto') {
+    style['width'] = minSize[0];
+  }
+  if (minSize[1] && size === 'auto') {
+    style['height'] = minSize[1];
+  }
 
   const controls = useMemo(() => {
     return showControls ? (
@@ -43,10 +57,22 @@ const Component: FC<Props> = (props) => {
     ) : null;
   }, [backOverflowRedirect, showControls]);
 
+  const resize = useMemo(() => {
+    return showResize ? (
+      <div className="resize">
+        <div className="btn" onClick={toggleSize}>
+          <CaretLeftOutlined />
+          <CaretRightOutlined />
+        </div>
+      </div>
+    ) : null;
+  }, [showResize, toggleSize]);
+
   return (
     <>
-      <div className={`${styles.root} ${showBrand ? 'show-brand' : ''} size-${size} ${className}`}>
+      <div className={`${styles.root} ${showBrand ? 'show-brand' : ''} size-${size} ${className}`} style={style}>
         {title && <DocumentHead title={title} />}
+        {resize}
         {controls}
         {showBrand && (
           <div className="brand">
