@@ -44,7 +44,7 @@ const summaryHtml = (
         </ul>
       </li>
       <li>
-        Vue
+        Vue版本
         <ul>
           <li>
             github: <a href="https://github.com/hiisea/elux-vue-antd-admin">https://github.com/hiisea/elux-vue-antd-admin</a>
@@ -167,6 +167,15 @@ const summaryHtml = (
           🚀 提供收藏夹书签功能，用其代替Page选项卡，操作更灵活。点击左上角
           <Link to="/admin/member/list/maintain" action="push" target="page">
             【+收藏】
+          </Link>
+          试试...
+        </p>
+      </li>
+      <li>
+        <p>
+          🚀 提供页内刷新功能。点击右上角
+          <Link to="/admin/member/list/maintain" action="push" target="page">
+            【刷新按钮】
           </Link>
           试试...
         </p>

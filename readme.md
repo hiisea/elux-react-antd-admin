@@ -20,7 +20,7 @@
 - React版本
   - github: <https://github.com/hiisea/elux-react-antd-admin>
   - gitee: <https://gitee.com/hiisea/elux-react-antd-admin-fork>
-- Vue
+- Vue版本
   - github: <https://github.com/hiisea/elux-vue-antd-admin>
   - gitee: <https://gitee.com/hiisea/elux-vue-antd-admin-fork>
 
@@ -85,6 +85,7 @@
   ```
 
 - 🚀 提供收藏夹书签功能，用其代替Page选项卡，操作更灵活。点击左上角[【+收藏】](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)试试...
+- 🚀 提供页内刷新功能。点击右上角[【刷新按钮】](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)试试...
 - 🚀 虚拟Window
   - 路由跳转时可以在新的虚拟窗口中打开，类似于target='_blank'，但是虚拟Window哦，如：[新窗口打开](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48&__c=_dialog) / [本窗口打开](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48)
   - 窗口中可以再开新窗口，最多可达10级
