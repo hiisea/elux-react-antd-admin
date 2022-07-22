@@ -12,22 +12,29 @@
       border-bottom: 1px solid @border-color-split;
     }
 
-    cite {
-      margin: 0 5px;
+    li {
+      margin-bottom: 10px;
     }
 
-    em {
-      margin: 0 5px;
-      font-style: normal;
-      font-weight: bold;
-    }
-
-    span {
+    blockquote {
+      padding: 0 20px;
       color: #666;
+      background-color: #eee;
+      border-left: 2px solid #ccc;
     }
 
     pre {
       background-color: #eee;
+
+      > code {
+        display: block;
+        padding: 10px 20px;
+      }
+    }
+
+    code {
+      padding: 0 10px;
+      color: #666;
     }
   }
 }
