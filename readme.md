@@ -1,15 +1,15 @@
 <div align="center">
     <img src="https://gitee.com/hiisea/elux-fork/raw/main/docs/.vuepress/public/images/logo-icon-rotate.svg" alt="elux" width="200" />
-    <h2> - <a href="https://eluxjs.com">eluxjs.com</a> -</h2>
+    <h2><a href="https://eluxjs.com">eluxjs.com</a></h2>
     <h3>基于“微模块”和“模型驱动”的跨平台、跨框架『同构方案』</h3>
     <small style="background:#eee">支持React/Vue/Web(浏览器)/Micro(微前端)/SSR(服务器渲染)/MP(小程序)/APP(手机应用)</small>
 </div>
 
 # 项目介绍
 
-本项目主要基于`Elux+Antd`构建，包含`React`版本和`Vue`版本，旨在提供给大家一个**简单**、**开箱即用**的后台管理系统通用模版，主要包含运行环境、脚手架、代码风格、基本Layout、状态管理、增删改查逻辑、列表、表单等。
+本项目主要基于`Elux+Antd`构建，包含`React`版本和`Vue`版本，旨在提供给大家一个**简单基础**、**开箱即用**的后台管理系统通用模版，主要包含运行环境、脚手架、代码风格、基本Layout、状态管理、路由管理、增删改查逻辑、列表、表单等。
 
-> 为保持工程简单清爽，方便二次开发，不提供各种纷杂的具体业务组件（网上很多）
+> 为保持工程简单清爽，方便二次开发，不提供各种纷杂的具体业务组件，请视具体业务自行加入（网上很多）
 
 ## 在线预览
 
@@ -31,11 +31,86 @@
 
 ## 你看得见的UI
 
+- 提供通用的Admin系统Layout（包括注册、登录、忘记密码等）。
+- 动态获取Menu菜单、轮询最新消息等。
+- 支持第一次后退溢出，自动回到首页，再次后退则弹出提示：您确定要离开本站？防止用户误操作。
+- 提供配置式查询表单, 还带TS类型验证哦，再也不担心写错字段名：
+
+  ```ts
+  const formItems: SearchFromItems<ListSearchFormData> = [
+    {name: 'name', label: '用户名', formItem: <Input placeholder="请输入关键字" />},
+    {name: 'nickname', label: '呢称', formItem: <Input placeholder="请输入呢称" />},
+    {name: 'status', label: '状态', formItem: <Select placeholder="请选择用户状态" />},
+    {name: 'role', label: '角色', formItem: <Select placeholder="请选择用户状态" />},
+    {name: 'email', label: 'Email', formItem: <Input placeholder="请输入Email" />},
+  ];
+  ```
+
+- 提供展开与隐藏高级搜索：[展开高级](http://admin-react-antd.eluxjs.com/admin/member/list/maintain?email=u.mese%40jww.gh) / [隐藏高级](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)
+- 提供跨页选取、重新搜索后选取、review已选取：[跨页选取](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)
+- 提供配置式批量操作等功能，如：[批量操作](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)
+
+  ```ts
+  const batchActions = {
+      actions: [
+        {key: 'delete', label: '批量删除', confirm: true},
+        {key: 'resolved', label: '批量通过', confirm: true},
+        {key: 'rejected', label: '批量拒绝', confirm: true},
+      ],
+      handler: (item: {key: string}, ids: (string | number)[]) => {
+        if (item.key === 'delete') {
+          deleteItems(ids as string[]);
+        } else if (item.key === 'resolved') {
+          alterItems(ids as string[], {status: Status.审核通过});
+        } else if (item.key === 'rejected') {
+          alterItems(ids as string[], {status: Status.审核拒绝});
+        }
+      },
+    };
+  ```
+
+- 提供资源选择器，并封装成select，可支持单选、多选、满足数量自动提交，如：[创建文章时，查询并选择责任编辑](http://admin-react-antd.eluxjs.com/admin/article/item/edit?__c=_dialog)
+
+  ```jsx
+  <FormItem {...fromDecorators.editors}>
+    <MSelect<MemberListSearch>
+      placeholder="请选择责任编辑"
+      selectorPathname="/admin/member/list/selector"
+      fixedSearch={{role: Role.责任编辑, status: Status.启用}}
+      limit={[1, 2]}
+      returnArray
+      showSearch
+    ></MSelect>
+  </FormItem>
+  ```
+
+- 收藏书签，提供收藏夹书签功能，用其代替Page选项卡，操作更灵活。点击左上角[【+收藏】](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)试试...
 - 虚拟Window
-- 收藏书签
-- 增删改查
-- 跨页选取
-- 资源选择器
+  - 路由跳转时可以在新的虚拟窗口中打开，类似于target='_blank'，但是虚拟Window哦，如：[新窗口打开](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48&__c=_dialog) / [本窗口打开](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48)
+  - 窗口中可以再开新窗口，最多可达10级
+  - 弹窗再弹弹窗体验不好？多层弹窗时自动隐藏下层弹窗，关闭上层弹窗自动恢复下层弹窗，保证每一时刻始终之会出现一层弹窗
+  - 实现真正意义上的Window（非简单的Dialog），每个窗口不仅拥有独立的Dom、状态管理Store、还自动维护独立的`历史记录栈`
+  - 提供窗口工具条：后退、刷新、关闭，如：[文章列表](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48&__c=_dialog) => 点击标题 => 点击作者 => 点击文章数。然后你可以依次回退每一步操作，也可一次性全部关闭。
+  - 提供窗口最大化、最小化按钮，如：[文章详情，窗口左上角按钮](http://admin-react-antd.eluxjs.com/admin/article/item/detail/50?__c=_dialog)；并支持默认最大化，如：[创建文章](http://admin-react-antd.eluxjs.com/admin/article/item/edit?__c=_dialog)
+  - 窗口可以通过Url发送，如将`http://admin-react-antd.eluxjs.com/admin/member/item/edit/50?__c=_dialog`发送给好友后，其可以通过Url还原窗口。
+- 基于抽象的增删改查逻辑：
+  - 业务逻辑通过类的继承复用，如果是标准的增删改查基本上不用写代码，否则可以自己覆盖父类中的某些方法：
+
+  ```ts
+  export class Model extends BaseResource<MemberResource> {
+    protected api = api;
+    protected defaultListSearch = defaultListSearch;
+  }
+  ```
+
+  - UI逻辑通过`Hooks`复用。
+  - 将视图抽象成为2大类：*列表*(List)和*单条*(Item)，抽取其共性。
+  - 在此基础上引入视图`渲染器(Render)`概念，类别名+渲染器=具体某个业务视图，如：
+    - type=list,render=maintain(列表+维护)，如：[/admin/member/list/maintain](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)
+    - type=list,render=index(列表+展示)，如：[/admin/article/list/index](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=49&__c=_dialog)
+    - type=list,render=selector(列表+选择)，如：[/admin/member/list/selector](http://admin-react-antd.eluxjs.com/admin/member/list/selector?role=editor&status=enable&__c=_dialog)
+    - type=item,render=detail(单条+展示)，如：[/admin/member/item/detail/49](http://admin-react-antd.eluxjs.com/admin/member/item/detail/49?__c=_dialog)
+    - type=item,render=edit(单条+编辑)，如：[/admin/member/item/edit/49](http://admin-react-antd.eluxjs.com/admin/member/item/edit/49?__c=_dialog)
 
 ## 你看不见的幕后
 
@@ -118,7 +193,7 @@
   }
   ```
 
-  - 支持awiat action的执行结果，如：
+  - 支持awiat action的执行结果，如在UI中等待login这个action的执行结果：
 
   ```ts
   const onSubmit = (values: HFormData) => {
@@ -126,6 +201,7 @@
     //stageActions.login()中包含异步请求，返回Promise
 
     result.catch(({message}) => {
+      //如果出错(密码错误)，在form中展示出错信息
       form.setFields([{name: 'password', errors: [message]}]);
     });
   };
@@ -239,6 +315,25 @@
   ```
 
   - 支持路由拦截和路由守卫
+  - 支持后退溢出时重定向，比如防止用户后退过多，不小心退出了本站：
+
+  ```ts
+  @effect(null)
+  protected async ['this._error'](error: CustomError): Promise<void> {
+    if (error.code === ErrorCodes.ROUTE_BACK_OVERFLOW) {
+      const redirect: string = HomeUrl;
+      //如果已经时主页，则提示用户是否退出本站？
+      if (this.getRouter().location.url === redirect && window.confirm('确定要退出本站吗？')){
+        //注意: back('')可以退出本站
+        setTimeout(() => this.getRouter().back('', 'window'), 0);
+      } else {
+        //如果不是在主页，则先回到主页
+        setTimeout(() => this.getRouter().relaunch({url: redirect}, 'window'), 0);
+      }
+    };
+  }
+  ```
+
   - 可跟踪和等待路由跳转完成。例如修改用户后，需要返回列表页面并刷新：
 
   ```ts
@@ -273,3 +368,7 @@
   ```
 
 - 未完待续...
+
+## 最后
+
+能耐心看到这里也辛苦了(^V^)！本项目完全开源免费，喜欢拿去，觉得好用别忘了[Github](https://github.com/hiisea/elux-react-antd-admin)给个Star哦(-_-)...
