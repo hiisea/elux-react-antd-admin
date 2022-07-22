@@ -141,7 +141,7 @@ const summaryHtml = (
       </li>
       <li>
         <p>
-          🚀 提供资源选择器，并封装成select，可单选、多选、满足数量自动提交，如：
+          🚀 提供资源选择器，并封装成select，可单选、多选、选满自动提交，如：
           <Link to="/admin/article/item/edit?__c=_dialog" action="push" target="window">
             创建文章时，查询并选择责任编辑
           </Link>
@@ -164,7 +164,7 @@ const summaryHtml = (
       </li>
       <li>
         <p>
-          🚀 收藏书签，提供收藏夹书签功能，用其代替Page选项卡，操作更灵活。点击左上角
+          🚀 提供收藏夹书签功能，用其代替Page选项卡，操作更灵活。点击左上角
           <Link to="/admin/member/list/maintain" action="push" target="page">
             【+收藏】
           </Link>

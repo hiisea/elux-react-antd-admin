@@ -69,7 +69,7 @@
     };
   ```
 
-- 🚀 提供资源选择器，并封装成select，可单选、多选、满足数量自动提交，如：[创建文章时，查询并选择责任编辑](http://admin-react-antd.eluxjs.com/admin/article/item/edit?__c=_dialog)
+- 🚀 提供资源选择器，并封装成select，可单选、多选、选满自动提交，如：[创建文章时，查询并选择责任编辑](http://admin-react-antd.eluxjs.com/admin/article/item/edit?__c=_dialog)
 
   ```jsx
   <FormItem {...fromDecorators.editors}>
@@ -84,7 +84,7 @@
   </FormItem>
   ```
 
-- 🚀 收藏书签，提供收藏夹书签功能，用其代替Page选项卡，操作更灵活。点击左上角[【+收藏】](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)试试...
+- 🚀 提供收藏夹书签功能，用其代替Page选项卡，操作更灵活。点击左上角[【+收藏】](http://admin-react-antd.eluxjs.com/admin/member/list/maintain)试试...
 - 🚀 虚拟Window
   - 路由跳转时可以在新的虚拟窗口中打开，类似于target='_blank'，但是虚拟Window哦，如：[新窗口打开](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48&__c=_dialog) / [本窗口打开](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48)
   - 窗口中可以再开新窗口，最多可达10级
