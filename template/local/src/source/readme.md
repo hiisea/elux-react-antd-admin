@@ -33,7 +33,13 @@
 
 - 🚀 提供通用的Admin系统Layout（包括注册、登录、忘记密码等）。
 - 🚀 动态获取Menu菜单、轮询最新消息等。
-- 🚀 支持第一次后退溢出，自动回到首页，再次后退则弹出提示：您确定要离开本站？防止用户误操作。
+- 🚀 支持第一次后退溢出，自动回到首页，再次后退则弹出提示：您确定要离开本站？防止用户误操作。![elux收藏夹](public/client/imgs/leave.jpg)
+- 提供&lt;DocumentHead&gt;组件，方便在SinglePage中维护document title、keyword、description等，该组件也可用于SSR，例如：
+
+  ```ts
+  <DocumentHead title={(id?'修改':'新增')+'用户'} />
+  ```
+
 - 🚀 提供配置式查询表单, 还带TS类型验证哦，再也不担心写错字段名：
 
   ```ts
