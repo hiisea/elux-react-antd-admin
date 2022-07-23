@@ -168,7 +168,7 @@ const summaryHtml = (
           <Link to="/admin/member/list/maintain" action="push" target="page">
             【+收藏】
           </Link>
-          试试...
+          试试... <img src="/client/imgs/favs.jpg" alt="elux收藏夹" />
         </p>
       </li>
       <li>
@@ -213,7 +213,8 @@ const summaryHtml = (
             ；并支持默认最大化，如：
             <Link to="/admin/article/item/edit?__c=_dialog" action="push" target="window">
               创建文章
-            </Link>
+            </Link>{' '}
+            <img src="/client/imgs/window.jpg" alt="elux虚拟窗口" />
           </li>
           <li>
             窗口可以通过Url发送，如将<code>http://admin-react-antd.eluxjs.com/admin/member/item/edit/50?__c=_dialog</code>
@@ -331,7 +332,7 @@ const summaryHtml = (
         </ul>
       </li>
       <li>
-        <p>🚀 内置地表最强状态管理框架(^-^)：</p>
+        <p>🚀 内置最强状态管理框架(^-^)：</p>
         <ul>
           <li>同时支持React/Vue，不再深度耦合UI框架。</li>
           <li>最大程度简化action和store的写法</li>
@@ -460,8 +461,24 @@ protected async [&#39;this._error&#39;](error: CustomError) {
         />
         <ul>
           <li>
-            武装到牙齿的Typescript智能提示和自动补全（并且类型自动生成，无需手写）：
-            <img src="/client/imgs/type.jpg" alt="elux-ts" />
+            <p>最方便的注入loading状态，想要跟踪异步action的执行情况？只需要在声明方法中传人key名就行了，如：</p>
+            <pre
+              dangerouslySetInnerHTML={{
+                __html: `<code class="language-ts">@effect(&#39;this.listLoading&#39;) //将该异步action的执行状态注入this.state.listLoading中
+public async fetchList(listSearchData?: TDefineResource[&#39;ListSearch&#39;]) {
+  const listSearch = listSearchData || this.state.listSearch || this.defaultListSearch;
+  const {list, listSummary} = await this.api.getList!(listSearch);
+  this.dispatch(this.privateActions.putList(listSearch, list, listSummary));
+}
+</code>`,
+              }}
+            />
+          </li>
+          <li>
+            <p>
+              武装到牙齿的Typescript智能提示和自动补全（并且类型自动生成，无需手写）：
+              <img src="/client/imgs/type.jpg" alt="elux-ts" />
+            </p>
           </li>
         </ul>
       </li>
@@ -591,7 +608,7 @@ router.back(stepOrCallback, target) //后退或刷新
       <li>
         <p>
           🚀 开箱即用的脚手架。提供封装好的<code>Cli命令行</code>脚手架，不用自己折腾：
-          <img src="/client/imgs/cli.jpg" alt="elux-cli" />
+          <img src="/client/imgs/cli.jpg" alt="elux脚手架" />
         </p>
       </li>
       <li>
@@ -613,6 +630,16 @@ router.back(stepOrCallback, target) //后退或刷新
         <p>🚀 未完待续...</p>
       </li>
     </ul>
+    <h2 id="vue版特别说明">Vue版特别说明</h2>
+    <p>
+      Vue版/React版保持同步，由于<a href="https://eluxjs.com">Elux</a>践行“<strong>模型驱动</strong>
+      ”的架构理念，View被刻意写得很薄，很多逻辑写在了Model中（因为Model与UI框架无关、Vue和React都可以复用）。
+    </p>
+    <p>
+      所以需要重构的只是View，由于Vue3中可以使用<code>steup+tsx</code>，并且<code>antd-vue</code>与<code>antd-react</code>
+      风格和api基本保持一致，所以能2个版本的差异就更小了。Vue版全程使用tsx编写，你也可以自己改成template方式，脚手架已经内置了对.vue文件的支持。也欢迎有志之士贡献源码，将其重构为
+      <code>template版</code>，新增一个branch或fork。
+    </p>
     <h2 id="感谢关注，欢迎参与">感谢关注，欢迎参与</h2>
     <p>
       {' '}
