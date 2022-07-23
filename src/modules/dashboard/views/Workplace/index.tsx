@@ -73,7 +73,19 @@ const summaryHtml = (
         <p>🚀 动态获取Menu菜单、轮询最新消息等。</p>
       </li>
       <li>
-        <p>🚀 支持第一次后退溢出，自动回到首页，再次后退则弹出提示：您确定要离开本站？防止用户误操作。</p>
+        <p>
+          🚀 支持第一次后退溢出，自动回到首页，再次后退则弹出提示：您确定要离开本站？防止用户误操作。
+          <img src="/client/imgs/leave.jpg" alt="elux收藏夹" />
+        </p>
+      </li>
+      <li>
+        <p>提供&lt;DocumentHead&gt;组件，方便在SinglePage中维护document title、keyword、description等，该组件也可用于SSR，例如：</p>
+        <pre
+          dangerouslySetInnerHTML={{
+            __html: `<code class="language-ts">&lt;DocumentHead title={(id?&#39;修改&#39;:&#39;新增&#39;)+&#39;用户&#39;} /&gt;
+</code>`,
+          }}
+        />
       </li>
       <li>
         <p>🚀 提供配置式查询表单, 还带TS类型验证哦，再也不担心写错字段名：</p>
