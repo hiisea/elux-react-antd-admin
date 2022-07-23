@@ -15,7 +15,7 @@ export interface Props {
   maskClosable?: boolean;
   mask?: boolean;
   size?: 'max' | 'auto';
-  minSize?: number[];
+  minSize?: (number | string)[];
   backOverflowRedirect?: string;
 }
 
@@ -29,10 +29,10 @@ const Component: FC<Props> = (props) => {
   });
   const style = {};
   if (minSize[0] && size === 'auto') {
-    style['width'] = minSize[0];
+    style['width'] = typeof minSize[0] === 'number' ? minSize[0] + 'px' : minSize[0];
   }
   if (minSize[1] && size === 'auto') {
-    style['height'] = minSize[1];
+    style['height'] = typeof minSize[1] === 'number' ? minSize[1] + 'px' : minSize[1];
   }
 
   const controls = useMemo(() => {
