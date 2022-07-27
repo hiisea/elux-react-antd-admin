@@ -64,6 +64,19 @@ const summaryHtml = (
         也可以使用Elux提供的命令：<code>npm create elux@latest 或 yarn create elux</code>
       </li>
     </ul>
+    <h2 id="⚠️注意事项">⚠️注意事项</h2>
+    <p>
+      安装请注意！安装请注意！安装请注意！重要的事情说三遍，因为使用了<code>workspace</code>，所以请保证你的安装环境：
+    </p>
+    <ul>
+      <li>Node版本 &gt;= 14.0.0</li>
+      <li>
+        推荐使用 <code>yarn</code> 安装依赖
+      </li>
+      <li>
+        如果使用 <code>npm</code> 安装依赖，npm版本 &gt;= 7.0
+      </li>
+    </ul>
     <h2 id="你看得见的ui">你看得见的UI</h2>
     <ul>
       <li>
@@ -231,6 +244,9 @@ const summaryHtml = (
           <li>
             窗口可以通过Url发送，如将<code>http://admin-react-antd.eluxjs.com/admin/member/item/edit/50?__c=_dialog</code>
             发送给好友后，其可以通过Url还原窗口。
+          </li>
+          <li>
+            轻松实现keep-alive。keep-alive优点是用户体验好，缺点是太占资源（需要缓存所有Dom元素还有相关内存变量），现在使用虚拟Windw，你想keep-alive就在新窗口中打开，不想keep-alive就在原窗口中打开，关闭窗口就自动销毁keep-alive
           </li>
         </ul>
       </li>
@@ -642,6 +658,51 @@ router.back(stepOrCallback, target) //后退或刷新
         <p>🚀 未完待续...</p>
       </li>
     </ul>
+    <h2 id="不使用npm管理微模块">不使用NPM管理微模块</h2>
+    <p>
+      项目中的<code>微模块</code>默认是使用NPM包来管理的，每个微模块下都有一个<code>package.json</code>文件，例如：
+      <code>src/modules/admin/package.json</code>，开发时使用了<code>workspace</code>和<code>monorepo</code>来管理：
+    </p>
+    <pre
+      dangerouslySetInnerHTML={{
+        __html: `<code class="language-json">  &quot;workspaces&quot;: [
+    &quot;./mock&quot;,
+    &quot;./public&quot;,
+    &quot;./src/modules/*&quot;
+  ],
+</code>`,
+      }}
+    />
+    <p>
+      跨<code>微模块</code>引用时，用的是npm包名，例如：
+    </p>
+    <pre
+      dangerouslySetInnerHTML={{
+        __html: `<code class="language-ts">import {ListSearch} from &#39;@elux-admin-antd/member/entity&#39;;
+</code>`,
+      }}
+    />
+    <p>
+      <code>微模块</code>最大的好处还是在于<strong>高内聚，低耦合</strong>
+      ，至于是否要用npm来管理，不是必须的。如果你不想绕这么一个圈，也可以分分钟改成普通的单体结构：
+    </p>
+    <pre
+      dangerouslySetInnerHTML={{
+        __html: `<code class="language-ts">import {ListSearch} from &#39;@/modules/member/entity&#39;;
+</code>`,
+      }}
+    />
+    <p>
+      只需要在<code>src/tsconfig.json</code>中加入paths别名就可以了：
+    </p>
+    <pre
+      dangerouslySetInnerHTML={{
+        __html: `<code class="language-json">&quot;paths&quot;: {
+  &quot;@/*&quot;: [&quot;./*&quot;]
+}
+</code>`,
+      }}
+    />
     <h2 id="vue版特别说明">Vue版特别说明</h2>
     <p>
       Vue版/React版保持同步，由于<a href="https://eluxjs.com">Elux</a>践行“<strong>模型驱动</strong>
@@ -652,6 +713,18 @@ router.back(stepOrCallback, target) //后退或刷新
       风格和api基本保持一致，所以能2个版本的差异就更小了。Vue版全程使用tsx编写，你也可以自己改成template方式，脚手架已经内置了对.vue文件的支持。也欢迎有志之士贡献源码，将其重构为
       <code>template版</code>，新增一个branch或fork。
     </p>
+    <h2 id="更多相关文章">更多相关文章</h2>
+    <ul>
+      <li>
+        <a href="https://juejin.cn/post/7106791733509226533">从&quot;微前端&quot;到“微模块”</a>
+      </li>
+      <li>
+        <a href="https://juejin.cn/post/7124177821953425422">不想当Window的Dialog不是一个好Modal，弹窗翻身记...</a>
+      </li>
+      <li>
+        <a href="https://juejin.cn/post/7124959667326812196">手撸Router，还要啥Router框架？让react-router/vue-router躺一边凉快去</a>
+      </li>
+    </ul>
     <h2 id="感谢关注，欢迎参与">感谢关注，欢迎参与</h2>
     <p>
       {' '}
