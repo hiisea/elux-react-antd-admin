@@ -29,6 +29,14 @@
 - 使用Git命令clone相应的库：`git clone xxx`
 - 也可以使用Elux提供的命令：`npm create elux@latest 或 yarn create elux`
 
+## ⚠️注意事项
+
+安装请注意！安装请注意！安装请注意！重要的事情说三遍，因为使用了`workspace`，所以请保证你的安装环境：
+
+- Node版本 >= 14.0.0
+- 推荐使用 `yarn` 安装依赖
+- 如果使用 `npm` 安装依赖，npm版本 >= 7.0
+
 ## 你看得见的UI
 
 - 🚀 提供通用的Admin系统Layout（包括注册、登录、忘记密码等）。
@@ -100,6 +108,7 @@
   - 提供窗口工具条：后退、刷新、关闭，如：[文章列表](http://admin-react-antd.eluxjs.com/admin/article/list/index?author=48&__c=_dialog) => 点击标题 => 点击作者 => 点击文章数。然后你可以依次回退每一步操作，也可一次性全部关闭。
   - 提供窗口最大化、最小化按钮，如：[文章详情，窗口左上角按钮](http://admin-react-antd.eluxjs.com/admin/article/item/detail/50?__c=_dialog)；并支持默认最大化，如：[创建文章](http://admin-react-antd.eluxjs.com/admin/article/item/edit?__c=_dialog) ![elux虚拟窗口](public/client/imgs/window.jpg)
   - 窗口可以通过Url发送，如将`http://admin-react-antd.eluxjs.com/admin/member/item/edit/50?__c=_dialog`发送给好友后，其可以通过Url还原窗口。
+  - 轻松实现keep-alive。keep-alive优点是用户体验好，缺点是太占资源（需要缓存所有Dom元素还有相关内存变量），现在使用虚拟Windw，你想keep-alive就在新窗口中打开，不想keep-alive就在原窗口中打开，关闭窗口就自动销毁keep-alive
   
 - 🚀 基于抽象的增删改查逻辑：
   - 业务逻辑通过类的继承复用，如果是标准的增删改查基本上不用写代码，否则可以自己覆盖父类中的某些方法：
@@ -390,11 +399,49 @@
 
 - 🚀 未完待续...
 
+## 不使用NPM管理微模块
+
+项目中的`微模块`默认是使用NPM包来管理的，每个微模块下都有一个`package.json`文件，例如：`src/modules/admin/package.json`，开发时使用了`workspace`和`monorepo`来管理：
+
+```json
+  "workspaces": [
+    "./mock",
+    "./public",
+    "./src/modules/*"
+  ],
+```
+
+跨`微模块`引用时，用的是npm包名，例如：
+
+```ts
+import {ListSearch} from '@elux-admin-antd/member/entity';
+```
+
+`微模块`最大的好处还是在于**高内聚，低耦合**，至于是否要用npm来管理，不是必须的。如果你不想绕这么一个圈，也可以分分钟改成普通的单体结构：
+
+```ts
+import {ListSearch} from '@/modules/member/entity';
+```
+
+只需要在`src/tsconfig.json`中加入paths别名就可以了：
+
+```json
+"paths": {
+  "@/*": ["./*"]
+}
+```
+
 ## Vue版特别说明
 
 Vue版/React版保持同步，由于[Elux](https://eluxjs.com)践行“**模型驱动**”的架构理念，View被刻意写得很薄，很多逻辑写在了Model中（因为Model与UI框架无关、Vue和React都可以复用）。
 
 所以需要重构的只是View，由于Vue3中可以使用`steup+tsx`，并且`antd-vue`与`antd-react`风格和api基本保持一致，所以能2个版本的差异就更小了。Vue版全程使用tsx编写，你也可以自己改成template方式，脚手架已经内置了对.vue文件的支持。也欢迎有志之士贡献源码，将其重构为`template版`，新增一个branch或fork。
+
+## 更多相关文章
+
+- [从"微前端"到“微模块”](https://juejin.cn/post/7106791733509226533)
+- [不想当Window的Dialog不是一个好Modal，弹窗翻身记...](https://juejin.cn/post/7124177821953425422)
+- [手撸Router，还要啥Router框架？让react-router/vue-router躺一边凉快去](https://juejin.cn/post/7124959667326812196)
 
 ## 感谢关注，欢迎参与
 
