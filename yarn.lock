@@ -1239,13 +1239,12 @@
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@elux/app@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.npmjs.org/@elux/app/-/app-2.5.0.tgz#4775e0a98c5b9ddd9fac0a1cf3c8d0458b87acab"
-  integrity sha512-gwRbXXKF4TY5KI11FyDFBYlDMmigYD9gXtuEAHyTdxPJQGoQ8CLrUVTh/JfPSDv1iyarc7E30fnJv0XhMMQEyw==
+"@elux/app@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.npmmirror.com/@elux/app/-/app-2.6.0.tgz#2b766f7d7fb11f17f948dd51a898dbedc6103840"
+  integrity sha512-vvBYyAazmBHWJ/8IHwgR9bE+4BTpCYuokNvwk+Y/daEirXTjQ9EqJSDwwO2cVQqzdf4erBfr3kRaGe9W5pYBZA==
   dependencies:
-    "@elux/core" "^2.4.0"
-    "@elux/route" "^2.4.0"
+    "@elux/core" "^2.6.0"
 
 "@elux/babel-preset@^1.0.2":
   version "1.0.2"
@@ -1333,10 +1332,10 @@
     "@elux/cli-utils" "^2.3.1"
     commander "^7.0.0"
 
-"@elux/core@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@elux/core/-/core-2.4.0.tgz#bedd0dbdaf0221ee0a5f2d1fdfcffed5f1825d18"
-  integrity sha512-bGuANHeYP6N0arf8KHkGGY+RnVu0fjl+iOHTCDoxq70PkpiQDAUQ10srqujFgtE1cT+kL+Fq9/rN7V2FFHLRGQ==
+"@elux/core@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.npmmirror.com/@elux/core/-/core-2.6.0.tgz#98fb49ff47fd5fc1006336bf13ad2215d066ba68"
+  integrity sha512-psCBtJZyCnKOuKy8QdyikEO4z3zVbuac9qkFTqA7/cGhnH2CWIPuwPVRTMm7v9Die1ds9SMnGOu4A18qea3CMQ==
 
 "@elux/eslint-plugin@^1.2.2":
   version "1.2.2"
@@ -1357,48 +1356,37 @@
     eslint-plugin-vue "^8.0.1"
     prettier "^2.4.0"
 
-"@elux/react-components@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@elux/react-components/-/react-components-2.4.0.tgz#83986adbd97a0f86afb466c5f4c17d2189a372bf"
-  integrity sha512-tQdfhcpkSbRbrsodEqAPLMQFTdo31r+vkM9PDkl969HsDsTOIdKS3lYbEbVNHmM/6r85ZTTm7MB7U2z5aioZaQ==
+"@elux/react-components@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.npmmirror.com/@elux/react-components/-/react-components-2.6.0.tgz#91d513faca7154287de0b0fa8089a1e8625f03c4"
+  integrity sha512-Jj8zw4BeyUqBibiINqEnxBn5RWhZcJtzn4r8CWIw5JDJfb9VVP9y0CiGZU87sW09C0y6/cOqpzL0QzqZXW5GqA==
   dependencies:
-    "@elux/core" "^2.4.0"
-    "@elux/route" "^2.4.0"
+    "@elux/core" "^2.6.0"
 
-"@elux/react-redux@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.npmjs.org/@elux/react-redux/-/react-redux-2.5.0.tgz#cde442443dd4352ecc1f5fd1a86fb77a013a827a"
-  integrity sha512-/LDd81u2jacStrRN/Qde3frYtrCpjBtJKrVCU5tFN5EIsGiqx9YudPxgLUGBNIFx0ONib9/mzeGnx2XBxxULLA==
+"@elux/react-redux@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.npmmirror.com/@elux/react-redux/-/react-redux-2.6.0.tgz#b80fe02dc7ca2412e784165af2cffac87f2a9428"
+  integrity sha512-ccurYEB6E6yEEDTALEtxuJKnqF0EdTXW4f0ul+ON7V2og6Nx7yqg3PR+vhoHGwnIptfEMkCfb9yYTqIhqGxb+A==
   dependencies:
-    "@elux/core" "^2.4.0"
-    react-redux "^7.2.2"
+    "@elux/core" "^2.6.0"
 
-"@elux/react-web@^2.5.1":
-  version "2.5.1"
-  resolved "https://registry.npmmirror.com/@elux/react-web/-/react-web-2.5.1.tgz#6a5857800960f8776906ff21963690541d204980"
-  integrity sha512-Bd5h8VqhANoD1oHPRs1lcVpU1JCnwgtqZbqkF/t6K4wMfKryuKUntwYjsJSacHWpOiqa58wus5ahgigBsRpbyg==
+"@elux/react-web@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.npmmirror.com/@elux/react-web/-/react-web-2.6.0.tgz#93487f0aa6e198bee760f4c91a4634b35c034f89"
+  integrity sha512-DTg9CXIMG2IjEjLSm4sFnVjBDro9ZCQakKxjiobnqkeRMblfplXW4ZEPG0gK6DhCqcH/UNJqSm01fMK8LLL4Tw==
   dependencies:
-    "@elux/app" "^2.5.0"
-    "@elux/core" "^2.4.0"
-    "@elux/react-components" "^2.4.0"
-    "@elux/react-redux" "^2.5.0"
-    "@elux/route" "^2.4.0"
-    "@elux/route-browser" "^2.5.1"
+    "@elux/app" "^2.6.0"
+    "@elux/core" "^2.6.0"
+    "@elux/react-components" "^2.6.0"
+    "@elux/react-redux" "^2.6.0"
+    "@elux/route-browser" "^2.6.0"
 
-"@elux/route-browser@^2.5.1":
-  version "2.5.1"
-  resolved "https://registry.npmmirror.com/@elux/route-browser/-/route-browser-2.5.1.tgz#94486afcaef6f9da6316b77e1f5abf170b58130e"
-  integrity sha512-IRansmJMBmSceMm8NHKj/4KL03THazGkXV2+5N3Smz4iku33yvJXHeGcCbFVFZJNNlc9H1m8jr/+foYzV7oNdg==
+"@elux/route-browser@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.npmmirror.com/@elux/route-browser/-/route-browser-2.6.0.tgz#b7361e81350d9bd8cb204aae4c8cf0c815d6c402"
+  integrity sha512-GeHeVJI/PDxT01Usd/1ka3jQ+CVS9u7PuOyq3xk1ho/iasp4qTrUorNnoBnonoeqdnaR3MlFxHckJdMuP91mMA==
   dependencies:
-    "@elux/core" "^2.4.0"
-    "@elux/route" "^2.4.0"
-
-"@elux/route@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@elux/route/-/route-2.4.0.tgz#5251b3cf897be91180d54209b5b2ff54f2746b0b"
-  integrity sha512-v3in8H/hdxZmdo/Ra83iBCXlPSjZxW/Epi+o2sp7Kv3qgWNSEegRBrAx40BoyhNEBuLMOk4TzWHZ159gw3xU7w==
-  dependencies:
-    "@elux/core" "^2.4.0"
+    "@elux/core" "^2.6.0"
 
 "@elux/stylelint-config@^1.1.1":
   version "1.1.1"
@@ -7561,7 +7549,7 @@ react-is@^17.0.2:
   resolved "https://registry.npmmirror.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-redux@^7.2.2:
+react-redux@^7.0.0:
   version "7.2.8"
   resolved "https://registry.npmmirror.com/react-redux/-/react-redux-7.2.8.tgz#a894068315e65de5b1b68899f9c6ee0923dd28de"
   integrity sha512-6+uDjhs3PSIclqoCk0kd6iX74gzrGc3W5zcAjbrFgEdIjRSQObdIwfx80unTkVUYvbQ95Y8Av3OvFHq1w5EOUw==
