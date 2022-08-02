@@ -55,9 +55,10 @@
     "@ant-design/icons"
   ],
   "dependencies": {
-    "@elux/react-web": "^2.5.1",
+    "@elux/react-web": "^2.6.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
+    "react-redux": "^7.0.0",
     "axios": "^0.21.1",
     "query-string": "^7.1.1",
     "path-to-regexp": "^6.2.0",
