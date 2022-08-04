@@ -3,9 +3,10 @@
 const antdVars = require('@elux-admin-antd/stage/assets/css/antd-var.json');
 const {getLocalIP} = require('@elux/cli-utils');
 const serverPort = 4003;
+//允许用户build时通过设置APP_ENV=xxxx来使用不同的api前缀，也可以通过不同的env配置文件来实现
 const apiHosts = {
   local: `http://${getLocalIP()}:3003/`,
-  demo: 'http://api-admin-demo.eluxjs.com/',
+  localhost: 'http://localhost:3003/',
 };
 const APP_ENV = process.env.APP_ENV || 'local';
 module.exports = {
