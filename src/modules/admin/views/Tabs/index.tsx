@@ -32,7 +32,7 @@ const AddIcon = (
 );
 
 const Refresh = (
-  <Link to={0} action="back" target="page" refresh className="btn-refresh" title="刷新">
+  <Link to={0} action="back" refresh className="btn-refresh" title="刷新">
     <ReloadOutlined />
   </Link>
 );

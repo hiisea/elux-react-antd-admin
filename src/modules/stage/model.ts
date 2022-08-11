@@ -147,7 +147,7 @@ export class Model extends BaseModel<ModuleState, APPState> {
       const redirect: string = error.detail.redirect || (this.state.curUser.hasLogin ? AdminHomeUrl : GuestHomeUrl);
       if (this.getRouter().location.url === redirect && window.confirm('确定要退出本站吗？')) {
         //注意: back('')可以退出本站
-        setTimeout(() => this.getRouter().back('', 'window'), 0);
+        setTimeout(() => this.getRouter().back(''), 0);
       } else {
         setTimeout(() => this.getRouter().relaunch({url: redirect}, 'window'), 0);
       }
