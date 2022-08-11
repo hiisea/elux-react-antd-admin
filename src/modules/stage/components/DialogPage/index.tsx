@@ -44,7 +44,7 @@ const Component: FC<Props> = (props) => {
           </Link>
         </Tooltip>
         <Tooltip title="刷新">
-          <Link to={0} action="back" target="page" refresh>
+          <Link to={0} action="back" refresh>
             <ReloadOutlined />
           </Link>
         </Tooltip>
